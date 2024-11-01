@@ -1,0 +1,6 @@
+package by.urban.web_project.controller.concrete;
+
+public enum CommandName {
+	DO_AUTH, DO_REGISTRATION, GO_TO_REGISTRATION_PAGE, GO_TO_AUTHENTIFICATION_PAGE, WRITE_ADMIN, GO_TO_INDEX_PAGE,
+	GO_TO_NEWS_PAGE, SHOW_STUB_PAGE, NO_SUCH_COMMAND
+}

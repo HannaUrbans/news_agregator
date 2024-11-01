@@ -1,0 +1,544 @@
+@charset "UTF-8";
+
+body {
+	margin: 0 ! important;
+	/*background-image: url("../images/newspaper.png");
+	background-size: 65% auto;
+	background-repeat: no-repeat;*/
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100vh;
+}
+
+.body_flexbox {
+	margin-top: 25px;
+	margin-left: 25px;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+.email-admin-form {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 85vh;
+	max-width: 400px;
+	background-image: url("../images/back.png");
+	background-size: auto;
+	background-repeat: repeat;
+	margin-right: 10px;
+}
+
+.email-admin-form label, .email-admin-form textarea, .email-admin-form input[type="email"],
+	.email-admin-form input[type="file"] {
+	display: block;
+	width: 90%;
+	margin-bottom: 10px;
+	font-optical-sizing: auto;
+	margin-left: 15px;
+	margin-top: 10px;
+}
+
+.email-admin-form button {
+	width: 100%;
+}
+
+.email-admin-form label, .email-admin-form textarea, .email-admin-form input[type="email"]
+	{
+	border-radius: 10px;
+}
+
+.email-admin-form label {
+	font-family: "Oswald", serif;
+	font-weight: 400;
+	font-style: normal;
+	color: #DD7700;
+	font-style: normal;
+	text-transform: uppercase;
+}
+
+.white-back {
+	background: white;
+	width: 95%;
+	border-radius: 10px;
+}
+
+.email-admin-form textarea {
+	resize: none;
+}
+
+header {
+	display: flex;
+	justify-content: right;
+}
+
+.header_and_news, .news {
+	display: flex;
+	justify-content: flex-start;
+}
+
+button {
+	margin-left: auto;
+	background-color: black;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+	font-family: "Montserrat", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+	width: 250px;
+	border-radius: 10px;
+}
+
+.email-admin-form button {
+	margin: 0;
+}
+
+button:hover {
+	background-color: #6016AE;
+}
+
+button:active {
+	background-color: #DD7700;
+}
+
+.header_and_news {
+	width: 60%;
+	display: flex;
+	height: 85vh;
+	align-items: flex-start;
+	display: flex;
+}
+
+.rotated_part {
+	transform: rotate(90deg);
+	transform-origin: left center;
+	width: 3%;
+	margin-left: 5px;
+}
+
+.not_rotated_part {
+	margin-left: 5px;
+	height: 100%;
+	flex: 1;
+}
+
+p {
+	font-family: 'Merriweather', serif;
+}
+
+h1, h3 {
+	text-transform: uppercase;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+h1 {
+	font-family: "Caveat", cursive;
+	font-optical-sizing: auto;
+	font-weight: 200;
+	font-style: normal;
+	font-size: 64px;
+	/*font-family: "Oswald", serif;
+	font-optical-sizing: auto;
+	font-weight: 200;
+	font-style: normal;*/
+	margin-bottom: 20px;
+	background-color: rgb(255, 255, 255);
+}
+
+h3 {
+	font-size: 36px;
+	font-family: "Oswald", serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	width: 400px;
+	font-style: normal;
+	color: #DD7700;
+	font-style: normal;
+}
+
+.news_block {
+	display: flex;
+	align-items: flex-start;
+}
+
+.center_news_block {
+	height: 50vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.center_news_block .news_item {
+	background-color: #F5F5F5;
+	border-radius: 10px;
+}
+
+.left_news_block .news-item, .right_news_block .news-item {
+	transition: transform 0.3s;
+}
+
+.left_news_block .news-item:hover, .right_news_block .news-item:hover {
+	transform: scale(1.05);
+	cursor: pointer;
+}
+
+.center_news_block:hover {
+	transform: scale(1.05);
+	cursor: pointer;
+}
+
+.bottom_news_block, .center_side_news_block {
+	margin-top: 10px;
+}
+
+.left_news_block {
+	margin-right: 25px;
+}
+
+.center_news_block {
+	/*width: 65vh;*/
+	overflow: hidden;
+	padding: 15px;
+	border: none;
+	border-radius: 10px;
+	margin-right: 25px;
+	padding: 10px;
+	height: 50vh;
+	background-color: F5F5F5;
+	transition: transform 0.3s;
+}
+
+.news_item {
+	padding: 10px;
+	box-sizing: border-box;
+	overflow: hidden;
+	/*display: flex;
+	flex-direction: column;*/
+	width: 100%;
+	z-index: 0;
+}
+
+.image-container {
+	position: relative;
+	text-align: left;
+}
+
+.image-container img {
+	border-radius: 10px;
+}
+
+.right_news_block .news_header, .left_news_block .news_header {
+	position: absolute;
+	bottom: 5px;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.5);
+	padding: 5px;
+}
+
+.news_item p, .news_item h4 {
+	font-family: "Montserrat", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+}
+
+.news_item h4 {
+	font-family: "Oswald", serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+}
+
+.center_news_block .news_item h4 {
+	font-weight: 200;
+	margin-top: 5px;
+	font-size: 36px;
+	margin-block-end: 0;
+}
+
+.left_news_block h4, .right_news_block h4 {
+	font-size: 16px;
+	color: #DD7700;
+	/*color: #6016AE;*/
+	margin-block-end: 0;
+	margin-block-start: 0;
+	text-transform: uppercase;
+}
+
+.left_news_block .image-container, .right_news_block .image-container {
+	overflow: hidden;
+	border: none;
+	border-radius: 10px;
+	width: 200px;
+	height: 150px;
+}
+
+.center_news_block .image-container img {
+	border: none;
+	border-radius: 10px;
+	width: 100%;
+	height: 300px;
+	object-fit: cover;
+	display: block;
+}
+
+.left_news_block .image-container img, .right_news_block .image-container img
+	{
+	margin: 10px auto;
+	border: none;
+	border-radius: 10px;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.center_news_block h4 {
+	color: #DD7700;
+	line-height: 1.1;
+}
+
+h4 .breaking_news {
+	color: #A80000;
+	text-transform: uppercase;
+}
+
+.center_news_block p {
+	padding-bottom: 10px;
+	font-size: 16px;
+}
+
+.news_header {
+	word-wrap: break-word;
+}
+
+.news_short_description {
+	word-wrap: break-word;
+	text-align: justify;
+}
+
+.news_short_description-container {
+	overflow: hidden;
+	padding-bottom: 15px;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 7;
+	height: 100px;
+}
+
+.form_to_fill_in {
+	margin: 5px auto;
+	margin-top: 20px;
+	width: 100%;
+	height: auto;
+	max-width: 400px;
+	padding: 10px;
+	text-align: center;
+	border-radius: 10px;
+}
+
+.form_to_fill_in form {
+	margin: 5px auto;
+	width: 80%;
+	padding: 10px;
+	background-color: rgba(255, 255, 255, 1);
+	border-radius: 10px;
+}
+
+.form_to_fill_in h1 {
+	color: #DD7700;
+	background: none;
+	text-align: center;
+	font-family: "Oswald", serif;
+	font-optical-sizing: auto;
+	font-weight: 200;
+	font-style: normal;
+	font-size: 36px;
+}
+
+.form_to_fill_in label, .form_to_fill_in input[type="email"],
+	.form_to_fill_in input[type="text"], .form_to_fill_in input[type="password"]
+	{
+	display: block;
+	width: 100%;
+	font-optical-sizing: auto;
+	height: 30px;
+	border: none;
+}
+
+.form_to_fill_in label {
+	display: flex;
+	align-items: center;
+}
+
+.form_to_fill_in button {
+	width: 100%;
+	margin-top: 15px;
+}
+
+.enter_button {
+	margin-top: 5px;
+	margin-right: 5px;
+}
+
+.form_to_fill_in input[type="checkbox"] {
+	display: inline-block;
+	margin-right: 5px;
+}
+
+.form_to_fill_in input[type="email"], .form_to_fill_in input[type="text"],
+	.form_to_fill_in input[type="password"] {
+	border-radius: 10px;
+	box-shadow: none;
+	background-color: transparent !important;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form_to_fill_in input[type="text"]:-internal-autofill-selected,
+	.form_to_fill_in input[type="email"]:-internal-autofill-selected,
+	.form_to_fill_in input[type="password"]:-internal-autofill-selected {
+	border-radius: 10px !important;
+	background-color: white !important;
+}
+
+.form_to_fill_in label {
+	font-family: "Oswald", serif;
+	font-weight: 400;
+	color: #DD7700;
+	font-style: normal;
+	text-transform: uppercase;
+}
+
+.form_to_fill_in textarea {
+	resize: none;
+}
+
+.form_to_fill_in a {
+	font-family: "Montserrat", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+	color: rgba(96, 22, 174, 0.7);
+	text-decoration: none;
+	font-size: 14px;
+	margin: 10px auto;
+}
+
+.form_to_fill_in a:hover {
+	color: rgba(96, 22, 174, 1);
+}
+
+.newsPage {
+	max-width: 80%;
+	margin-left: 10px;
+}
+
+.newsPage h1 {
+	color: #DD7700;
+}
+
+.newsPage p {
+	font-family: "Montserrat", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+	font-size: 14px;
+	text-align: justify;
+	padding-right: 10px;
+	border-right-width: 2px;
+	border-right-style: solid;
+	border-right-color: rgba(96, 22, 174, 1);
+}
+
+.newsPage img {
+	float: left;
+	margin: 0 15px 15px 0;
+	max-width: 30%;
+	height: auto;
+}
+
+.newsPage img {
+	filter: grayscale(100%); /* Черно-белый фильтр */
+	transition: filter 0.3s;
+}
+
+.newsPage img:hover {
+	filter: grayscale(0); /* Восстановление цвета при наведении */
+}
+
+.alert {
+	font-family: "Montserrat", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+	font-size: 18px;
+	text-align: justify;
+	padding-right: 10px;
+	padding-bottom: 10px;
+}
+
+.alert-success {
+	color: green;
+}
+
+.alert-danger {
+	color: red;
+}
+
+.form_to_fill_in .alert {
+	font-size: 16px;
+	padding-top: 15px;
+	padding-bottom: 10px;
+}
+
+.buttons_block {
+	display: flex;
+	width: 400px;
+	justify-content: space-between;
+	margin-top: 10px;
+	margin-right: 10px;
+}
+
+.buttons_block button {
+	width: 100%;
+	font-size: 12px;
+}
+
+.greeting_message {
+	font-family: "Caveat", cursive;
+	font-optical-sizing: auto;
+	color: rgb(96, 22, 174);
+	font-weight: 400;
+	font-size: 36px;
+	text-transform: uppercase;
+	font-style: normal;
+	margin-top: 55px;
+	margin-left: 380px;
+}
+
+#user_account_page {
+	background-image: url("../images/userAccountImg.png");
+	height: 50vh;
+	background-repeat: no-repeat;
+	background-position: left;
+	background-size: contain;
+}
+
+footer {
+	padding: 10px;
+	font-size: 16px;
+	font-family: "Montserrat", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+}

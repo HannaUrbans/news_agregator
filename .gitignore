@@ -1,0 +1,25 @@
+# Общие игнорируемые файлы
+*.class
+*.log
+*.tmp
+*.swp
+
+
+# Директории сборки
+target/
+bin/
+.metadata/
+.settings/
+
+# Игнорирование настроек IDE
+.idea/
+*.iml
+*.project
+*.classpath
+
+# Игнорирование системных файлов
+.DS_Store
+Thumbs.db
+
+# Игнорирование файла email.properties
+*.properties
