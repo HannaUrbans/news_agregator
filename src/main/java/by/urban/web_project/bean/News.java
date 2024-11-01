@@ -67,7 +67,7 @@ public class News implements Serializable {
 
 	@Override
 	public String toString() {
-		return "News {" + "id='" + id + '\'' + ", importance=" + importance + ", title='" + title + '\'' + ", brief='"
+		return getClass().getName() + "{" + "id='" + id + '\'' + ", importance=" + importance + ", title='" + title + '\'' + ", brief='"
 				+ brief + '\'' + '}';
 	}
 }

@@ -209,11 +209,13 @@
 							.png или .pdf:</label> <input type="file" id="inputFile" name="inputFile">
 						<br>
 						<div>
-							<c:if test="${not empty successMessage}">
-								<div class="alert alert-success">${successMessage}</div>
+							<!-- ищем атрибут в области запроса -->
+							<c:if test="${not (requestScope.successMessage eq null)}">
+								<div class="alert alert-success">${requestScope.successMessage}</div>
 							</c:if>
-							<c:if test="${not empty errorMessage}">
-								<div class="alert alert-danger">${errorMessage}</div>
+							<!-- ищем атрибут в области запроса -->
+							<c:if test="${not (requestScope.errorMessage eq null)}">
+								<div class="alert alert-danger">${requestScope.errorMessage}</div>
 							</c:if>
 						</div>
 
