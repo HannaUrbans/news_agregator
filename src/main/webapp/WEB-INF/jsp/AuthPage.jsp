@@ -22,8 +22,9 @@
 		<div class="form_to_fill_in">
 
 			<form action="Controller" method="post">
-				<c:if test="${not empty regSuccess}">
-					<div class="alert alert-success">${regSuccess}</div>
+				<c:if test="${not (sessionScope.regSuccess eq null)}">
+					<div class="alert alert-success">${sessionScope.regSuccess}</div>
+					<c:remove var="regSuccess" scope="session" />
 				</c:if>
 				<h1>Пожалуйста, войдите</h1>
 				<label><input type="email" name="email"
@@ -31,8 +32,9 @@
 					type="password" name="password" placeholder="Пароль" required /></label> <br>
 				<label><input type="checkbox" name="rememberMe">Запомнить
 					меня</label>
-				<c:if test="${not empty authError }">
-					<div class="alert alert-danger">${authError}</div>
+				<c:if test="${not (sessionScope.authError eq null)}">
+					<div class="alert alert-danger">${sessionScope.authError}</div>
+					<c:remove var="authSuccess" scope="session" />
 				</c:if>
 				<button type="submit" name="command" value="DO_AUTH">Войти</button>
 				<!-- <a href="Controller?command=GO_TO_REGISTRATION_PAGE">Регистрация

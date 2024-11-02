@@ -18,24 +18,28 @@
 	href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-<div class = "not_footer">
-	<div class = "form_to_fill_in">
-		<form action="Controller" method="post">
-		<h1>Пожалуйста, зарегистрируйтесь</h1>
-			<label> <input type="text" name="name"
-				placeholder="Имя пользователя" required></label> <br> <label>
-				<input type="email" name="email" placeholder="Email адрес" required>
-			</label> <br> <label> <input type="password" name="password"
-				placeholder="Пароль" required></label> <br> <label> <input
-				type="password" name="confirmPassword"
-				placeholder="Подтверждение пароля" required></label> <br>
-				<c:if test="${not empty regError }"><div class="alert alert-danger">${regError}</div></c:if>
-			<button type="submit" name="command" value="DO_REGISTRATION">Зарегистрироваться</button>
-		</form>
+	<div class="not_footer">
+		<div class="form_to_fill_in">
+			<form action="Controller" method="post">
+				<h1>Пожалуйста, зарегистрируйтесь</h1>
+				<label> <input type="text" name="name"
+					placeholder="Имя пользователя" required></label> <br> <label>
+					<input type="email" name="email" placeholder="Email адрес" required>
+				</label> <br> <label> <input type="password" name="password"
+					placeholder="Пароль" required></label> <br> <label> <input
+					type="password" name="confirmPassword"
+					placeholder="Подтверждение пароля" required></label> <br>
+				<c:if test="${not(sessionScope.regError eq null) }">
+					<div class="alert alert-danger">${sessionScope.regError}</div>
+					<c:remove var="regError" scope="session" />
+				</c:if>
+				<c:remove var="regError" scope="session" />
+				<button type="submit" name="command" value="DO_REGISTRATION">Зарегистрироваться</button>
+			</form>
+		</div>
 	</div>
-	</div>
-	<div class = "footer">
-	<%@ include file="page_elems/footer.jsp"%>
+	<div class="footer">
+		<%@ include file="page_elems/footer.jsp"%>
 	</div>
 </body>
 </html>

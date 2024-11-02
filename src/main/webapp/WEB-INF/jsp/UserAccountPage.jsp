@@ -28,8 +28,9 @@
 			</header>
 			<div class="body_flexbox">
 				<h4 class="greeting_message">
-					<c:if test="$ {not empty authSuccess}">
-					${authSuccess}
+					<c:if test="$ {not (sessionScope.authSuccess eq null)}">
+					${sessionScope.authSuccess}
+					 <c:remove var="authSuccess" scope="session" />
 				</c:if>
 				</h4>
 			</div>

@@ -8,6 +8,7 @@ import by.urban.web_project.controller.concrete.implementation.DoRegistration;
 import by.urban.web_project.controller.concrete.implementation.GoToAuthentificationPage;
 import by.urban.web_project.controller.concrete.implementation.GoToRegistrationPage;
 import by.urban.web_project.controller.concrete.implementation.GoToIndexPage;
+import by.urban.web_project.controller.concrete.implementation.GoToUserAccountPage;
 import by.urban.web_project.controller.concrete.implementation.GoToNewsPage;
 import by.urban.web_project.controller.concrete.implementation.WriteAdmin;
 import by.urban.web_project.controller.concrete.implementation.NoSuchCommand;
@@ -24,6 +25,7 @@ public class CommandProvider {
 		commands.put(CommandName.WRITE_ADMIN, new WriteAdmin());
 		commands.put(CommandName.GO_TO_INDEX_PAGE, new GoToIndexPage());
 		commands.put(CommandName.GO_TO_NEWS_PAGE, new GoToNewsPage());
+		commands.put(CommandName.GO_TO_USER_ACCOUNT_PAGE, new GoToUserAccountPage());
 		commands.put(CommandName.SHOW_STUB_PAGE, new ShowStub());
 		commands.put(CommandName.NO_SUCH_COMMAND, new NoSuchCommand());
 	}

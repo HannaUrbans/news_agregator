@@ -201,21 +201,29 @@
 				<div class="white-back">
 					<form action="Controller" method="post"
 						enctype="multipart/form-data">
-						<label for="email">Email:</label> <input type="email" id="email"
-							name="email" required> <br> <label for="message">Текст
+						<label for="email">Email:</label>
+						<!-- если передается сообщение об ошибке, то в значение поля записывается то, что было передано ранее -->
+						<input type="email" id="email" name="email"
+							value="${not (sessionScope.errorMessage eq null) ? sessionScope.email : ''}"
+							required> <br> <label for="message">Текст
 							сообщения:</label>
-						<textarea id="message" name="message" rows="4" required></textarea>
+						<!-- если передается сообщение об ошибке, то в значение поля записывается то, что было передано ранее -->
+						<textarea id="message" name="message" rows="4" required>${not (sessionScope.errorMessage eq null) ? sessionScope.message : ''}</textarea>
 						<br> <label for="inputFile">Прикрепите файл в формате
 							.png или .pdf:</label> <input type="file" id="inputFile" name="inputFile">
 						<br>
 						<div>
-							<!-- ищем атрибут в области запроса -->
-							<c:if test="${not (requestScope.successMessage eq null)}">
-								<div class="alert alert-success">${requestScope.successMessage}</div>
+							<!-- ищем атрибут в области сессии, НЕ ЗАПРОСА -->
+							<c:if test="${not (sessionScope.successMessage eq null)}">
+								<div class="alert alert-success">${sessionScope.successMessage}</div>
+								<!-- чтобы после отображения оповещения при повторном вводе данных не дублировались оповещения -->
+								<c:remove var="successMessage" scope="session" />
 							</c:if>
-							<!-- ищем атрибут в области запроса -->
-							<c:if test="${not (requestScope.errorMessage eq null)}">
-								<div class="alert alert-danger">${requestScope.errorMessage}</div>
+							<!-- ищем атрибут в области сессии, НЕ ЗАПРОСА -->
+							<c:if test="${not (sessionScope.errorMessage eq null)}">
+								<div class="alert alert-danger">${sessionScope.errorMessage}</div>
+								<!-- чтобы после отображения оповещения при повторном вводе данных не дублировались оповещения -->
+								<c:remove var="errorMessage" scope="session" />
 							</c:if>
 						</div>
 

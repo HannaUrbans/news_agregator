@@ -5,7 +5,6 @@ import by.urban.web_project.logic.Check;
 
 import java.io.IOException;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import by.urban.web_project.controller.concrete.Command;
@@ -22,18 +21,17 @@ public class DoRegistration implements Command {
 		String confirmPassword = request.getParameter("confirmPassword");
 
 		if (!passwordCheck.checkPassword(request, passwordForRegistration, confirmPassword)) {
-			request.setAttribute("regError", "Пароли не совпадают");
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/RegPage.jsp");
-			dispatcher.forward(request, response);
+			request.getSession().setAttribute("regError", "Пароли не совпадают");
+			response.sendRedirect("Controller?command=GO_TO_REGISTRATION_PAGE");
+			return;
 		}
 
 		if (logicForRegistration.checkReg(nameForRegistration, emailForRegistration, passwordForRegistration)) {
-			request.setAttribute("regSuccess", nameForRegistration + ", поздравляем Вас с завершением регистрации!");
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/AuthPage.jsp");
-			dispatcher.forward(request, response);
+			request.getSession().setAttribute("regSuccess",
+					nameForRegistration + ", поздравляем Вас с завершением регистрации!");
+			response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
 		} else {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/RegPage.jsp");
-			dispatcher.forward(request, response);
+			response.sendRedirect("Controller?command=GO_TO_REGISTRATION_PAGE");
 		}
 	}
 }
