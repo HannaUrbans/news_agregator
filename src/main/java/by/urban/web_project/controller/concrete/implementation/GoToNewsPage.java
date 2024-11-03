@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import by.urban.web_project.controller.concrete.Command;
+import by.urban.web_project.utils.SessionUtils;
 import by.urban.web_project.bean.News;
 import by.urban.web_project.bean.NewsDatabase;
 
@@ -24,6 +25,9 @@ public class GoToNewsPage implements Command {
 			request.setAttribute("errorMessage", "Новость не найдена.");
 		}
 
+		SessionUtils.logCurrentUser(request);
+		System.out.println("Текущий URL: " + request.getRequestURL().toString());
+		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/NewsPage.jsp");
 		dispatcher.forward(request, response);
 	}

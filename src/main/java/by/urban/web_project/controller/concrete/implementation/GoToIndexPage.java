@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.bean.News;
 import by.urban.web_project.logic.LogicStubForAddingNewsToMainPage;
+import by.urban.web_project.utils.SessionUtils;
 
 public class GoToIndexPage implements Command {
 	@Override
@@ -28,6 +29,9 @@ public class GoToIndexPage implements Command {
 
 		request.setAttribute("regularNews", regularNewsList);
 
+		SessionUtils.logCurrentUser(request);
+		System.out.println("Текущий URL: " + request.getRequestURL().toString());
+		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/main_index.jsp");
 		dispatcher.forward(request, response);
 	}

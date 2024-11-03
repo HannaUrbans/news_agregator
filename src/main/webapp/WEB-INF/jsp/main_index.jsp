@@ -208,7 +208,7 @@
 							required> <br> <label for="message">Текст
 							сообщения:</label>
 						<!-- если передается сообщение об ошибке, то в значение поля записывается то, что было передано ранее -->
-						<textarea id="message" name="message" rows="4" required>${not (sessionScope.errorMessage eq null) ? sessionScope.message : ''}</textarea>
+						<textarea id="message" name="message" rows="4" required>${not (sessionScope.errorMessage eq null) ? requestScope.message : ''}</textarea>
 						<br> <label for="inputFile">Прикрепите файл в формате
 							.png или .pdf:</label> <input type="file" id="inputFile" name="inputFile">
 						<br>
@@ -233,7 +233,7 @@
 			</div>
 		</div>
 	</div>
-	</div>
+
 	<div class="footer">
 		<%@ include file="page_elems/footer.jsp"%>
 	</div>

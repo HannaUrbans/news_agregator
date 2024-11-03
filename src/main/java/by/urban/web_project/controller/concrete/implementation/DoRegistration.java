@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import by.urban.web_project.controller.concrete.Command;
+import by.urban.web_project.utils.SessionUtils;
 
 public class DoRegistration implements Command {
 	private final LogicStubForRegistration logicForRegistration = new LogicStubForRegistration();
@@ -19,6 +20,8 @@ public class DoRegistration implements Command {
 		String emailForRegistration = request.getParameter("email");
 		String passwordForRegistration = request.getParameter("password");
 		String confirmPassword = request.getParameter("confirmPassword");
+		SessionUtils.logCurrentUser(request);
+		System.out.println("Текущий URL: " + request.getRequestURL().toString());
 
 		if (!passwordCheck.checkPassword(request, passwordForRegistration, confirmPassword)) {
 			request.getSession().setAttribute("regError", "Пароли не совпадают");
@@ -33,5 +36,8 @@ public class DoRegistration implements Command {
 		} else {
 			response.sendRedirect("Controller?command=GO_TO_REGISTRATION_PAGE");
 		}
+
+		SessionUtils.logCurrentUser(request);
+
 	}
 }
