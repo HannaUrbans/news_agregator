@@ -26,6 +26,11 @@
 					<div class="alert alert-success">${sessionScope.regSuccess}</div>
 					<c:remove var="regSuccess" scope="session" />
 				</c:if>
+
+				<c:if test="${not(sessionScope.logoutSuccess eq null)}">
+					<h1> ${sessionScope.logoutSuccess}</h1>
+					 <c:remove var="logoutSuccess" scope="session" />
+				</c:if>
 				<h1>Пожалуйста, войдите</h1>
 				<label><input type="email" name="email"
 					placeholder="Email адрес" required /></label> <br> <label><input

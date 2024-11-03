@@ -22,7 +22,7 @@
 			<header>
 				<div class="enter_button">
 					<form action="Controller" method="Get">
-						<button type="submit" name="command" value="SHOW_STUB_PAGE">Выйти</button>
+						<button type="submit" name="command" value="LOGOUT">Выйти</button>
 					</form>
 				</div>
 			</header>
@@ -31,7 +31,7 @@
 					<c:if test="$ {not (sessionScope.authSuccess eq null)}">
 					${sessionScope.authSuccess}
 					 <c:remove var="authSuccess" scope="session" />
-				</c:if>
+					</c:if>
 				</h4>
 			</div>
 		</div>

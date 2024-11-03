@@ -13,6 +13,7 @@ import by.urban.web_project.controller.concrete.implementation.GoToNewsPage;
 import by.urban.web_project.controller.concrete.implementation.WriteAdmin;
 import by.urban.web_project.controller.concrete.implementation.NoSuchCommand;
 import by.urban.web_project.controller.concrete.implementation.ShowStub;
+import by.urban.web_project.controller.concrete.implementation.LogOut;
 
 public class CommandProvider {
 	private Map<CommandName, Command> commands = new HashMap<>();
@@ -28,6 +29,7 @@ public class CommandProvider {
 		commands.put(CommandName.GO_TO_USER_ACCOUNT_PAGE, new GoToUserAccountPage());
 		commands.put(CommandName.SHOW_STUB_PAGE, new ShowStub());
 		commands.put(CommandName.NO_SUCH_COMMAND, new NoSuchCommand());
+		commands.put(CommandName.LOGOUT, new LogOut());
 	}
 
 	public Command takeCommand(String userCommand) {
