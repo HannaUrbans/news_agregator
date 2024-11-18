@@ -20,11 +20,13 @@ public class CommandProvider {
 		commands.put(CommandName.GO_TO_AUTHOR_ACCOUNT_PAGE, new GoToAuthorAccountPage());
 		commands.put(CommandName.GO_TO_CHANGE_NAME_FORM, new GoToChangeNameForm());
 		commands.put(CommandName.GO_TO_CHANGE_PASSWORD_FORM, new GoToChangePasswordForm());
+		commands.put(CommandName.GO_TO_CHANGE_BIO_FORM, new GoToChangeBioForm());
 		commands.put(CommandName.GO_TO_ADD_NEWS_FORM_PAGE, new GoToAddNewsFormPage());
 		commands.put(CommandName.ADD_NEWS, new AddNews());
 		commands.put(CommandName.SHOW_ALL_NEWS, new ShowAllNews());
 		commands.put(CommandName.CHANGE_NAME, new ChangeName());
 		commands.put(CommandName.CHANGE_PASSWORD, new ChangePassword());
+		commands.put(CommandName.CHANGE_BIO, new ChangeBio());
 		commands.put(CommandName.SHOW_STUB_PAGE, new ShowStub());
 		commands.put(CommandName.NO_SUCH_COMMAND, new NoSuchCommand());
 		commands.put(CommandName.LOGOUT, new LogOut());

@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ include file="page_elems/title.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,13 +32,14 @@
 </header>
 <body>
 <div class="not_footer">
-    <div class = "form_to_fill_in">
+    <div class="form_to_fill_in">
 
-    <form action="Controller" method="post">
-        <label for="newPassword">Новый пароль:</label>
-        <input type="text" id="newPassword" name="newPassword" required>
-        <button type="submit" name="command" value="CHANGE_PASSWORD">Готово</button>
-    </form>
+        <form action="Controller" method="post">
+            <label for="newBio">Отредактируйте биографию:</label>
+            <textarea id="newBio" name="newBio" required><c:choose><c:when
+                    test="${not empty sessionScope.newBio}">${sessionScope.newBio}</c:when><c:otherwise>${sessionScope.author.bio}</c:otherwise></c:choose></textarea>
+            <button type="submit" name="command" value="CHANGE_BIO">Готово</button>
+        </form>
     </div>
 </div>
 <div class="footer">

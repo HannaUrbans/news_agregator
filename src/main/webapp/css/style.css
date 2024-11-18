@@ -703,6 +703,17 @@ h4 .breaking_news {
     margin-top: 100px;
 }
 
+.bio_desc a {
+    font-size: 14px;
+}
+
+#newBio {
+    height: 600px;
+    width: 300px;
+    padding: 10px;
+
+}
+
 .note {
     /*background-image: url("../images/note_back.png");
     background-repeat: no-repeat;

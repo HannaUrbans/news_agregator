@@ -34,7 +34,7 @@
         <form action="Controller" method="post">
             <label for="newName">Новое имя:</label>
             <input type="text" id="newName" name="newName" required>
-            <button type="submit" name="command" value="CHANGE_NAME">Изменить имя</button>
+            <button type="submit" name="command" value="CHANGE_NAME">Готово</button>
         </form>
     </div>
     </div>

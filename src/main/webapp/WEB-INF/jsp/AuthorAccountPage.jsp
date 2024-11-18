@@ -68,12 +68,12 @@
                         </p>
                         <a href="Controller?command=GO_TO_CHANGE_NAME_FORM">Изменить имя</a>
                         <c:if test="${not empty sessionScope.changeNameSuccess}">
-                            <p style="color: green;">${sessionScope.changeNameSuccess}</p>
+                            <div class="alert alert-success">${sessionScope.changeNameSuccess}</div>
                             <c:remove var="changeNameSuccess" scope="session"/>
                         </c:if>
 
                         <c:if test="${not empty sessionScope.changeNameError}">
-                            <p style="color: red;">${sessionScope.changeNameError}</p>
+                            <div class="alert alert-danger">${sessionScope.changeNameError}</div>
                             <c:remove var="changeNameError" scope="session"/>
                         </c:if>
                         <h4>E-mail</h4>
@@ -92,12 +92,12 @@
                         </p>
                         <a href="Controller?command=GO_TO_CHANGE_PASSWORD_FORM">Изменить пароль</a>
                         <c:if test="${not empty sessionScope.changePasswordSuccess}">
-                            <p style="color: green;">${sessionScope.changePasswordSuccess}</p>
+                            <div class="alert alert-success">${sessionScope.changePasswordSuccess}</div>
                             <c:remove var="changePasswordSuccess" scope="session"/>
                         </c:if>
 
                         <c:if test="${not empty sessionScope.changePasswordError}">
-                            <p style="color: red;">${sessionScope.changePasswordError}</p>
+                            <div class="alert alert-danger">${sessionScope.changePasswordError}</div>
                             <c:remove var="changePasswordError" scope="session"/>
                         </c:if>
                     </div>
@@ -107,15 +107,29 @@
     </div>
     <div class="bio_desc">
         <h4>Биография</h4>
-        <c:if test="${not empty sessionScope.author.bio}">
-            ${sessionScope.author.bio}
-        </c:if>
+        <c:choose>
+            <c:when test="${not empty sessionScope.newBio}">
+                ${sessionScope.newBio}
+            </c:when>
+            <c:otherwise>
+                ${sessionScope.author.bio}
+            </c:otherwise>
+        </c:choose>
         <br>
-        <a href="Controller?command=SHOW_STUB_PAGE">Заглушка</a>
+        <a href="Controller?command=GO_TO_CHANGE_BIO_FORM">Изменить биографию</a>
+        <c:if test="${not empty sessionScope.changeBioSuccess}">
+            <div class="alert alert-success">${sessionScope.changeBioSuccess}</div>
+            <c:remove var="changeBioSuccess" scope="session"/>
+        </c:if>
+        <c:if test="${not empty sessionScope.changeBioError}">
+            <div class="alert alert-danger">${sessionScope.changeBioError}</div>
+            <c:remove var="changeBioError" scope="session"/>
+        </c:if>
     </div>
-    <form><div class = "news_button">
-        <button type="submit" name="command" value="GO_TO_ADD_NEWS_FORM_PAGE">Добавить новость</button>
-    </div>
+    <form>
+        <div class="news_button">
+            <button type="submit" name="command" value="GO_TO_ADD_NEWS_FORM_PAGE">Добавить новость</button>
+        </div>
     </form>
     <div class="author_page_news_list">
         <h4>Список статей:</h4>
@@ -123,7 +137,7 @@
         <c:if test="${not empty sessionScope.newsAuthorsList}">
             <c:forEach var="news" items="${sessionScope.newsAuthorsList}">
                 <h4>${news.title}</h4>
-                <img src="${pageContext.request.contextPath}/images/${news.imageUrl}" alt="Image" />
+                <img src="${pageContext.request.contextPath}/images/${news.imageUrl}" alt="Image"/>
                 <p>${news.brief}</p>
                 <p>${news.newsText}</p>
                 <hr>
