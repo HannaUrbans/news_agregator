@@ -5,11 +5,12 @@ import by.urban.web_project.mockdb.UsersDatabase;
 import by.urban.web_project.model.roles.Author;
 import by.urban.web_project.model.roles.User;
 import by.urban.web_project.service.IAuthorizationService;
+import by.urban.web_project.service.ServiceException;
 
 //Logic Stub For Authorization
 public class AuthorizationServiceImpl implements IAuthorizationService {
 
-	public Object checkAuth(String email, String password) {
+	public Object checkAuth(String email, String password) throws ServiceException {
 
 		Author authorizedAuthor = AuthorsDatabase.getAuthorByEmailAndPassword(email, password);
 		if (authorizedAuthor != null) {

@@ -5,9 +5,9 @@ import by.urban.web_project.model.News;
 import java.util.List;
 
 public interface INewsService {
-    News getBreakingNews();
+    News getBreakingNews() throws ServiceException;
 
-    News getTopNews();
+    News getTopNews() throws ServiceException;
 
-    List<News> getRegularNews();
+    List<News> getRegularNews() throws ServiceException;
 }

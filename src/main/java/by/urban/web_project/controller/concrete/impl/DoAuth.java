@@ -4,6 +4,7 @@ import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.model.roles.Author;
 import by.urban.web_project.model.roles.User;
 import by.urban.web_project.service.IAuthorizationService;
+import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
 import by.urban.web_project.utils.SessionUtils;
 import jakarta.servlet.ServletException;
@@ -18,43 +19,46 @@ import java.io.IOException;
 
 public class DoAuth implements Command {
     ServiceFactory serviceFactory = ServiceFactory.getInstance();
-
     IAuthorizationService logicForAuthorization = serviceFactory.getAuthorizationService();
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        SessionUtils.logCurrentVisitor(request);
 
-        System.out.println("Авторизация пользователя:" + email);
-        SessionUtils.logCurrentVisitor(request);
+        try {
+            SessionUtils.logCurrentVisitor(request);
+            System.out.println("Авторизация пользователя:" + email);
 
-        Object authorizedObject = logicForAuthorization.checkAuth(email, password);
-        if (authorizedObject != null) {
-            if (authorizedObject instanceof Author) {
-                Author author = (Author) authorizedObject;
-                request.getSession(true).setAttribute("author", author);
-                request.getSession(true).setAttribute("email", email);
-                request.getSession().setAttribute("authSuccess", "Добро пожаловать в личный кабинет, " + author.getName());
-                System.out.println("Номер сессии: " + request.getSession(true).getId());
-                response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
-            } else if (authorizedObject instanceof User) {
-                User user = (User) authorizedObject;
-                request.getSession(true).setAttribute("user", user);
-                request.getSession(true).setAttribute("email", email);
-                request.getSession().setAttribute("authSuccess", "Добро пожаловать в личный кабинет, " + user.getName());
-                System.out.println("Номер сессии: " + request.getSession(true).getId());
-                response.sendRedirect("Controller?command=GO_TO_USER_ACCOUNT_PAGE");
+            Object authorizedObject = logicForAuthorization.checkAuth(email, password);
 
+            if (authorizedObject != null) {
+                if (authorizedObject instanceof Author) {
+                    Author author = (Author) authorizedObject;
+                    request.getSession(true).setAttribute("author", author);
+                    request.getSession(true).setAttribute("email", email);
+                    request.getSession().setAttribute("authSuccess", "Добро пожаловать в личный кабинет, " + author.getName());
+                    System.out.println("Номер сессии: " + request.getSession(true).getId());
+                    response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
+                } else if (authorizedObject instanceof User) {
+                    User user = (User) authorizedObject;
+                    request.getSession(true).setAttribute("user", user);
+                    request.getSession(true).setAttribute("email", email);
+                    request.getSession().setAttribute("authSuccess", "Добро пожаловать в личный кабинет, " + user.getName());
+                    System.out.println("Номер сессии: " + request.getSession(true).getId());
+                    response.sendRedirect("Controller?command=GO_TO_USER_ACCOUNT_PAGE");
+                }
+            } else {
+                request.getSession().setAttribute("authError", "Неправильный email или пароль");
+                response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
             }
-            SessionUtils.logCurrentVisitor(request);
-        } else {
-            request.getSession().setAttribute("authError", "Неправильный email или пароль");
-            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+
             SessionUtils.logCurrentVisitor(request);
 
+        } catch (ServiceException e) {
+            e.printStackTrace();
+            request.getSession().setAttribute("authError", "Произошла ошибка при авторизации");
+            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
         }
     }
 }

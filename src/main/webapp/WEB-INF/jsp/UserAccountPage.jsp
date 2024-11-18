@@ -43,12 +43,12 @@
                             <c:remove var="authSuccess" scope="session"/>
                         </c:if>
                     </h4>
-                    <h4 class="alert alert-danger">
-                        <c:if test="${not (sessionScope.regRedirectFail eq null)}">
-                            ${sessionScope.regRedirectFail}
+                    <c:if test="${not (sessionScope.regRedirectFail eq null)}">
+                        <h4 class="alert alert-danger">
+                                ${sessionScope.regRedirectFail}
                             <c:remove var="regRedirectFail" scope="session"/>
-                        </c:if>
-                    </h4>
+                        </h4>
+                    </c:if>
                 </div>
                 <div class="photo_text_align">
                     <div id="userPic">

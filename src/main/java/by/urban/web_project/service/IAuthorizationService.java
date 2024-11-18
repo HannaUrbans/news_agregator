@@ -1,5 +1,5 @@
 package by.urban.web_project.service;
 
 public interface IAuthorizationService {
-    Object checkAuth(String email, String password);
+    Object checkAuth(String email, String password) throws ServiceException;
 }
