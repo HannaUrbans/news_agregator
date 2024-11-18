@@ -1,10 +1,12 @@
 package by.urban.web_project.controller.concrete;
 
 import java.io.IOException;
+
+import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface Command {
-	void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException;
+	void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, MessagingException;
 }

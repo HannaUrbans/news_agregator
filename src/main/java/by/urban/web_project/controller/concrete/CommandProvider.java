@@ -3,17 +3,7 @@ package by.urban.web_project.controller.concrete;
 import java.util.HashMap;
 import java.util.Map;
 
-import by.urban.web_project.controller.concrete.implementation.DoAuth;
-import by.urban.web_project.controller.concrete.implementation.DoRegistration;
-import by.urban.web_project.controller.concrete.implementation.GoToAuthentificationPage;
-import by.urban.web_project.controller.concrete.implementation.GoToRegistrationPage;
-import by.urban.web_project.controller.concrete.implementation.GoToIndexPage;
-import by.urban.web_project.controller.concrete.implementation.GoToUserAccountPage;
-import by.urban.web_project.controller.concrete.implementation.GoToNewsPage;
-import by.urban.web_project.controller.concrete.implementation.WriteAdmin;
-import by.urban.web_project.controller.concrete.implementation.NoSuchCommand;
-import by.urban.web_project.controller.concrete.implementation.ShowStub;
-import by.urban.web_project.controller.concrete.implementation.LogOut;
+import by.urban.web_project.controller.concrete.impl.*;
 
 public class CommandProvider {
 	private Map<CommandName, Command> commands = new HashMap<>();
@@ -27,6 +17,14 @@ public class CommandProvider {
 		commands.put(CommandName.GO_TO_INDEX_PAGE, new GoToIndexPage());
 		commands.put(CommandName.GO_TO_NEWS_PAGE, new GoToNewsPage());
 		commands.put(CommandName.GO_TO_USER_ACCOUNT_PAGE, new GoToUserAccountPage());
+		commands.put(CommandName.GO_TO_AUTHOR_ACCOUNT_PAGE, new GoToAuthorAccountPage());
+		commands.put(CommandName.GO_TO_CHANGE_NAME_FORM, new GoToChangeNameForm());
+		commands.put(CommandName.GO_TO_CHANGE_PASSWORD_FORM, new GoToChangePasswordForm());
+		commands.put(CommandName.GO_TO_ADD_NEWS_FORM_PAGE, new GoToAddNewsFormPage());
+		commands.put(CommandName.ADD_NEWS, new AddNews());
+		commands.put(CommandName.SHOW_ALL_NEWS, new ShowAllNews());
+		commands.put(CommandName.CHANGE_NAME, new ChangeName());
+		commands.put(CommandName.CHANGE_PASSWORD, new ChangePassword());
 		commands.put(CommandName.SHOW_STUB_PAGE, new ShowStub());
 		commands.put(CommandName.NO_SUCH_COMMAND, new NoSuchCommand());
 		commands.put(CommandName.LOGOUT, new LogOut());
@@ -35,7 +33,7 @@ public class CommandProvider {
 	public Command takeCommand(String userCommand) {
 		CommandName commandName;
 		Command command;
-		System.out.println("Attempting to take command: " + userCommand);
+		//System.out.println("Attempting to take command: " + userCommand);
 		try {
 			commandName = CommandName.valueOf(userCommand.toUpperCase());
 			command = commands.get(commandName);

@@ -136,7 +136,7 @@ public class EmailSending {
 		return attachmentPart;
 	}
 
-	private static byte[] readAttachmentData(Part inputFile) throws IOException {
+	public static byte[] readAttachmentData(Part inputFile) throws IOException {
 		// ByteArrayOutputStream используется как буффер для временного хранения
 		// считанных данных
 		// вместо этого можно записать в файл на диске FileOutputStream fileOutputStream
