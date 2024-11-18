@@ -550,7 +550,9 @@ h4 .breaking_news {
 .alert-danger {
     color: red;
 }
-
+#author_account_page .alert-danger {
+    background-color: white;
+}
 .form_to_fill_in .alert {
     font-size: 16px;
     padding-top: 15px;
@@ -592,18 +594,24 @@ h4 .breaking_news {
     font-size: 26px;
     text-transform: uppercase;
     font-style: normal;
-    margin-top: 5px;
     margin-left: auto;
     margin-right: auto;
     color: #DD7700;
     text-align: center;
+    background-color: white;
+    border-radius: 10px;
+    margin-bottom: -10px;
+}
+
+#user_account_page .greeting_message {
+    background-color: transparent;
 }
 
 #author_account_page {
     background-image: url("../images/authorAccountImg.png");
     background-repeat: no-repeat;
     background-position: top;
-    background-size: 1000px;
+    background-size: 800px;
     height: 90vh;
 }
 
@@ -678,10 +686,6 @@ h4 .breaking_news {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-#author_account_page .body_center_flexbox {
-    margin-top: 90px;
 }
 
 .photo_text_align {

@@ -39,18 +39,23 @@
 
         <div class="logged_user_profile">
             <div>
-                <h4 class="greeting_message">
-                    <c:if test="${not (sessionScope.authSuccess eq null)}">
-                        ${sessionScope.authSuccess}
-                        <c:remove var="authSuccess" scope="session"/>
-                    </c:if>
-                </h4>
                 <c:if test="${not (sessionScope.regRedirectFail eq null)}">
-                    <h4 class="alert alert-danger">
+                    <div class="alert alert-danger">
                             ${sessionScope.regRedirectFail}
                         <c:remove var="regRedirectFail" scope="session"/>
-                    </h4>
+                    </div>
                 </c:if>
+                <h4 class="greeting_message">
+                    Добро пожаловать,
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.author.name}">
+                            ${sessionScope.author.name}
+                        </c:when>
+                        <c:otherwise>
+                            ${sessionScope.authorGetName}
+                        </c:otherwise>
+                    </c:choose>
+                </h4>
             </div>
             <div class="photo_text_align">
                 <div id="authorPic">

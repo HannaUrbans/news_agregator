@@ -37,14 +37,14 @@ public class DoAuth implements Command {
                     Author author = (Author) authorizedObject;
                     request.getSession(true).setAttribute("author", author);
                     request.getSession(true).setAttribute("email", email);
-                    request.getSession().setAttribute("authSuccess", "Добро пожаловать в личный кабинет, " + author.getName());
+                    request.getSession().setAttribute("authorGetName", author.getName());
                     System.out.println("Номер сессии: " + request.getSession(true).getId());
                     response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
                 } else if (authorizedObject instanceof User) {
                     User user = (User) authorizedObject;
                     request.getSession(true).setAttribute("user", user);
                     request.getSession(true).setAttribute("email", email);
-                    request.getSession().setAttribute("authSuccess", "Добро пожаловать в личный кабинет, " + user.getName());
+                    request.getSession().setAttribute("userGetName", user.getName());
                     System.out.println("Номер сессии: " + request.getSession(true).getId());
                     response.sendRedirect("Controller?command=GO_TO_USER_ACCOUNT_PAGE");
                 }
