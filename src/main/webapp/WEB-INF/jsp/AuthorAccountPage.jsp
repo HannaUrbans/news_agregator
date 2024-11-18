@@ -66,7 +66,7 @@
                                 ${sessionScope.author.name}
                             </c:if>
                         </p>
-                        <a href="Controller?command=GO_TO_CHANGE_NAME_FORM">Изменить имя</a>
+                        <a href="Controller?command=GO_TO_CHANGE_FORM&formType=name">Изменить имя</a>
                         <c:if test="${not empty sessionScope.changeNameSuccess}">
                             <div class="alert alert-success">${sessionScope.changeNameSuccess}</div>
                             <c:remove var="changeNameSuccess" scope="session"/>
@@ -90,7 +90,7 @@
                                 </c:forEach>
                             </c:if>
                         </p>
-                        <a href="Controller?command=GO_TO_CHANGE_PASSWORD_FORM">Изменить пароль</a>
+                        <a href="Controller?command=GO_TO_CHANGE_FORM&formType=password">Изменить пароль</a>
                         <c:if test="${not empty sessionScope.changePasswordSuccess}">
                             <div class="alert alert-success">${sessionScope.changePasswordSuccess}</div>
                             <c:remove var="changePasswordSuccess" scope="session"/>
@@ -116,7 +116,7 @@
             </c:otherwise>
         </c:choose>
         <br>
-        <a href="Controller?command=GO_TO_CHANGE_BIO_FORM">Изменить биографию</a>
+        <a href="Controller?command=GO_TO_CHANGE_FORM&formType=bio">Изменить биографию</a>
         <c:if test="${not empty sessionScope.changeBioSuccess}">
             <div class="alert alert-success">${sessionScope.changeBioSuccess}</div>
             <c:remove var="changeBioSuccess" scope="session"/>

@@ -64,14 +64,14 @@
                                     ${sessionScope.user.name}
                                 </c:if>
                             </p>
-                            <a href="Controller?command=GO_TO_CHANGE_NAME_FORM">Изменить имя</a>
+                            <a href="Controller?command=GO_TO_CHANGE_FORM&formType=name">Изменить имя</a>
                             <c:if test="${not empty sessionScope.changeNameSuccess}">
-                                <p style="color: green;">${sessionScope.changeNameSuccess}</p>
+                                <div class="alert alert-success">${sessionScope.changeNameSuccess}</div>
                                 <c:remove var="changeNameSuccess" scope="session"/>
                             </c:if>
 
                             <c:if test="${not empty sessionScope.changeNameError}">
-                                <p style="color: red;">${sessionScope.changeNameError}</p>
+                                <div class="alert alert-danger">${sessionScope.changeNameError}</div>
                                 <c:remove var="changeNameError" scope="session"/>
                             </c:if>
                             <h4>E-mail</h4>
@@ -88,14 +88,14 @@
                                     </c:forEach>
                                 </c:if>
                             </p>
-                            <a href="Controller?command=GO_TO_CHANGE_PASSWORD_FORM">Изменить пароль</a>
+                            <a href="Controller?command=GO_TO_CHANGE_FORM&formType=password">Изменить пароль</a>
                             <c:if test="${not empty sessionScope.changePasswordSuccess}">
-                                <p style="color: green;">${sessionScope.changePasswordSuccess}</p>
+                                <div class="alert alert-success">${sessionScope.changePasswordSuccess}</div>
                                 <c:remove var="changePasswordSuccess" scope="session"/>
                             </c:if>
 
                             <c:if test="${not empty sessionScope.changePasswordError}">
-                                <p style="color: red;">${sessionScope.changePasswordError}</p>
+                                <div class="alert alert-danger">${sessionScope.changePasswordError}</div>
                                 <c:remove var="changePasswordError" scope="session"/>
                             </c:if>
                         </div>
