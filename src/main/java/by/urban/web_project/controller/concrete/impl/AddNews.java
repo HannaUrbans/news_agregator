@@ -12,10 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
-import static by.urban.web_project.mockdb.NewsDatabase.getAllNews;
 
 public class AddNews implements Command {
     @Override

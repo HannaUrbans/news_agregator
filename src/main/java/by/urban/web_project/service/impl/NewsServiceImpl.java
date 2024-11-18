@@ -1,13 +1,16 @@
-package by.urban.web_project.service;
+package by.urban.web_project.service.impl;
 
 import by.urban.web_project.model.News;
 import by.urban.web_project.mockdb.NewsDatabase;
 import by.urban.web_project.model.NewsImportance;
+import by.urban.web_project.service.INewsService;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class LogicStubForAddingNewsToMainPage {
-	public static News getBreakingNews() {
+//Logic Stub For Adding News To Main Page
+public class NewsServiceImpl implements INewsService {
+	public News getBreakingNews() {
 		// вытягиваем новости из класса-имитации базы данных
 		List<News> news = NewsDatabase.getAllNews();
 		for (News item : news) {
@@ -18,7 +21,7 @@ public class LogicStubForAddingNewsToMainPage {
 		return null;
 	}
 
-	public static News getTopNews() {
+	public News getTopNews() {
 		List<News> news = NewsDatabase.getAllNews();
 		for (News item : news) {
 			if (item.getImportance() == NewsImportance.TOP) {
@@ -28,7 +31,7 @@ public class LogicStubForAddingNewsToMainPage {
 		return null;
 	}
 
-	public static List<News> getRegularNews() {
+	public List<News> getRegularNews() {
 		List<News> news = NewsDatabase.getAllNews();
 		List<News> regularNewsList = new ArrayList<>();
 		for (News item : news) {

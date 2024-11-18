@@ -18,7 +18,6 @@ public class GoToUserAccountPage implements Command {
 		}
 
 		SessionUtils.logCurrentVisitor(request);
-		System.out.println("Текущий URL: " + request.getRequestURL().toString());
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/UserAccountPage.jsp");
 		dispatcher.forward(request, response);

@@ -15,7 +15,7 @@ public class ChangeName implements Command {
         String newName = request.getParameter("newName");
         User user = null;
         Author author = null;
-        System.out.println(newName);
+        System.out.println("Новое имя: " + newName);
         if (newName != null && !newName.trim().isEmpty()) {
 
             user = (User) request.getSession().getAttribute("user");

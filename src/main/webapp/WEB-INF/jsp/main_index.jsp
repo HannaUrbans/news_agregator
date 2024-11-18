@@ -202,7 +202,7 @@
                         </div>
                     </div>
                 </div>
-                <form>
+                <form class="news_button">
                     <button type="submit" name="command" value="SHOW_ALL_NEWS">Показать все новости</button>
                 </form>
             </div>

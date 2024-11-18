@@ -15,7 +15,7 @@ public class ChangePassword implements Command {
         String newPassword = request.getParameter("newPassword");
         User user = null;
         Author author = null;
-        System.out.println(newPassword);
+        System.out.println("Новый пароль: " + newPassword);
         if (newPassword != null && !newPassword.trim().isEmpty()) {
 
             user = (User) request.getSession().getAttribute("user");
@@ -27,8 +27,7 @@ public class ChangePassword implements Command {
                 user.setPassword(newPassword);
                 request.getSession().setAttribute("user", user);
                 request.getSession().setAttribute("changePasswordSuccess", "Пароль успешно обновлен");
-            }
-            else if (author != null) {
+            } else if (author != null) {
                 author.setPassword(newPassword);
                 request.getSession().setAttribute("author", author);  // Сохраняем обновленного автора в сессию
                 request.getSession().setAttribute("changePasswordSuccess", "Пароль успешно обновлен");

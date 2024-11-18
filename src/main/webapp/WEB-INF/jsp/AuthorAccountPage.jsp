@@ -28,7 +28,6 @@
                 <button type="submit" name="command" value="GO_TO_INDEX_PAGE">Главная</button>
             </form>
         </div>
-
         <div class="enter_button">
             <form action="Controller" method="Get">
                 <button type="submit" name="command" value="LOGOUT">Выйти</button>
@@ -37,6 +36,7 @@
 
     </header>
     <div class="body_center_flexbox">
+
         <div class="logged_user_profile">
             <div>
                 <h4 class="greeting_message">
@@ -45,12 +45,12 @@
                         <c:remove var="authSuccess" scope="session"/>
                     </c:if>
                 </h4>
-                <h4 class="alert alert-danger">
                 <c:if test="${not (sessionScope.regRedirectFail eq null)}">
-                    ${sessionScope.regRedirectFail}
-                    <c:remove var="regRedirectFail" scope="session"/>
+                    <h4 class="alert alert-danger">
+                            ${sessionScope.regRedirectFail}
+                        <c:remove var="regRedirectFail" scope="session"/>
+                    </h4>
                 </c:if>
-                </h4>
             </div>
             <div class="photo_text_align">
                 <div id="authorPic">
@@ -113,7 +113,7 @@
         <br>
         <a href="Controller?command=SHOW_STUB_PAGE">Заглушка</a>
     </div>
-    <form><div class = "add_news_button">
+    <form><div class = "news_button">
         <button type="submit" name="command" value="GO_TO_ADD_NEWS_FORM_PAGE">Добавить новость</button>
     </div>
     </form>

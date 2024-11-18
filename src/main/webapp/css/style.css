@@ -570,15 +570,19 @@ h4 .breaking_news {
     font-size: 12px;
 }
 
-.add_news_button {
+.news_button {
     margin: 20px auto;
     width: fit-content;
 }
 
-.add_news_button button {
+.news_button button {
     width: 250px;
     font-size: 16px;
     background-color: #DD7700;
+}
+
+.news_button button:hover {
+    transform: scale(1.1); /* Увеличение на 10% при наведении */
 }
 
 .greeting_message {

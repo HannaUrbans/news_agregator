@@ -23,7 +23,6 @@ public class GoToRegistrationPage implements Command {
 		}
 
 		SessionUtils.logCurrentVisitor(request);
-		System.out.println("Текущий URL: " + request.getRequestURL().toString());
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/RegPage.jsp");
 		dispatcher.forward(request, response);

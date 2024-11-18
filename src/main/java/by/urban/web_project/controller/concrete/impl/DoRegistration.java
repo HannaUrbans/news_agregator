@@ -1,8 +1,9 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.service.Check;
-import by.urban.web_project.service.LogicStubForRegistration;
+import by.urban.web_project.service.ICheckService;
+import by.urban.web_project.service.IRegistrationService;
+import by.urban.web_project.service.ServiceFactory;
 import by.urban.web_project.utils.SessionUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,9 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class DoRegistration implements Command {
-    private final LogicStubForRegistration logicForRegistration = new LogicStubForRegistration();
-    private final Check check = new Check();
+    ServiceFactory serviceFactory = ServiceFactory.getInstance();
 
+    IRegistrationService logicForRegistration = serviceFactory.getRegistrationService();
+    ICheckService check = serviceFactory.getCheckService();
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -23,7 +25,6 @@ public class DoRegistration implements Command {
         String passwordForRegistration = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
         SessionUtils.logCurrentVisitor(request);
-        System.out.println("Текущий URL: " + request.getRequestURL().toString());
 
         // Проверка на дублирование email
         if (logicForRegistration.checkIfEmailExistsInDB(request, emailForRegistration)) {

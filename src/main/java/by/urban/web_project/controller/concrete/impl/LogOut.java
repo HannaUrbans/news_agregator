@@ -12,7 +12,6 @@ public class LogOut implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         SessionUtils.logCurrentVisitor(request);
-        System.out.println("Текущий URL: " + request.getRequestURL().toString());
 
         // Проверяем, существует ли сессия
         if (request.getSession(false) != null &&
