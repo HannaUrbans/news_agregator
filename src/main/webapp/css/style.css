@@ -711,13 +711,16 @@ h4 .breaking_news {
     font-size: 14px;
 }
 
-#newBio {
+#newBio, #newNewsText {
     height: 600px;
     width: 300px;
     padding: 10px;
-
 }
-
+#newNewsBrief {
+    height: 200px;
+    width: 300px;
+    padding: 10px;
+}
 .note {
     /*background-image: url("../images/note_back.png");
     background-repeat: no-repeat;

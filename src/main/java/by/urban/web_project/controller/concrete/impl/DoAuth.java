@@ -1,6 +1,8 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
+import by.urban.web_project.mockdb.NewsDatabase;
+import by.urban.web_project.model.News;
 import by.urban.web_project.model.roles.Author;
 import by.urban.web_project.model.roles.User;
 import by.urban.web_project.service.IAuthorizationService;
@@ -12,6 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -37,6 +41,12 @@ public class DoAuth implements Command {
                     Author author = (Author) authorizedObject;
                     request.getSession(true).setAttribute("author", author);
                     request.getSession(true).setAttribute("email", email);
+                    //
+                    List<News> authorNewsList = NewsDatabase.getNewsByAuthor(email);
+                    Collections.reverse(authorNewsList);
+                    System.out.println("authorNewsList size: " + authorNewsList.size());
+                    request.getSession().setAttribute("authorNewsList", authorNewsList);
+                    //
                     request.getSession().setAttribute("authorGetName", author.getName());
                     System.out.println("Номер сессии: " + request.getSession(true).getId());
                     response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");

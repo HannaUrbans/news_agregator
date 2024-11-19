@@ -1,6 +1,8 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
+import by.urban.web_project.mockdb.NewsDatabase;
+import by.urban.web_project.model.News;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,10 +28,24 @@ public class GoToChangeForm implements Command {
                 page = "/WEB-INF/jsp/changeNameForm.jsp";
                 break;
             case "bio":
-            default:
                 page = "/WEB-INF/jsp/changeBioForm.jsp";
                 break;
+            case "newsArticle":
+                page = "/WEB-INF/jsp/changeNewsArticleForm.jsp";
+                break;
         }
+
+        //newsId передавалось в URL, его нужно передать далее в ChangeNewsArticle.java
+        String newsId = request.getParameter("newsId");
+        if (newsId != null) {
+            request.getSession().setAttribute("newsId", newsId);
+
+            News newsToEdit = NewsDatabase.getNewsById(Integer.parseInt(newsId));
+            if (newsToEdit != null) {
+                request.getSession().setAttribute("news", newsToEdit);
+            }
+        }
+
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(page);
         dispatcher.forward(request, response);

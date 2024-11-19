@@ -33,11 +33,16 @@
             <div class="wide_form">
             <h1>Для добавления новости, пожалуйста, заполните все поля</h1>
 
+                <!-- идентификационный номер вручную - это временное решение, пока не подключена БД -->
+                <label for="newsId">Уникальный идентификационный номер новости (только цифры)
+                    <textarea id="newsId" name="newsId" required></textarea>
+                </label>
+
             <label for="newsImportance">Выберите категорию новости
                 <select id="newsImportance" name="newsImportance">
-                    <option value="breakingImportance">Breaking</option>
-                    <option value="topImportance">Top</option>
-                    <option value="regularImportance">Regular</option>
+                    <option value="breaking">Breaking</option>
+                    <option value="top">Top</option>
+                    <option value="regular">Regular</option>
                 </select>
             </label>
 

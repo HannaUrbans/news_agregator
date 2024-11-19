@@ -3,7 +3,6 @@
 <%@ include file="page_elems/title.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,9 +34,13 @@
     <div class="form_to_fill_in">
 
         <form action="Controller" method="post">
-            <label for="newBio">Отредактируйте биографию:</label>
-            <textarea id="newBio" name="newBio" required><c:choose><c:when test="${not empty sessionScope.newBio}">${sessionScope.newBio}</c:when><c:otherwise>${sessionScope.author.bio}</c:otherwise></c:choose></textarea>
-            <button type="submit" name="command" value="CHANGE_BIO">Готово</button>
+            <label for="newNewsTitle">Изменить заголовок статьи:</label>
+            <input type="text" id="newNewsTitle" name="newNewsTitle" required value="${news.title}">
+            <label for="newNewsBrief">Изменить бриф статьи:</label>
+            <textarea id="newNewsBrief" name="newNewsBrief" required>${news.brief}</textarea>
+            <label for="newNewsText">Изменить текст статьи:</label>
+            <textarea id="newNewsText" name="newNewsText" required>${news.newsText}</textarea>
+            <button type="submit" name="command" value="CHANGE_NEWS_ARTICLE">Готово</button>
         </form>
     </div>
 </div>

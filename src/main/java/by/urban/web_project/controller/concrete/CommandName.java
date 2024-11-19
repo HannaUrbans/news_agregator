@@ -17,6 +17,7 @@ public enum CommandName {
     CHANGE_NAME,
     CHANGE_PASSWORD,
     CHANGE_BIO,
+    CHANGE_NEWS_ARTICLE,
     SHOW_STUB_PAGE,
     NO_SUCH_COMMAND,
     LOGOUT

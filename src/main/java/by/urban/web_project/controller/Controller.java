@@ -1,5 +1,6 @@
 package by.urban.web_project.controller;
 
+import by.urban.web_project.service.ServiceException;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +31,7 @@ public class Controller extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
         try {
             doRequest(request, response);
-        } catch (MessagingException e) {
+        } catch (MessagingException | ServiceException e) {
             throw new RuntimeException(e);
         }
     }
@@ -41,13 +42,13 @@ public class Controller extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
         try {
             doRequest(request, response);
-        } catch (MessagingException e) {
+        } catch (MessagingException | ServiceException e) {
             throw new RuntimeException(e);
         }
     }
 
 	private void doRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, MessagingException {
+            throws ServletException, IOException, MessagingException, ServiceException {
 		String userCommand = request.getParameter("command");
 		System.out.println("Received command: " + userCommand);
 		Command command = provider.takeCommand(userCommand);

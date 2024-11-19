@@ -139,16 +139,33 @@
     <div class="author_page_news_list">
         <h4>Список статей:</h4>
 
-        <c:if test="${not empty sessionScope.newsAuthorsList}">
-            <c:forEach var="news" items="${sessionScope.newsAuthorsList}">
-                <h4>${news.title}</h4>
-                <img src="${pageContext.request.contextPath}/images/${news.imageUrl}" alt="Image"/>
-                <p>${news.brief}</p>
-                <p>${news.newsText}</p>
-                <hr>
+
+        <c:forEach var="news" items="${sessionScope.authorNewsList}">
+        <div class="news-item">
+            <h4>
+                <c:choose>
+                    <c:when test="${not empty sessionScope.newNewsTitle}">${fn:escapeXml(sessionScope.newNewsTitle)}</c:when><c:otherwise>${fn:escapeXml(news.title)}</c:otherwise>
+                </c:choose>
+            </h4>
+
+            <img src="${pageContext.request.contextPath}/images/${news.imageUrl}" alt="Image"/>
+
+            <p>
+                <c:choose>
+                    <c:when test="${not empty sessionScope.newNewsBrief}">${fn:escapeXml(sessionScope.newNewsBrief)}</c:when><c:otherwise>${fn:escapeXml(news.brief)}</c:otherwise></c:choose>
+            </p>
+
+            <p>
+                <c:choose>
+                    <c:when test="${not empty sessionScope.newNewsText}">${fn:escapeXml(sessionScope.newNewsText)}</c:when><c:otherwise>${fn:escapeXml(news.newsText)}</c:otherwise>
+                </c:choose>
+            </p>
+
+            <a href="Controller?command=GO_TO_CHANGE_FORM&formType=newsArticle&newsId=${news.newsId}">Изменить
+                новость</a>
+            <hr>
             </c:forEach>
-        </c:if>
+        </div>
     </div>
-</div>
 </body>
 </html>
