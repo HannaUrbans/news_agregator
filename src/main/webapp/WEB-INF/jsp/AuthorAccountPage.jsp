@@ -139,7 +139,6 @@
     <div class="author_page_news_list">
         <h4>Список статей:</h4>
 
-
         <c:forEach var="news" items="${sessionScope.authorNewsList}">
         <div class="news-item">
             <h4>
@@ -147,9 +146,8 @@
                     <c:when test="${not empty sessionScope.newNewsTitle}">${fn:escapeXml(sessionScope.newNewsTitle)}</c:when><c:otherwise>${fn:escapeXml(news.title)}</c:otherwise>
                 </c:choose>
             </h4>
-
-            <img src="${pageContext.request.contextPath}/images/${news.imageUrl}" alt="Image"/>
-
+            <img src="${pageContext.request.contextPath}${news.imageUrl}" alt="Image"/>
+            <img src="${news.imageUrl}" alt="Image"/>
             <p>
                 <c:choose>
                     <c:when test="${not empty sessionScope.newNewsBrief}">${fn:escapeXml(sessionScope.newNewsBrief)}</c:when><c:otherwise>${fn:escapeXml(news.brief)}</c:otherwise></c:choose>

@@ -121,14 +121,14 @@
                                 <c:choose>
                                     <c:when test="${isBreakingNews}">
                                         <a
-                                                href="Controller?command=GO_TO_NEWS_PAGE&newsId=${breakingNews.newsId}">
+                                            href="Controller?command=GO_TO_NEWS_PAGE&newsId=${breakingNews.newsId}">
                                             <img src="${breakingNews.imageUrl}"
                                                  alt="Breaking News Image"/>
                                         </a>
                                     </c:when>
                                     <c:when test="${isTopNews}">
                                         <a
-                                                href="Controller?command=GO_TO_NEWS_PAGE&newsId=${topNews.newsId}">
+                                             href="Controller?command=GO_TO_NEWS_PAGE&newsId=${topNews.newsId}">
                                             <img src="${topNews.imageUrl}" alt="Top News Image"/>
                                         </a>
                                     </c:when>
