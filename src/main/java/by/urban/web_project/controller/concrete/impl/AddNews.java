@@ -91,11 +91,11 @@ public class AddNews implements Command {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Неверный формат данных");
-            request.getRequestDispatcher("/errorPage.jsp").forward(request, response);
+            request.getRequestDispatcher("/stub.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Ошибка при добавлении новости.");
-            request.getRequestDispatcher("/errorPage.jsp").forward(request, response);
+            request.getRequestDispatcher("/stub.jsp").forward(request, response);
         }
     }
 }

@@ -10,7 +10,7 @@ import java.util.Map;
 public class CommandProvider {
     private Map<CommandName, Command> commands = new HashMap<>();
 
-    public CommandProvider() throws DAOException, ServiceException {
+    public CommandProvider() throws ServiceException, DAOException {
         commands.put(CommandName.DO_AUTH, new DoAuth());
         commands.put(CommandName.DO_REGISTRATION, new DoRegistration());
         commands.put(CommandName.GO_TO_REGISTRATION_PAGE, new GoToRegistrationPage());

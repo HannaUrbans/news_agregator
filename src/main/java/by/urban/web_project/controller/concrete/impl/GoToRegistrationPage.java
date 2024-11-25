@@ -23,7 +23,7 @@ public class GoToRegistrationPage implements Command {
             return;
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/RegPage.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/reg-page.jsp");
         dispatcher.forward(request, response);
     }
 }

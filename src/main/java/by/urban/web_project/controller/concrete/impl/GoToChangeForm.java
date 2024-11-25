@@ -22,16 +22,16 @@ public class GoToChangeForm implements Command {
         String page = "";
         switch (formType) {
             case "password":
-                page = "/WEB-INF/jsp/changePasswordForm.jsp";
+                page = "/WEB-INF/jsp/change-password-form.jsp";
                 break;
             case "name":
-                page = "/WEB-INF/jsp/changeNameForm.jsp";
+                page = "/WEB-INF/jsp/change-name-form.jsp";
                 break;
             case "bio":
-                page = "/WEB-INF/jsp/changeBioForm.jsp";
+                page = "/WEB-INF/jsp/change-bio-form.jsp";
                 break;
             case "newsArticle":
-                page = "/WEB-INF/jsp/changeNewsArticleForm.jsp";
+                page = "/WEB-INF/jsp/change-news-article-form.jsp";
                 break;
         }
 

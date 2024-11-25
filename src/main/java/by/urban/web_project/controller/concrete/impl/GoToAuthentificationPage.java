@@ -22,7 +22,7 @@ public class GoToAuthentificationPage implements Command {
             return;
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/AuthPage.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/auth-page.jsp");
         dispatcher.forward(request, response);
 
     }

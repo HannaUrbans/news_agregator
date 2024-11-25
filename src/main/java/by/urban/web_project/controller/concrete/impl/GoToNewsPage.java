@@ -25,7 +25,7 @@ public class GoToNewsPage implements Command {
             request.setAttribute("errorMessage", "Новость не найдена.");
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/NewsPage.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/news-page.jsp");
         dispatcher.forward(request, response);
     }
 }

@@ -11,7 +11,7 @@ import java.io.IOException;
 public class ShowStub implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/Stub.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/stub.jsp");
         dispatcher.forward(request, response);
     }
 }

@@ -17,7 +17,7 @@ public class GoToAuthorAccountPage implements Command {
             return;
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/AuthorAccountPage.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/author-account-page.jsp");
         dispatcher.forward(request, response);
     }
 }

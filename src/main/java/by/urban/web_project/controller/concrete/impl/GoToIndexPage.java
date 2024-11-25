@@ -40,7 +40,7 @@ public class GoToIndexPage implements Command {
         }
 
         System.out.println("Номер сессии при открытии главной страницы: " + request.getSession().getId());
-        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/main_index.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/main-index.jsp");
         dispatcher.forward(request, response);
     }
 }

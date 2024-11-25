@@ -23,7 +23,7 @@ public class ShowAllNews implements Command {
 
         request.getSession().setAttribute("newsList", newsList);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/AllNewsPage.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/all-news-page.jsp");
         dispatcher.forward(request, response);
 
     }

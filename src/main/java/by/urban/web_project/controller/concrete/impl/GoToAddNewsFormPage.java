@@ -11,7 +11,7 @@ import java.io.IOException;
 public class GoToAddNewsFormPage implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/addNewsFormPage.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/add-news-form-page.jsp");
         dispatcher.forward(request, response);
     }
 }
