@@ -16,6 +16,9 @@ public interface IUserDAO {
 
     boolean registerUserInDatabase(String name, String email, String password) throws DAOException;
 
+    void updateUserName(int userId, String newName) throws DAOException;
+
+    void updateUserPassword(int userId, String newPassword) throws DAOException;
     //void logOut(String loggedVisitorEmail) throws DAOException;
     //void addProfilePic(String loggedVisitorEmail, String profilePicUrl) throws DAOException;
     //void changeName(String loggedVisitorEmail, String name) throws DAOException;

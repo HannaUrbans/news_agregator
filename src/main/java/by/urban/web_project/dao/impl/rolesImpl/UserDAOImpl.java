@@ -96,4 +96,44 @@ public class UserDAOImpl implements IUserDAO {
             throw new DAOException(e);
         }
     }
+
+    /**
+     * Метод обновляет поле "имя" (информация добавляется в личном кабинете)
+     */
+    @Override
+    public void updateUserName(int userId, String newName) throws DAOException {
+        String query = "UPDATE news_management.users SET user_name = ? WHERE user_id=?";
+        try (Connection connection = dbConnectionTool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, newName);
+            preparedStatement.setInt(2, userId);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new DAOException("Не удалось обновить имя пользователя с ID " + userId);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
+
+    /**
+     * Метод обновляет поле "пароль" (информация добавляется в личном кабинете)
+     */
+    @Override
+    public void updateUserPassword(int userId, String newPassword) throws DAOException {
+        String query = "UPDATE news_management.users SET author_password = ? WHERE users_id=?";
+        try (Connection connection = dbConnectionTool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, newPassword);
+            preparedStatement.setInt(2, userId);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new DAOException("Не удалось обновить пароль пользователя с ID " + userId);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
 }

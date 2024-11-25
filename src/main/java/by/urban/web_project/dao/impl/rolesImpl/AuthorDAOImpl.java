@@ -118,4 +118,44 @@ public class AuthorDAOImpl implements IAuthorDAO {
             throw new DAOException(e);
         }
     }
+
+    /**
+     * Метод обновляет поле "имя" (информация добавляется в личном кабинете)
+     */
+    @Override
+    public void updateAuthorName(int authorId, String newName) throws DAOException {
+        String query = "UPDATE news_management.authors SET author_name = ? WHERE author_id=?";
+        try (Connection connection = dbConnectionTool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, newName);
+            preparedStatement.setInt(2, authorId);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new DAOException("Не удалось обновить имя автора с ID " + authorId);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
+
+    /**
+     * Метод обновляет поле "пароль" (информация добавляется в личном кабинете)
+     */
+    @Override
+    public void updateAuthorPassword(int authorId, String newPassword) throws DAOException {
+        String query = "UPDATE news_management.authors SET author_password = ? WHERE author_id=?";
+        try (Connection connection = dbConnectionTool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, newPassword);
+            preparedStatement.setInt(2, authorId);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new DAOException("Не удалось обновить пароль автора с ID " + authorId);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
 }

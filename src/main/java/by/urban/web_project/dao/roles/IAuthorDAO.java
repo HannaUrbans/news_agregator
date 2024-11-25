@@ -14,4 +14,8 @@ public interface IAuthorDAO {
     boolean registerAuthorInDatabase(String name, String email, String password, String bio, String authorKey) throws DAOException;
 
     void updateAuthorBio(int authorId, String newBio) throws DAOException;
+
+    void updateAuthorName(int authorId, String newName) throws DAOException;
+
+    void updateAuthorPassword(int authorId, String newPassword) throws DAOException;
 }
