@@ -18,7 +18,7 @@ public class DoRegistration implements Command {
     private final IRegistrationService logicForRegistration = serviceFactory.getRegistrationService();
     private final ICheckService check = serviceFactory.getCheckService();
 
-    public DoRegistration() throws DAOException {
+    public DoRegistration() throws ServiceException {
     }
 
     @Override

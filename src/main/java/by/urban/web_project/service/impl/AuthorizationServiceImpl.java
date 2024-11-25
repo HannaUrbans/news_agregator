@@ -19,26 +19,14 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
     private final ICheckService checkTool;
 
     //ранняя инициализация в конструкторе
-    public AuthorizationServiceImpl() throws ServiceException, DAOException {
-
-        this.daoFactory = DAOFactory.getInstance();
-        if (daoFactory == null) {
-            throw new ServiceException("DAOFactory is not initialized");
-        }
-
-        this.userAuthorizationLogic = daoFactory.getUserDAO();
-        if (userAuthorizationLogic == null) {
-            throw new ServiceException("User DAO is not initialized");
-        }
-
-        this.authorAuthorizationLogic = daoFactory.getAuthorDAO();
-        if (authorAuthorizationLogic == null) {
-            throw new ServiceException("AuthorDAO is not initialized");
-        }
-
-        this.checkTool = ServiceFactory.getInstance().getCheckService();
-        if (checkTool == null) {
-            throw new ServiceException("CheckService is not initialized");
+    public AuthorizationServiceImpl() throws ServiceException {
+        try {
+            this.daoFactory = DAOFactory.getInstance();
+            this.userAuthorizationLogic = daoFactory.getUserDAO();
+            this.authorAuthorizationLogic = daoFactory.getAuthorDAO();
+            this.checkTool = ServiceFactory.getInstance().getCheckService();
+        } catch (DAOException e) {
+            throw new ServiceException(e);
         }
     }
 

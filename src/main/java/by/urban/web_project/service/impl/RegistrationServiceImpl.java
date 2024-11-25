@@ -13,10 +13,14 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private final IUserDAO userRegistrationLogic;
     private final IAuthorDAO authorRegistrationLogic;
 
-    public RegistrationServiceImpl() throws DAOException {
-        daoFactory = DAOFactory.getInstance();
-        userRegistrationLogic = daoFactory.getUserDAO();
-        authorRegistrationLogic = daoFactory.getAuthorDAO();
+    public RegistrationServiceImpl() throws ServiceException {
+        try {
+            daoFactory = DAOFactory.getInstance();
+            userRegistrationLogic = daoFactory.getUserDAO();
+            authorRegistrationLogic = daoFactory.getAuthorDAO();
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
     }
 
     /**

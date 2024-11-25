@@ -1,11 +1,9 @@
 package by.urban.web_project.service;
 
-import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.service.impl.*;
 
 public final class ServiceFactory {
 
-    //!!! здесь приходится выбрасывать DAO исключения, есть подозрение, что неверно организована работа слоев!!!
     private static ServiceFactory instance;
 
     // Сервисы, инициализируемые при первом доступе
@@ -19,7 +17,7 @@ public final class ServiceFactory {
     static {
         try {
             instance = new ServiceFactory();
-        } catch (ServiceException | DAOException e) {
+        } catch (ServiceException e) {
             System.err.println("Ошибка инициализации ServiceFactory: " + e.getMessage());
             e.printStackTrace();
             //в статическом блоке нельзя вызывать checked исключения
@@ -27,7 +25,7 @@ public final class ServiceFactory {
         }
     }
 
-    private ServiceFactory() throws ServiceException, DAOException {
+    private ServiceFactory() throws ServiceException {
     }
 
     // Метод для получения экземпляра фабрики
@@ -39,35 +37,35 @@ public final class ServiceFactory {
     }
 
     // Ленивая инициализация сервисов
-    public ICheckService getCheckService() throws DAOException {
+    public ICheckService getCheckService() throws ServiceException {
         if (checkService == null) {
             checkService = new CheckServiceImpl();
         }
         return checkService;
     }
 
-    public INewsService getNewsService() {
+    public INewsService getNewsService() throws ServiceException {
         if (newsService == null) {
             newsService = new NewsServiceImpl();
         }
         return newsService;
     }
 
-    public IAuthorizationService getAuthorizationService() throws DAOException, ServiceException {
+    public IAuthorizationService getAuthorizationService() throws ServiceException {
         if (authorizationService == null) {
             authorizationService = new AuthorizationServiceImpl();
         }
         return authorizationService;
     }
 
-    public IRegistrationService getRegistrationService() throws DAOException {
+    public IRegistrationService getRegistrationService() throws ServiceException {
         if (registrationService == null) {
             registrationService = new RegistrationServiceImpl();
         }
         return registrationService;
     }
 
-    public IChangeProfileService getChangeProfileService() throws DAOException, ServiceException {
+    public IChangeProfileService getChangeProfileService() throws ServiceException {
         if (changeProfileService == null) {
             changeProfileService = new ChangeProfileServiceImpl();
         }

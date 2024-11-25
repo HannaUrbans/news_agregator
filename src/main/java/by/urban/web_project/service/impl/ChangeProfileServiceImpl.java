@@ -13,15 +13,12 @@ public class ChangeProfileServiceImpl implements IChangeProfileService {
     private final IUserDAO userDAO;
 
     //ранняя инициализация в конструкторе
-    public ChangeProfileServiceImpl() throws ServiceException, DAOException {
-        this.authorDAO = DAOFactory.getInstance().getAuthorDAO();
-        if (this.authorDAO == null) {
-            throw new ServiceException("AuthorDAO is not initialized");
-        }
-
-        this.userDAO = DAOFactory.getInstance().getUserDAO();
-        if (this.userDAO == null) {
-            throw new ServiceException("UserDAO is not initialized");
+    public ChangeProfileServiceImpl() throws ServiceException {
+        try {
+            this.authorDAO = DAOFactory.getInstance().getAuthorDAO();
+            this.userDAO = DAOFactory.getInstance().getUserDAO();
+        } catch (DAOException e) {
+            throw new ServiceException(e);
         }
     }
 

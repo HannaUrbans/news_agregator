@@ -1,7 +1,6 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.model.roles.Author;
 import by.urban.web_project.model.roles.User;
 import by.urban.web_project.service.IChangeProfileService;
@@ -17,11 +16,7 @@ public class ChangeName implements Command {
     private final IChangeProfileService updateTool;
 
     public ChangeName() throws ServiceException {
-        try {
-            this.updateTool = ServiceFactory.getInstance().getChangeProfileService();
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
+        this.updateTool = ServiceFactory.getInstance().getChangeProfileService();
     }
 
     @Override
@@ -61,4 +56,6 @@ public class ChangeName implements Command {
             } else {
                 response.sendRedirect("Controller?command=GO_TO_USER_ACCOUNT_PAGE");
             }
-        }}}
+        }
+    }
+}

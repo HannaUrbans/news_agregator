@@ -15,9 +15,13 @@ public class CheckServiceImpl implements ICheckService {
     private final IAuthorRegistrationKeyDAO checkKeyTool;
 
     //ранняя инициализация в конструкторе
-    public CheckServiceImpl() throws DAOException {
-        DAOFactory daoFactory = DAOFactory.getInstance();
-        this.checkKeyTool = daoFactory.getAuthorRegistrationKeyDAO();
+    public CheckServiceImpl() throws ServiceException {
+        try {
+            DAOFactory daoFactory = DAOFactory.getInstance();
+            this.checkKeyTool = daoFactory.getAuthorRegistrationKeyDAO();
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
     }
 
     /**
