@@ -38,7 +38,7 @@ public class GoToIndexPage implements Command {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Ошибка при получении новостей.");
         }
-        SessionUtils.logCurrentVisitor(request);
+
         System.out.println("Номер сессии при открытии главной страницы: " + request.getSession().getId());
         RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/main_index.jsp");
         dispatcher.forward(request, response);

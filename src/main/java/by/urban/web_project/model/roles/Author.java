@@ -1,6 +1,7 @@
 package by.urban.web_project.model.roles;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Author extends User implements Serializable{
@@ -8,8 +9,8 @@ public class Author extends User implements Serializable{
 
     private String bio;
 
-    public Author(String name, String email, String password, String bio) {
-        super(name, email, password);
+    public Author(int id, LocalDate registrationDate, String name, String email, String password, String bio) {
+        super(id, registrationDate, name, email, password);
         this.setAuthor(true);
         this.bio = bio;
     }

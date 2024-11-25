@@ -1,37 +1,76 @@
 package by.urban.web_project.service;
 
-import by.urban.web_project.service.impl.AuthorizationServiceImpl;
-import by.urban.web_project.service.impl.CheckServiceImpl;
-import by.urban.web_project.service.impl.NewsServiceImpl;
-import by.urban.web_project.service.impl.RegistrationServiceImpl;
+import by.urban.web_project.dao.DAOException;
+import by.urban.web_project.service.impl.*;
 
 public final class ServiceFactory {
-    private static final ServiceFactory instance = new ServiceFactory();
 
-    private final ICheckService checkService = new CheckServiceImpl();
-    private final INewsService newsService = new NewsServiceImpl();
-    private final IAuthorizationService authorizationService = new AuthorizationServiceImpl();
-    private final IRegistrationService registrationService = new RegistrationServiceImpl();
+    //!!! здесь приходится выбрасывать DAO исключения, есть подозрение, что неверно организована работа слоев!!!
+    private static ServiceFactory instance;
 
-    private ServiceFactory() {}
+    // Сервисы, инициализируемые при первом доступе
+    private ICheckService checkService;
+    private INewsService newsService;
+    private IAuthorizationService authorizationService;
+    private IRegistrationService registrationService;
+    private IChangeProfileService changeProfileService;
 
+    // Статический блок для инициализации фабрики
+    static {
+        try {
+            instance = new ServiceFactory();
+        } catch (ServiceException | DAOException e) {
+            System.err.println("Ошибка инициализации ServiceFactory: " + e.getMessage());
+            e.printStackTrace();
+            //в статическом блоке нельзя вызывать checked исключения
+            throw new ExceptionInInitializerError(e);
+        }
+    }
+
+    private ServiceFactory() throws ServiceException, DAOException {
+    }
+
+    // Метод для получения экземпляра фабрики
     public static ServiceFactory getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException("ServiceFactory не был инициализирован.");
+        }
         return instance;
     }
 
-    public ICheckService getCheckService() {
+    // Ленивая инициализация сервисов
+    public ICheckService getCheckService() throws DAOException {
+        if (checkService == null) {
+            checkService = new CheckServiceImpl();
+        }
         return checkService;
     }
 
     public INewsService getNewsService() {
+        if (newsService == null) {
+            newsService = new NewsServiceImpl();
+        }
         return newsService;
     }
 
-    public IAuthorizationService getAuthorizationService() {
+    public IAuthorizationService getAuthorizationService() throws DAOException, ServiceException {
+        if (authorizationService == null) {
+            authorizationService = new AuthorizationServiceImpl();
+        }
         return authorizationService;
     }
 
-    public IRegistrationService getRegistrationService() {
+    public IRegistrationService getRegistrationService() throws DAOException {
+        if (registrationService == null) {
+            registrationService = new RegistrationServiceImpl();
+        }
         return registrationService;
+    }
+
+    public IChangeProfileService getChangeProfileService() throws DAOException, ServiceException {
+        if (changeProfileService == null) {
+            changeProfileService = new ChangeProfileServiceImpl();
+        }
+        return changeProfileService;
     }
 }

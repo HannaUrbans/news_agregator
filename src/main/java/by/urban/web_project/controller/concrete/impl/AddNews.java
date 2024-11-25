@@ -13,8 +13,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -26,16 +24,15 @@ public class AddNews implements Command {
         INewsService newsService = serviceFactory.getNewsService();
 
         try {
-            // Получаем параметры из запроса
+            // Получаем параметры из запроса, которые в запрос передавались через форму
             int newsId = Integer.parseInt(request.getParameter("newsId"));
             String newsImportanceStr = request.getParameter("newsImportance");
-
             NewsImportance newsImportance = NewsImportance.valueOf(newsImportanceStr.toUpperCase());
             String newsTitle = request.getParameter("newsTitle");
             String newsBrief = request.getParameter("newsBrief");
             String newsArticle = request.getParameter("newsArticle");
 
-            // Получаем файл изображения (если есть)
+            // Получаем файл изображения через интерфейс Part
             Part newsPicPart = request.getPart("newsPic");
 
             String fileName = null;
@@ -90,6 +87,7 @@ public class AddNews implements Command {
             // Перенаправляем на страницу с новостями автора
             response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
 
+            // !!! не забыть проверить потом в джсп, выводятся ли эти ошибки
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Неверный формат данных");

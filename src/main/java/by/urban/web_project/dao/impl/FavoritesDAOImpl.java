@@ -1,10 +1,10 @@
 package by.urban.web_project.dao.impl;
 
 import by.urban.web_project.dao.DAOException;
-import by.urban.web_project.dao.FavoritesDAO;
+import by.urban.web_project.dao.IFavoritesDAO;
 import by.urban.web_project.model.Favorites;
 
-public class SQLFavoritesDAO implements FavoritesDAO {
+public class FavoritesDAOImpl implements IFavoritesDAO {
     public void addFavorites(Favorites favorites) throws DAOException {
         System.out.println(favorites.toString());
     }

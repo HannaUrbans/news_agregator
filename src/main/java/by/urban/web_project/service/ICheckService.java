@@ -6,4 +6,6 @@ public interface ICheckService {
     boolean checkPassword(HttpServletRequest request, String passwordForRegistration, String confirmPassword) throws ServiceException;
 
     boolean checkAuthorKey(HttpServletRequest request, String inputAuthorKey) throws ServiceException;
+
+    boolean checkInvalidEmail(String email) throws ServiceException;
 }

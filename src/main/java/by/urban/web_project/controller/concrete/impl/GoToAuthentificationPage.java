@@ -1,7 +1,6 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.utils.SessionUtils;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,8 +21,6 @@ public class GoToAuthentificationPage implements Command {
             }
             return;
         }
-
-        SessionUtils.logCurrentVisitor(request);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/AuthPage.jsp");
         dispatcher.forward(request, response);

@@ -11,7 +11,7 @@ import java.io.IOException;
 public class LogOut implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        SessionUtils.logCurrentVisitor(request);
+
 
         // Проверяем, существует ли сессия
         if (request.getSession(false) != null &&
@@ -21,7 +21,7 @@ public class LogOut implements Command {
         } else {
             request.getSession().setAttribute("logoutFail", "Вы не были зарегистрированы в системе");
         }
-
+        SessionUtils.logCurrentVisitor(request);
         response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
     }
 }

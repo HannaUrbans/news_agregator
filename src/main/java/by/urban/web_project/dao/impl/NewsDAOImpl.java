@@ -1,10 +1,10 @@
 package by.urban.web_project.dao.impl;
 
 import by.urban.web_project.dao.DAOException;
-import by.urban.web_project.dao.NewsDAO;
+import by.urban.web_project.dao.INewsDAO;
 import by.urban.web_project.model.News;
 
-public class SQLNewsDAO implements NewsDAO {
+public class NewsDAOImpl implements INewsDAO {
     public void addNews(News news) throws DAOException {
         System.out.println(news.toString());
     }

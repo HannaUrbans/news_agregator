@@ -1,5 +1,6 @@
 package by.urban.web_project.controller;
 
+import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.service.ServiceException;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
@@ -21,7 +22,7 @@ public class Controller extends HttpServlet {
 
 	private final CommandProvider provider = new CommandProvider();
 
-	public Controller() {
+	public Controller() throws DAOException, ServiceException {
 		super();
 	}
 

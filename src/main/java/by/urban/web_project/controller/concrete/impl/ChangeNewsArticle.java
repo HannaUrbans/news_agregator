@@ -45,5 +45,5 @@ public class ChangeNewsArticle implements Command {
 
         response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
 
-}
+    }
 }

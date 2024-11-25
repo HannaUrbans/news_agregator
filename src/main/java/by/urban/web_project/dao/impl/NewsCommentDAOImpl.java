@@ -1,10 +1,10 @@
 package by.urban.web_project.dao.impl;
 
 import by.urban.web_project.dao.DAOException;
-import by.urban.web_project.dao.NewsCommentDAO;
+import by.urban.web_project.dao.INewsCommentDAO;
 import by.urban.web_project.model.NewsComment;
 
-public class SQLNewsCommentDAO implements NewsCommentDAO {
+public class NewsCommentDAOImpl implements INewsCommentDAO {
     public void addComment(NewsComment comment) throws DAOException {
         System.out.println(comment);
     }

@@ -2,7 +2,7 @@ package by.urban.web_project.dao;
 
 import by.urban.web_project.model.News;
 
-public interface NewsDAO {
+public interface INewsDAO {
     void addNews(News news) throws DAOException;
 
     boolean deleteNews(int newsId) throws DAOException;

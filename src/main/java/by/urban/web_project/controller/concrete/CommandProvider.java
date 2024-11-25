@@ -1,6 +1,8 @@
 package by.urban.web_project.controller.concrete;
 
 import by.urban.web_project.controller.concrete.impl.*;
+import by.urban.web_project.dao.DAOException;
+import by.urban.web_project.service.ServiceException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +10,7 @@ import java.util.Map;
 public class CommandProvider {
     private Map<CommandName, Command> commands = new HashMap<>();
 
-    public CommandProvider() {
+    public CommandProvider() throws DAOException, ServiceException {
         commands.put(CommandName.DO_AUTH, new DoAuth());
         commands.put(CommandName.DO_REGISTRATION, new DoRegistration());
         commands.put(CommandName.GO_TO_REGISTRATION_PAGE, new GoToRegistrationPage());

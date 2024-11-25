@@ -17,8 +17,6 @@ public class GoToAuthorAccountPage implements Command {
             return;
         }
 
-        SessionUtils.logCurrentVisitor(request);
-
         RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/AuthorAccountPage.jsp");
         dispatcher.forward(request, response);
     }

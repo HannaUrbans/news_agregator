@@ -16,8 +16,6 @@ public class GoToUserAccountPage implements Command {
 			response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
 			return;
 		}
-
-		SessionUtils.logCurrentVisitor(request);
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/UserAccountPage.jsp");
 		dispatcher.forward(request, response);
