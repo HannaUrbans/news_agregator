@@ -61,4 +61,12 @@ public class ChangeProfileServiceImpl implements IChangeProfileService {
         }
     }
 
+    @Override
+    public void updateUserPassword(int userId, String newPassword) throws ServiceException {
+        try {
+            userDAO.updateUserPassword(userId, newPassword);
+        } catch (DAOException e) {
+            throw new ServiceException("Ошибка при обновлении пароля пользователя", e);
+        }
+    }
 }

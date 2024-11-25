@@ -122,7 +122,7 @@ public class UserDAOImpl implements IUserDAO {
      */
     @Override
     public void updateUserPassword(int userId, String newPassword) throws DAOException {
-        String query = "UPDATE news_management.users SET author_password = ? WHERE users_id=?";
+        String query = "UPDATE news_management.users SET user_password = ? WHERE user_id=?";
         try (Connection connection = dbConnectionTool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, newPassword);

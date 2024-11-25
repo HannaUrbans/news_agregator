@@ -8,4 +8,6 @@ public interface IChangeProfileService {
     void updateUserName(int userId, String newName) throws ServiceException;
 
     void updateAuthorPassword(int authorId, String newPassword) throws ServiceException;
+
+    void updateUserPassword(int userId, String newPassword) throws ServiceException;
 }
