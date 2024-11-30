@@ -1,11 +1,12 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.model.roles.Author;
-import by.urban.web_project.model.roles.User;
+import by.urban.web_project.model.User;
 import by.urban.web_project.service.IChangeProfileService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
+import by.urban.web_project.utils.ProfileFieldToChange;
+import by.urban.web_project.utils.UpdateUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,42 +21,46 @@ public class ChangeName implements Command {
     }
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        //проверяем, жива ли сессия
+        if (request.getSession(false) == null){
+            request.setAttribute("errorMessage", "Вы не авторизованы.");
+            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+        }
+
+        //кастуем, потому что getAttribute возвращает Object
+        //атрибут автора назначали при авторизации
         String newName = request.getParameter("newName");
-        User user = null;
-        Author author = null;
+        User user = (User) request.getSession().getAttribute("user");
+        User author = (User) request.getSession().getAttribute("author");
 
         if (newName != null && !newName.trim().isEmpty()) {
-            user = (User) request.getSession().getAttribute("user");
-            author = (Author) request.getSession().getAttribute("author");
+            boolean updateSuccess = false;
 
             if (author != null) {
-                try {
-                    updateTool.updateAuthorName(author.getId(), newName);
-                    author.setName(newName);
-                    request.getSession().setAttribute("author", author);
-                    request.getSession().setAttribute("changeNameSuccess", "Имя успешно обновлено");
-                } catch (ServiceException e) {
-                    e.printStackTrace();
-                }
+                updateSuccess = UpdateUtils.updateProfileField(author, newName, ProfileFieldToChange.NAME, updateTool); // Обновляем имя
             } else if (user != null) {
-                try {
-                    updateTool.updateUserName(user.getId(), newName);
-                    user.setName(newName);
-                    request.getSession().setAttribute("user", user);
-                    request.getSession().setAttribute("changeNameSuccess", "Имя успешно обновлено");
-                } catch (ServiceException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                request.getSession().setAttribute("changeNameError", "Вы не задали новое имя");
+                updateSuccess = UpdateUtils.updateProfileField(user, newName, ProfileFieldToChange.NAME, updateTool); // Обновляем имя
             }
 
-            if (author != null) {
-                response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
+            // Обработка результата
+            if (updateSuccess) {
+                request.getSession().setAttribute("changeNameSuccess", "Имя успешно обновлено");
+                if (author != null) {
+                    request.getSession().setAttribute("author", author);
+                    response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
+                } else {
+                    request.getSession().setAttribute("user", user);
+                    response.sendRedirect("Controller?command=GO_TO_USER_ACCOUNT_PAGE");
+                }
             } else {
+                request.getSession().setAttribute("changeNameError", "Произошла ошибка при обновлении имени");
                 response.sendRedirect("Controller?command=GO_TO_USER_ACCOUNT_PAGE");
             }
+        } else {
+            request.getSession().setAttribute("changeNameError", "Вы не задали новое имя");
+            response.sendRedirect("Controller?command=GO_TO_USER_ACCOUNT_PAGE");
         }
     }
 }

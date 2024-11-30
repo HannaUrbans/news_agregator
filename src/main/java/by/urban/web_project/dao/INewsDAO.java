@@ -12,5 +12,4 @@ public interface INewsDAO {
     void changeNewsBrief(int newsId, String brief) throws DAOException;
 
     void changeNewsText(int newsId, String newsText) throws DAOException;
-
 }

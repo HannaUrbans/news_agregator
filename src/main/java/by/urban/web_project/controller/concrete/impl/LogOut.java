@@ -1,7 +1,6 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.utils.SessionUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +20,7 @@ public class LogOut implements Command {
         } else {
             request.getSession().setAttribute("logoutFail", "Вы не были зарегистрированы в системе");
         }
-        SessionUtils.logCurrentVisitor(request);
+
         response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
     }
 }

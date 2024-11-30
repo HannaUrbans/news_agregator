@@ -52,7 +52,7 @@
                             ${sessionScope.author.name}
                         </c:when>
                         <c:otherwise>
-                            ${sessionScope.authorGetName}
+                            ${sessionScope.nameFromDb}
                         </c:otherwise>
                     </c:choose>
                 </h4>
@@ -83,17 +83,27 @@
                         </c:if>
                         <h4>E-mail</h4>
                         <c:if test="${not (sessionScope.author eq null)}">
-                            ${sessionScope.author.email}
+                            ${sessionScope.emailFromDb}
                         </c:if>
 
                         <h4>Пароль</h4>
                         <p>
-                            <c:if test="${not empty sessionScope.author.password}">
-                                <c:set var="passwordLength" value="${fn:length(sessionScope.author.password)}"/>
-                                <c:forEach var="i" begin="1" end="${passwordLength}">
-                                    *
-                                </c:forEach>
-                            </c:if>
+                            <c:choose>
+                                <c:when test="${not empty sessionScope.newPassword}">
+                                    <c:set var="passwordLength" value="${fn:length(sessionScope.newPassword)}"/>
+                                    <c:forEach var="i" begin="1" end="${passwordLength}">
+                                        *
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:if test="${not empty sessionScope.passwordFromDb}">
+                                        <c:set var="passwordLength" value="${fn:length(sessionScope.passwordFromDb)}"/>
+                                        <c:forEach var="i" begin="1" end="${passwordLength}">
+                                            *
+                                        </c:forEach>
+                                    </c:if>
+                                </c:otherwise>
+                            </c:choose>
                         </p>
                         <a href="Controller?command=GO_TO_CHANGE_FORM&formType=password">Изменить пароль</a>
                         <c:if test="${not empty sessionScope.changePasswordSuccess}">
@@ -117,7 +127,7 @@
                 ${sessionScope.newBio}
             </c:when>
             <c:otherwise>
-                ${sessionScope.author.bio}
+                ${sessionScope.bioFromDb}
             </c:otherwise>
         </c:choose>
         <br>

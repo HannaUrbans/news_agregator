@@ -14,6 +14,12 @@ public class GoToChangeForm implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        //проверяем, жива ли сессия
+        if (request.getSession(false) == null){
+            request.setAttribute("errorMessage", "Вы не авторизованы.");
+            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+        }
+
         String formType = request.getParameter("formType");
         if (formType == null) {
             response.sendRedirect("Controller?command=NO_SUCH_COMMAND");

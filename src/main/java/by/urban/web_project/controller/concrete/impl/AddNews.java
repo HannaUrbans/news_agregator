@@ -4,24 +4,33 @@ import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.mockdb.NewsDatabase;
 import by.urban.web_project.model.News;
 import by.urban.web_project.model.NewsImportance;
+import by.urban.web_project.model.UserRole;
+import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
 import by.urban.web_project.utils.ImageUtils;
-import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
 public class AddNews implements Command {
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, MessagingException, ServiceException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServiceException, ServletException {
+
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        ICheckService checkService = serviceFactory.getCheckService();
         INewsService newsService = serviceFactory.getNewsService();
+
+        //проверяем, что в сессии автор и что сессия жива (неявно, но если request.getSession().getAttribute(sessionAttribute) равно null, то сессия не жива
+        if (!checkService.checkIfRoleAuthorizedForAction(request, response, "author", UserRole.AUTHOR)) {
+            return;
+        }
 
         try {
             // Получаем параметры из запроса, которые в запрос передавались через форму
@@ -91,11 +100,11 @@ public class AddNews implements Command {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Неверный формат данных");
-            request.getRequestDispatcher("/stub.jsp").forward(request, response);
+            response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Ошибка при добавлении новости.");
-            request.getRequestDispatcher("/stub.jsp").forward(request, response);
+            response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
         }
     }
 }

@@ -16,7 +16,7 @@ import static by.urban.web_project.mockdb.NewsDatabase.getAllNews;
 
 public class ShowAllNews implements Command {
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, MessagingException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         List<News> newsList = getAllNews();
         //выводится в обратном порядке добавления в список
         Collections.reverse(newsList);

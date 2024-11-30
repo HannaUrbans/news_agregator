@@ -5,7 +5,6 @@ import by.urban.web_project.model.News;
 import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
-import by.urban.web_project.utils.SessionUtils;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

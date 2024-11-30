@@ -1,14 +1,15 @@
 package by.urban.web_project.service;
 
 
+import by.urban.web_project.model.UserRole;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface IRegistrationService {
-    boolean checkUserReg(String name, String email, String password) throws ServiceException;
+    UserRole specifyRoleKeyBelongsTo(HttpServletRequest request, String inputRegKey) throws ServiceException;
 
-    boolean checkAuthorReg(String name, String email, String password, String bio, String authorKey) throws ServiceException;
+    int checkUserReg(String name, String email, String password) throws ServiceException;
 
-    boolean checkUserEmailExistsInDB(HttpServletRequest request, String email) throws ServiceException;
+    int checkExclusiveUserReg(String name, String email, String password, String regKey, UserRole userRole) throws ServiceException;
 
-    boolean checkAuthorEmailExistsInDB(HttpServletRequest request, String email) throws ServiceException;
+    boolean checkEmailExistsInDB(HttpServletRequest request, String email) throws ServiceException;
 }

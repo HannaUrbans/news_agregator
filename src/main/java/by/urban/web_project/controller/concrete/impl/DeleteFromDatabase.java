@@ -2,31 +2,37 @@ package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.model.User;
+import by.urban.web_project.model.UserRole;
 import by.urban.web_project.service.IChangeProfileService;
+import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
 import by.urban.web_project.utils.ProfileFieldToChange;
 import by.urban.web_project.utils.UpdateUtils;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-public class ChangePassword implements Command {
+public class DeleteFromDatabase implements Command {
     private final IChangeProfileService updateTool;
 
-    public ChangePassword() throws ServiceException {
+    public DeleteFromDatabase() throws ServiceException {
         this.updateTool = ServiceFactory.getInstance().getChangeProfileService();
     }
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        //проверяем, жива ли сессия
-        if (request.getSession(false) == null){
-            request.setAttribute("errorMessage", "Вы не авторизованы.");
-            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServiceException {
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        ICheckService checkService = serviceFactory.getCheckService();
+
+        //проверяем, что в сессии админ и что сессия жива (неявно, но если request.getSession().getAttribute(sessionAttribute) равно null, то сессия не жива
+        if (!checkService.checkIfRoleAuthorizedForAction(request, response, "admin", UserRole.ADMIN)) {
+            return;
         }
+
+
+
 
         String newPassword = request.getParameter("newPassword");
         User user = (User) request.getSession().getAttribute("user");

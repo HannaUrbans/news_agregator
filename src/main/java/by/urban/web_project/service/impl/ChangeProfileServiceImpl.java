@@ -2,20 +2,17 @@ package by.urban.web_project.service.impl;
 
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.DAOFactory;
-import by.urban.web_project.dao.roles.IAuthorDAO;
-import by.urban.web_project.dao.roles.IUserDAO;
+import by.urban.web_project.dao.IUserDAO;
 import by.urban.web_project.service.IChangeProfileService;
 import by.urban.web_project.service.ServiceException;
 
 public class ChangeProfileServiceImpl implements IChangeProfileService {
 
-    private final IAuthorDAO authorDAO;
     private final IUserDAO userDAO;
 
     //ранняя инициализация в конструкторе
     public ChangeProfileServiceImpl() throws ServiceException {
         try {
-            this.authorDAO = DAOFactory.getInstance().getAuthorDAO();
             this.userDAO = DAOFactory.getInstance().getUserDAO();
         } catch (DAOException e) {
             throw new ServiceException(e);
@@ -23,45 +20,27 @@ public class ChangeProfileServiceImpl implements IChangeProfileService {
     }
 
     @Override
-    public void updateBio(int authorId, String newBio) throws ServiceException {
+    public void updateBio(int id, String newBio) throws ServiceException {
         try {
-            authorDAO.updateAuthorBio(authorId, newBio);
+            userDAO.updateBio(id, newBio);
         } catch (DAOException e) {
             throw new ServiceException("Ошибка при обновлении био автора", e);
         }
     }
 
     @Override
-    public void updateAuthorName(int authorId, String newName) throws ServiceException {
+    public void updateName(int id, String newName) throws ServiceException {
         try {
-            authorDAO.updateAuthorName(authorId, newName);
-        } catch (DAOException e) {
-            throw new ServiceException("Ошибка при обновлении имени автора", e);
-        }
-    }
-
-    @Override
-    public void updateUserName(int userId, String newName) throws ServiceException {
-        try {
-            userDAO.updateUserName(userId, newName);
+            userDAO.updateName(id, newName);
         } catch (DAOException e) {
             throw new ServiceException("Ошибка при обновлении имени пользователя", e);
         }
     }
 
     @Override
-    public void updateAuthorPassword(int authorId, String newPassword) throws ServiceException {
+    public void updatePassword(int id, String newPassword) throws ServiceException {
         try {
-            authorDAO.updateAuthorPassword(authorId, newPassword);
-        } catch (DAOException e) {
-            throw new ServiceException("Ошибка при обновлении имени автора", e);
-        }
-    }
-
-    @Override
-    public void updateUserPassword(int userId, String newPassword) throws ServiceException {
-        try {
-            userDAO.updateUserPassword(userId, newPassword);
+            userDAO.updatePassword(id, newPassword);
         } catch (DAOException e) {
             throw new ServiceException("Ошибка при обновлении пароля пользователя", e);
         }

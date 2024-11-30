@@ -2,7 +2,6 @@ package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.utils.EmailSending;
-import by.urban.web_project.utils.SessionUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,9 +17,6 @@ public class WriteAdmin implements Command {
         String message = request.getParameter("message");
         // именно Part, потому что содержимое НЕ строка
         Part inputFile = request.getPart("inputFile");
-
-        SessionUtils.logCurrentVisitor(request);
-        System.out.println("Текущий URL: " + request.getRequestURL().toString());
 
         try {
             EmailSending.sendEmail(request.getServletContext(), email, message, inputFile);

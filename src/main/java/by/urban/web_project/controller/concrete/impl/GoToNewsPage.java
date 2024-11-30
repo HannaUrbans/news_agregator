@@ -3,7 +3,6 @@ package by.urban.web_project.controller.concrete.impl;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.mockdb.NewsDatabase;
 import by.urban.web_project.model.News;
-import by.urban.web_project.utils.SessionUtils;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +16,7 @@ public class GoToNewsPage implements Command {
         // получаем ID новости из параметров запроса
         String newsId = request.getParameter("newsId");
         // получаем новость по ID
-        News news = NewsDatabase.getNewsById(Integer.valueOf(newsId));
+        News news = NewsDatabase.getNewsById(Integer.parseInt(newsId));
 
         if (news != null) {
             request.setAttribute("news", news);

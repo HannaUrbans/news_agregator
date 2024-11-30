@@ -1,10 +1,12 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.model.roles.Author;
+import by.urban.web_project.model.User;
 import by.urban.web_project.service.IChangeProfileService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
+import by.urban.web_project.utils.ProfileFieldToChange;
+import by.urban.web_project.utils.UpdateUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,32 +22,31 @@ public class ChangeBio implements Command {
     }
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        //кастуем, потому что getAttribute возвращает Object
-        Author author = (Author) request.getSession().getAttribute("author");
+        //проверяем, жива ли сессия
+        if (request.getSession(false) == null){
+            request.setAttribute("errorMessage", "Вы не авторизованы.");
+            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+        }
 
-        String newBio = request.getParameter("newBio");
+        // Получаем пользователя из сессии
+        User user = (User) request.getSession().getAttribute("author");
+        String newValue = request.getParameter("newBio"); // Пример для биографии
+        ProfileFieldToChange field = ProfileFieldToChange.BIO; // Указание, что обновляется биография
 
-        if (newBio != null && !newBio.trim().isEmpty()) {
-            //меняем био
-            try {
-                //update запрос в sql с новым био
-                updateTool.updateBio(author.getId(), newBio);
-                //в бд уже новая информация, теперь объекту присваиваем новое био, чтобы передать в атрибуты
-                author.setBio(newBio);
-                //обновляем профиль автора и передаем дальше в сессию уже с новой биографией
-                request.getSession().setAttribute("author", author);
+        if (newValue != null && !newValue.trim().isEmpty()) {
+            boolean isUpdated = UpdateUtils.updateProfileField(user, newValue, field, updateTool);
 
+            if (isUpdated) {
+                request.getSession().setAttribute("newBio", newValue);
                 request.getSession().setAttribute("changeBioSuccess", "Биография успешно обновлена");
-
-            } catch (ServiceException e) {
-                e.printStackTrace();
+            } else {
+                request.getSession().setAttribute("changeBioError", "Произошла ошибка при обновлении биографии");
             }
         } else {
             request.getSession().setAttribute("changeBioError", "Вы не написали ничего в поле");
         }
 
         response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
-    }
-}
+    }}

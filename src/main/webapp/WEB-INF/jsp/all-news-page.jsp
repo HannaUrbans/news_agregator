@@ -59,8 +59,14 @@
                     <strong>${news.title}</strong><br/>
                     <em>${news.brief}</em><br/>
                     <!-- Отображаем полный текст новости только для зарегистрированных пользователей -->
-                    <c:if test="${not empty sessionScope.email}">
+                    <c:if test="${not empty sessionScope.id}">
                         <p>${news.newsText}</p>
+                    </c:if>
+                    <!-- Отображаем кнопку только для зарегистрированных админов -->
+                    <c:if test="${not empty sessionScope.admin}">
+                        <form action="Controller" method="Get">
+                            <button type="submit" name="command" value="SHOW_STUB_PAGE">Удалить из базы данных</button>
+                        </form>
                     </c:if>
                     <hr/>
                 </li>

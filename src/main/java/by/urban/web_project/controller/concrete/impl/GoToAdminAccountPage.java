@@ -8,15 +8,15 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-public class GoToAuthorAccountPage implements Command {
+public class GoToAdminAccountPage implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getSession(false) == null || request.getSession().getAttribute("author") == null) {
+        if (request.getSession(false) == null || request.getSession().getAttribute("admin") == null) {
             response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
             return;
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/author-account-page.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/admin-account-page.jsp");
         dispatcher.forward(request, response);
     }
 }

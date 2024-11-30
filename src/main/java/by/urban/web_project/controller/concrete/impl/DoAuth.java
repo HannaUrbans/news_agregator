@@ -1,15 +1,15 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.mockdb.NewsDatabase;
 import by.urban.web_project.model.News;
-import by.urban.web_project.model.roles.Author;
-import by.urban.web_project.model.roles.User;
+import by.urban.web_project.model.ProfileDataField;
+import by.urban.web_project.model.User;
+import by.urban.web_project.model.UserRole;
 import by.urban.web_project.service.IAuthorizationService;
+import by.urban.web_project.service.IProfileDataService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
-import by.urban.web_project.utils.SessionUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,8 +21,10 @@ import java.util.List;
 public class DoAuth implements Command {
     private final ServiceFactory serviceFactory = ServiceFactory.getInstance();
     private final IAuthorizationService logicForAuthorization = serviceFactory.getAuthorizationService();
+    private final IProfileDataService profileDataTool = serviceFactory.getProfileDataService();
 
-    public DoAuth() throws DAOException, ServiceException {
+    //idea заставила пробросить в конструкторе исключение из-за serviceFactory.getAuthorizationService()
+    public DoAuth() throws ServiceException {
     }
 
     @Override
@@ -31,48 +33,37 @@ public class DoAuth implements Command {
         String password = request.getParameter("password");
 
         try {
-            System.out.println("Авторизация пользователя: " + email);
+            //проверяем формат email + авторизован ли посетитель
+            User authorizedObject = logicForAuthorization.checkAuth(email, password);
+            //общий атрибут у всех ролей, который впоследствии будет использоваться для уникальных действий для ВСЕХ залогинившихся ролей
+            request.getSession().setAttribute("id", authorizedObject.getId());
+            request.getSession().setAttribute("nameFromDb", authorizedObject.getName());
 
-            //String hashedPassword = PasswordHasher.hashPasswordForRegistration(password);  // Хешируем введённый пароль
-
-            //проверяем формат email, пробуем авторизоваться как автор или как юзер
-            Object authorizedObject = logicForAuthorization.checkAuth(email, password);
-            //Object authorizedObject = logicForAuthorization.checkAuth(email, hashedPassword);
-
-            if (authorizedObject != null) {
-                //приводим к классу Автор
-                if (authorizedObject instanceof Author) {
-                    Author author = (Author) authorizedObject;
-
-                    request.getSession(true).setAttribute("author", author);
-                    request.getSession(true).setAttribute("email", email);
-
+            switch (authorizedObject.getUserRole()) {
+                case UserRole.ADMIN:
+                    request.getSession(true).setAttribute("admin", authorizedObject);
+                    System.out.println( "В сети " + authorizedObject);
+                    response.sendRedirect("Controller?command=GO_TO_ADMIN_ACCOUNT_PAGE");
+                    break;
+                case UserRole.AUTHOR:
+                    request.getSession(true).setAttribute("author", authorizedObject);
+                    request.getSession().setAttribute("emailFromDb",  profileDataTool.getDataFromDatabase(authorizedObject.getId(), ProfileDataField.EMAIL));
+                    request.getSession().setAttribute("passwordFromDb",  profileDataTool.getDataFromDatabase(authorizedObject.getId(), ProfileDataField.PASSWORD));
+                    request.getSession().setAttribute("bioFromDb",  profileDataTool.getDataFromDatabase(authorizedObject.getId(), ProfileDataField.BIO));
                     List<News> authorNewsList = NewsDatabase.getNewsByAuthor(email);
                     Collections.reverse(authorNewsList);
-                    System.out.println("authorNewsList size: " + authorNewsList.size());
-
                     request.getSession().setAttribute("authorNewsList", authorNewsList);
-                    request.getSession().setAttribute("authorGetName", author.getName());
-
+                    System.out.println( "В сети " + authorizedObject);
                     response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
-                }
-                // если не привели без проблем к классу Author, пробуем User
-                else if (authorizedObject instanceof User) {
-                    User user = (User) authorizedObject;
-
-                    request.getSession(true).setAttribute("user", user);
-                    request.getSession(true).setAttribute("email", email);
-                    request.getSession().setAttribute("userGetName", user.getName());
-
+                    break;
+                case UserRole.USER:
+                    request.getSession(true).setAttribute("user", authorizedObject);
+                    request.getSession().setAttribute("emailFromDb",  profileDataTool.getDataFromDatabase(authorizedObject.getId(), ProfileDataField.EMAIL));
+                    request.getSession().setAttribute("passwordFromDb",  profileDataTool.getDataFromDatabase(authorizedObject.getId(), ProfileDataField.PASSWORD));
+                    System.out.println( "В сети " + authorizedObject);
                     response.sendRedirect("Controller?command=GO_TO_USER_ACCOUNT_PAGE");
-                }
-            } else {
-                request.getSession().setAttribute("authError", "Неправильный email или пароль");
-                response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+                    break;
             }
-
-            //выводим на консоль, кто авторизовался
-            SessionUtils.logCurrentVisitor(request);
 
         } catch (ServiceException e) {
             e.printStackTrace();
