@@ -711,7 +711,7 @@ h4 .breaking_news {
     font-size: 14px;
 }
 
-#newBio, #newNewsText {
+#newBio, #newNewsContent {
     height: 600px;
     width: 300px;
     padding: 10px;

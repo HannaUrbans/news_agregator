@@ -16,7 +16,8 @@ public class ChangeNewsArticle implements Command {
 
         String newNewsTitle = request.getParameter("newNewsTitle");
         String newNewsBrief = request.getParameter("newNewsBrief");
-        String newNewsText = request.getParameter("newNewsText");
+        String newNewsContent = request.getParameter("newNewsContent");
+        String newNewsCategory = request.getParameter("newNewsCategory");
 
         //пришло из GoToChangeForm.java
         String newsIdString = (String) request.getSession().getAttribute("newsId");
@@ -32,9 +33,13 @@ public class ChangeNewsArticle implements Command {
                 if (newNewsBrief != null && !newNewsBrief.trim().isEmpty()) {
                     news.setBrief(newNewsBrief);
                 }
-                if (newNewsText != null && !newNewsText.trim().isEmpty()) {
-                    news.setNewsText(newNewsText);
+                if (newNewsContent != null && !newNewsContent.trim().isEmpty()) {
+                    news.setContent(newNewsContent);
                 }
+                if (newNewsCategory != null && !newNewsCategory.trim().isEmpty()) {
+                    news.setCategory(newNewsCategory);
+                }
+
 
                 request.getSession().setAttribute("authorNewsList", authorNewsList);
                 request.getSession().setAttribute("changeArticleSuccess", "Статья успешно обновлена");

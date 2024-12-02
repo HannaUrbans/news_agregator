@@ -1,112 +1,143 @@
 package by.urban.web_project.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 public class News implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int newsId;
-	private String newsAuthor;
 	private NewsImportance importance;
 	private String title;
 	private String imageUrl;
 	private String brief;
-	private String newsText;
+	private String content;
+	private LocalDateTime publishDate;
+	private List <User> newsAuthor;
+	private String category;
 
-	public News() {
-	}
-
-	public News(int newsId, String newsAuthor, NewsImportance importance, String title, String imageUrl, String brief, String newsText) {
-		this.newsId = newsId;
-		this.newsAuthor = newsAuthor;
+	public News(){}
+	public News(NewsImportance importance, String title, String imageUrl, String brief, String content, List <User> newsAuthor, String category) {
 		this.importance = importance;
 		this.title = title;
 		this.imageUrl = imageUrl;
 		this.brief = brief;
-		this.newsText = newsText;
+		this.content = content;
+		this.newsAuthor = newsAuthor;
+		this.category = category;
+	}
+
+	public News(int newsId, NewsImportance importance, String title, String imageUrl, String brief, String content, LocalDateTime publishDate, List<User> newsAuthor, String category) {
+		this.newsId = newsId;
+		this.importance = importance;
+		this.title = title;
+		this.imageUrl = imageUrl;
+		this.brief = brief;
+		this.content = content;
+		this.publishDate = publishDate;
+		this.newsAuthor = newsAuthor;
+		this.category = category;
 	}
 
 	public int getNewsId() {
 		return newsId;
 	}
 
-	public String getNewsAuthor() {
-		return newsAuthor;
+	public void setNewsId(int newsId) {
+		this.newsId = newsId;
 	}
 
 	public NewsImportance getImportance() {
 		return importance;
 	}
 
-	public String getTitle() {
-		return title;
-	}
-
-	public String getImageUrl() {
-		return imageUrl;
-	}
-
-	public String getBrief() {
-		return brief;
-	}
-
-	public String getNewsText() {
-		return newsText;
-	}
-
-	public void setNewsId(int newsId) {
-		this.newsId = newsId;
-	}
-
-	public void setNewsAuthor(String newsAuthor) {
-		this.newsAuthor = newsAuthor;
-	}
-
 	public void setImportance(NewsImportance importance) {
 		this.importance = importance;
+	}
+
+	public String getTitle() {
+		return title;
 	}
 
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+
+	public String getBrief() {
+		return brief;
 	}
 
 	public void setBrief(String brief) {
 		this.brief = brief;
 	}
 
-	public void setNewsText(String newsText) {
-		this.newsText = newsText;
+	public String getContent() {
+		return content;
 	}
 
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public LocalDateTime getPublishDate() {
+		return publishDate;
+	}
+
+	public void setPublishDate(LocalDateTime publishDate) {
+		this.publishDate = publishDate;
+	}
+
+	public List <User> getNewsAuthor() {
+		return newsAuthor;
+	}
+
+	public void setNewsAuthor(List<User> newsAuthor) {
+		this.newsAuthor = newsAuthor;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		News news = (News) o;
-		return newsId == news.newsId && Objects.equals(newsAuthor, news.newsAuthor) && importance == news.importance && Objects.equals(title, news.title) && Objects.equals(imageUrl, news.imageUrl) && Objects.equals(brief, news.brief) && Objects.equals(newsText, news.newsText);
+		return newsId == news.newsId && importance == news.importance && Objects.equals(title, news.title) && Objects.equals(imageUrl, news.imageUrl) && Objects.equals(brief, news.brief) && Objects.equals(content, news.content) && Objects.equals(publishDate, news.publishDate) && Objects.equals(newsAuthor, news.newsAuthor) && Objects.equals(category, news.category);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(newsId, newsAuthor, importance, title, imageUrl, brief, newsText);
+		return Objects.hash(newsId, importance, title, imageUrl, brief, content, publishDate, newsAuthor, category);
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getName() +"{" +
+		return getClass().getName() + "{" +
 				"newsId=" + newsId +
-				", newsAuthor='" + newsAuthor + '\'' +
 				", importance=" + importance +
 				", title='" + title + '\'' +
 				", imageUrl='" + imageUrl + '\'' +
 				", brief='" + brief + '\'' +
-				", newsText='" + newsText + '\'' +
+				", content='" + content + '\'' +
+				", publishDate=" + publishDate +
+				", newsAuthor=" + newsAuthor +
+				", category='" + category + '\'' +
 				'}';
 	}
 }

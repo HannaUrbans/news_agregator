@@ -13,7 +13,6 @@ public class DAOFactory {
     private INewsCategoryDAO sqlNewsCategoryImpl;
     private INewsCommentDAO sqlNewsCommentImpl;
     private INewsDAO sqlNewsImpl;
-    private ISessionDAO sqlSessionImpl;
 
     private DAOFactory() {
     }
@@ -42,38 +41,32 @@ public class DAOFactory {
         return sqlUserImpl;
     }
 
-    public IFavoritesDAO getFavoritesDAO() {
+    public IFavoritesDAO getFavoritesDAO() throws DAOException {
         if (sqlFavoritesImpl == null) {
             sqlFavoritesImpl = new FavoritesDAOImpl();
         }
         return sqlFavoritesImpl;
     }
 
-    public INewsCategoryDAO getNewsCategoryDAO() {
+    public INewsCategoryDAO getNewsCategoryDAO() throws DAOException {
         if (sqlNewsCategoryImpl == null) {
             sqlNewsCategoryImpl = new NewsCategoryDAOImpl();
         }
         return sqlNewsCategoryImpl;
     }
 
-    public INewsCommentDAO getNewsCommentDAO() {
+    public INewsCommentDAO getNewsCommentDAO() throws DAOException {
         if (sqlNewsCommentImpl == null) {
             sqlNewsCommentImpl = new NewsCommentDAOImpl();
         }
         return sqlNewsCommentImpl;
     }
 
-    public INewsDAO getNewsDAO() {
+    public INewsDAO getNewsDAO() throws DAOException {
         if (sqlNewsImpl == null) {
             sqlNewsImpl = new NewsDAOImpl();
         }
         return sqlNewsImpl;
     }
 
-    public ISessionDAO getSessionDAO() {
-        if (sqlSessionImpl == null) {
-            sqlSessionImpl = new SessionDAOImpl();
-        }
-        return sqlSessionImpl;
-    }
 }

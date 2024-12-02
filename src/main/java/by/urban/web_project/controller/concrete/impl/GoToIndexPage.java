@@ -2,6 +2,7 @@ package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.model.News;
+import by.urban.web_project.model.NewsImportance;
 import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
@@ -20,9 +21,9 @@ public class GoToIndexPage implements Command {
         INewsService newsService = serviceFactory.getNewsService();
 
         try {
-            News breakingNews = newsService.getBreakingNews();
-            News topNews = newsService.getTopNews();
-            List<News> regularNewsList = newsService.getRegularNews();
+            News breakingNews = newsService.getNewsByType(NewsImportance.BREAKING).get(0);
+            News topNews = newsService.getNewsByType(NewsImportance.TOP).get(0);
+            List<News> regularNewsList = newsService.getNewsByType(NewsImportance.REGULAR);
 
             if (breakingNews != null) {
                 request.setAttribute("breakingNews", breakingNews); // выводим последнюю добавленную срочную новость

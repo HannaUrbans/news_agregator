@@ -1,6 +1,8 @@
 package by.urban.web_project.service.impl;
 
-import by.urban.web_project.mockdb.NewsDatabase;
+import by.urban.web_project.dao.DAOException;
+import by.urban.web_project.dao.DAOFactory;
+import by.urban.web_project.dao.INewsDAO;
 import by.urban.web_project.model.News;
 import by.urban.web_project.model.NewsImportance;
 import by.urban.web_project.service.INewsService;
@@ -15,73 +17,72 @@ public class NewsServiceImpl implements INewsService {
     private List<News> topNewsList = new ArrayList<>();
     private List<News> breakingNewsList = new ArrayList<>();
 
-    public void addRegularNews(News regularNews) {
-        regularNewsList.add(regularNews);
-    }
+    private final DAOFactory daoFactory;
+    private final INewsDAO newsTool;
 
-    public void addTopNews(News topNews) {
-        topNewsList.add(topNews);
-    }
-
-    public void addBreakingNews(News breakingNews) {
-        breakingNewsList.add(breakingNews);
-    }
-
-    //только одна breaking новость для отображения на главной
-    public News getBreakingNews() throws ServiceException {
-        // вытягиваем новости из класса-имитации базы данных
-        List<News> news = NewsDatabase.getAllNews();
-        News lastBreakingNews = null;
-        for (News item : news) {
-            if (item.getImportance() == NewsImportance.BREAKING) {
-                lastBreakingNews = item; // вернуть последнюю добавленную срочную новость
-            }
+    public NewsServiceImpl() throws ServiceException {
+        try {
+            daoFactory = DAOFactory.getInstance();
+            newsTool = daoFactory.getNewsDAO();
+        } catch (DAOException e) {
+            throw new ServiceException(e);
         }
-        return lastBreakingNews;
     }
 
-    //все breaking новости
-    public List<News> getAllBreakingNews() throws ServiceException {
-        // вытягиваем новости из класса-имитации базы данных
-        List<News> news = NewsDatabase.getAllNews();
-        for (News item : news) {
-            if (item.getImportance() == NewsImportance.BREAKING) {
-                breakingNewsList.add(item);
-            }
+    public int addNewsToDatabase(News news) throws ServiceException {
+        try {
+            return (newsTool.addNews(news).getNewsId());
+        } catch (DAOException e) {
+            throw new ServiceException(e);
         }
-        return breakingNewsList;
     }
 
-    //только одна top новость для отображения на главной
-    public News getTopNews() throws ServiceException {
-        News lastTopNews = null;
-        List<News> news = NewsDatabase.getAllNews();
-        for (News item : news) {
-            if (item.getImportance() == NewsImportance.TOP) {
-                lastTopNews = item; // вернуть последнюю добавленную топовую новость
-            }
+    public boolean deleteNewsFromDatabase(int newsId) throws ServiceException {
+        try {
+            return newsTool.deleteNews(newsId);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
         }
-        return lastTopNews;
     }
 
-    //все top новости
-    public List<News> getAllTopNews() throws ServiceException {
-        List<News> news = NewsDatabase.getAllNews();
-        for (News item : news) {
-            if (item.getImportance() == NewsImportance.TOP) {
-                topNewsList.add(item); // вернуть первую найденную топовую новость
-            }
+    public List<News> getNewsByType(NewsImportance newsImportance) throws ServiceException {
+        try {
+            return newsTool.findNewsByType(newsImportance);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
         }
-        return topNewsList;
     }
 
-    public List<News> getRegularNews() throws ServiceException {
-        List<News> news = NewsDatabase.getAllNews();
-        for (News item : news) {
-            if (item.getImportance() == NewsImportance.REGULAR) {
-                regularNewsList.add(item);
-            }
+    public News getNewsFromDatabaseById(int newsId) throws ServiceException {
+        try {
+            return newsTool.getNewsById(newsId);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
         }
-        return regularNewsList;
     }
+
+    public List<News> getNewsList() throws ServiceException {
+        try {
+            return newsTool.getAllNews();
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<News> getAuthorNewsList(int authorId) throws ServiceException {
+        try {
+            return newsTool.getAllNewsByAuthor(authorId);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public boolean changeFieldData(int newsId, News news) throws ServiceException {
+        try {
+            return newsTool.changeNewsArticle(newsId, news);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+    }
+
 }

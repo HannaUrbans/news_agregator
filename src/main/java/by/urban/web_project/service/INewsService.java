@@ -1,24 +1,26 @@
 package by.urban.web_project.service;
 
+import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.model.News;
+import by.urban.web_project.model.NewsImportance;
+import by.urban.web_project.model.User;
 
 import java.util.List;
 
 public interface INewsService {
-    void addRegularNews(News regularNews) throws ServiceException;
+    int addNewsToDatabase(News news) throws ServiceException;
 
-    void addTopNews(News topNews) throws ServiceException;
+    boolean deleteNewsFromDatabase(int newsId) throws ServiceException;
 
-    void addBreakingNews(News breakingNews) throws ServiceException;
+    List<News> getNewsByType(NewsImportance newsImportance) throws ServiceException;
 
-    News getBreakingNews() throws ServiceException;
+    News getNewsFromDatabaseById(int newsId) throws ServiceException;
 
-    List<News> getAllBreakingNews() throws ServiceException;
+    List<News> getNewsList() throws ServiceException;
 
-    News getTopNews() throws ServiceException;
+    List<News> getAuthorNewsList(int authorId) throws ServiceException;
 
-    List<News> getAllTopNews() throws ServiceException;
+    boolean changeFieldData(int newsId, News news) throws ServiceException;
 
-    List<News> getRegularNews() throws ServiceException;
-
+    //методы для работы с категориями!!!
 }

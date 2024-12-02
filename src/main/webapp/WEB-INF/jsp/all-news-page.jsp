@@ -46,10 +46,14 @@
 
 
             </div>
+        </div>
     </header>
 </div>
 <div class="all_news_page"><h2>Все новости</h2>
-
+    <c:if test="${not empty sessionScope.deleteSuccessMessage}">
+        <div class="alert alert-success">${sessionScope.deleteSuccessMessage}</div>
+        <c:remove var="deleteSuccessMessage" scope="session"/>
+    </c:if>
     <!-- Проверяем, есть ли новости -->
     <c:if test="${not empty newsList}">
         <ul>
@@ -57,15 +61,22 @@
                 <li>
                     <strong>${news.newsId}</strong><br/>
                     <strong>${news.title}</strong><br/>
+                    <em>${news.category}</em><br/>
                     <em>${news.brief}</em><br/>
                     <!-- Отображаем полный текст новости только для зарегистрированных пользователей -->
                     <c:if test="${not empty sessionScope.id}">
-                        <p>${news.newsText}</p>
+                        <p>${news.imageUrl}</p>
+                        <p>${news.content}</p>
                     </c:if>
                     <!-- Отображаем кнопку только для зарегистрированных админов -->
                     <c:if test="${not empty sessionScope.admin}">
                         <form action="Controller" method="Get">
-                            <button type="submit" name="command" value="SHOW_STUB_PAGE">Удалить из базы данных</button>
+                            <input type="hidden" name="newsId" value="${news.newsId}"/>
+                            <button type="submit" name="command" value="DELETE_FROM_DATABASE">Удалить</button>
+                            <c:if test="${not empty sessionScope.deleteFailMessage}">
+                                <div class="alert alert-danger">${sessionScope.deleteFailMessage}</div>
+                                <c:remove var="deleteFailMessage" scope="session"/>
+                            </c:if>
                         </form>
                     </c:if>
                     <hr/>

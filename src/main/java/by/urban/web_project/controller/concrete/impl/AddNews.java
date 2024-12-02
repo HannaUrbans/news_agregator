@@ -1,7 +1,6 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.mockdb.NewsDatabase;
 import by.urban.web_project.model.News;
 import by.urban.web_project.model.NewsImportance;
 import by.urban.web_project.model.UserRole;
@@ -20,6 +19,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class AddNews implements Command {
+
+    public AddNews() throws ServiceException {
+    }
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServiceException, ServletException {
 
@@ -34,12 +37,12 @@ public class AddNews implements Command {
 
         try {
             // Получаем параметры из запроса, которые в запрос передавались через форму
-            int newsId = Integer.parseInt(request.getParameter("newsId"));
             String newsImportanceStr = request.getParameter("newsImportance");
             NewsImportance newsImportance = NewsImportance.valueOf(newsImportanceStr.toUpperCase());
             String newsTitle = request.getParameter("newsTitle");
             String newsBrief = request.getParameter("newsBrief");
-            String newsArticle = request.getParameter("newsArticle");
+            String newsContent = request.getParameter("newsContent");
+            String newsCategory = request.getParameter("newsCategory");
 
             // Получаем файл изображения через интерфейс Part
             Part newsPicPart = request.getPart("newsPic");
@@ -51,17 +54,13 @@ public class AddNews implements Command {
             }
             System.out.println("fileName " + fileName);
 
-            // Получаем email пользователя из сессии
-            String email = (String) request.getSession().getAttribute("email");
-
             // Формируем объект News
             News newNews = new News();
-            newNews.setNewsId(newsId);
-            newNews.setNewsAuthor(email);
             newNews.setImportance(newsImportance);
             newNews.setTitle(newsTitle);
             newNews.setBrief(newsBrief);
-            newNews.setNewsText(newsArticle);
+            newNews.setContent(newsContent);
+            newNews.setCategory(newsCategory);
 
             // Формируем URL для изображения (путь относительно корня web-приложения)
             String imageUrl = null;
@@ -70,24 +69,10 @@ public class AddNews implements Command {
             }
             newNews.setImageUrl(imageUrl);
 
-            // Добавляем новость в соответствующую категорию
-            switch (newsImportance) {
-                case REGULAR:
-                    newsService.addRegularNews(newNews);
-                    break;
-                case TOP:
-                    newsService.addTopNews(newNews);
-                    break;
-                case BREAKING:
-                    newsService.addBreakingNews(newNews);
-                    break;
-            }
 
-            // Добавляем новость в заглушку базы данных
-            NewsDatabase.addNews(newNews);
+            int id = (int) request.getSession().getAttribute("id");
 
-            // Получаем список новостей автора
-            List<News> alteredAuthorNewsList = NewsDatabase.getNewsByAuthor(email);
+            List<News> alteredAuthorNewsList = newsService.getAuthorNewsList(id);
             Collections.reverse(alteredAuthorNewsList);
 
             // Обновляем атрибут в сессии с новыми новостями автора

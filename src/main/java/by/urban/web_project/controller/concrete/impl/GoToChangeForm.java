@@ -1,8 +1,10 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.mockdb.NewsDatabase;
 import by.urban.web_project.model.News;
+import by.urban.web_project.service.INewsService;
+import by.urban.web_project.service.ServiceException;
+import by.urban.web_project.service.ServiceFactory;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +15,10 @@ import java.io.IOException;
 public class GoToChangeForm implements Command {
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ServiceException {
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        INewsService newsService = serviceFactory.getNewsService();
+
         //проверяем, жива ли сессия
         if (request.getSession(false) == null){
             request.setAttribute("errorMessage", "Вы не авторизованы.");
@@ -46,7 +51,7 @@ public class GoToChangeForm implements Command {
         if (newsId != null) {
             request.getSession().setAttribute("newsId", newsId);
 
-            News newsToEdit = NewsDatabase.getNewsById(Integer.parseInt(newsId));
+            News newsToEdit = newsService.getNewsFromDatabaseById(Integer.parseInt(newsId));
             if (newsToEdit != null) {
                 request.getSession().setAttribute("news", newsToEdit);
             }

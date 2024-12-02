@@ -160,12 +160,14 @@
             <img src="${news.imageUrl}" alt="Image"/>
             <p>
                 <c:choose>
+                    <c:when test="${not empty sessionScope.newNewsCategory}">${fn:escapeXml(sessionScope.newNewsCategory)}</c:when><c:otherwise>${fn:escapeXml(news.category)}</c:otherwise></c:choose>
+                <c:choose>
                     <c:when test="${not empty sessionScope.newNewsBrief}">${fn:escapeXml(sessionScope.newNewsBrief)}</c:when><c:otherwise>${fn:escapeXml(news.brief)}</c:otherwise></c:choose>
             </p>
 
             <p>
                 <c:choose>
-                    <c:when test="${not empty sessionScope.newNewsText}">${fn:escapeXml(sessionScope.newNewsText)}</c:when><c:otherwise>${fn:escapeXml(news.newsText)}</c:otherwise>
+                    <c:when test="${not empty sessionScope.newNewsContent}">${fn:escapeXml(sessionScope.newNewsContent)}</c:when><c:otherwise>${fn:escapeXml(news.content)}</c:otherwise>
                 </c:choose>
             </p>
 
@@ -175,5 +177,6 @@
             </c:forEach>
         </div>
     </div>
+</div>
 </body>
 </html>

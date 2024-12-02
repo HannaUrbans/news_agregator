@@ -8,10 +8,12 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title><%= title %></title>
+    <title><%= title %>
+    </title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Caveat:wght@400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
@@ -29,14 +31,9 @@
     </div>
 </header>
 <div class="not_footer">
-        <form action="Controller" method="post" enctype="multipart/form-data">
-            <div class="wide_form">
+    <form action="Controller" method="post" enctype="multipart/form-data">
+        <div class="wide_form">
             <h1>Для добавления новости, пожалуйста, заполните все поля</h1>
-
-                <!-- идентификационный номер вручную - это временное решение, пока не подключена БД -->
-                <label for="newsId">Уникальный идентификационный номер новости (только цифры)
-                    <textarea id="newsId" name="newsId" required></textarea>
-                </label>
 
             <label for="newsImportance">Выберите категорию новости
                 <select id="newsImportance" name="newsImportance">
@@ -58,13 +55,23 @@
                 <textarea id="newsBrief" name="newsBrief" required></textarea>
             </label>
 
-            <label for="newsArticle">Статья
-                <textarea id="newsArticle" name="newsArticle" required></textarea>
+            <label for="newsContent">Статья
+                <textarea id="newsContent" name="newsContent" required></textarea>
             </label>
 
+            <label for="newsCategory">Выберите категорию новости
+                <select id="newsCategory" name="newsCategory">
+                    <option value="1">3D печать</option>
+                    <option value="2">3D моделирование</option>
+                    <option value="3">Литьё фотополимером</option>
+                    <option value="4">Экология</option>
+                    <option value="5">Косплей</option>
+                    <option value="6">Материалы для работы</option>
+                </select>
+            </label>
             <button type="submit" name="command" value="ADD_NEWS">Добавить новость</button>
-            </div>
-        </form>
+        </div>
+    </form>
 
 
 </div>

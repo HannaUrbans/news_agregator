@@ -13,14 +13,13 @@ public class LogOut implements Command {
 
 
         // Проверяем, существует ли сессия
-        if (request.getSession(false) != null &&
-                (request.getSession(false).getAttribute("user") != null || request.getSession(false).getAttribute("author") != null)) {
-            request.getSession().invalidate();
-            request.getSession().setAttribute("logoutSuccess", "Вы успешно вышли из системы");
-        } else {
-            request.getSession().setAttribute("logoutFail", "Вы не были зарегистрированы в системе");
+        if (request.getSession(false) != null) {
+            if (request.getSession(false).getAttribute("user") != null || request.getSession(false).getAttribute("author") != null || request.getSession(false).getAttribute("admin") != null) {
+                request.getSession().invalidate();
+                request.getSession().setAttribute("logoutSuccess", "Вы успешно вышли из системы");
+            }} else{
+                request.getSession().setAttribute("logoutFail", "Вы не были зарегистрированы в системе");
         }
-
         response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
     }
 }

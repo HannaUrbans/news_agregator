@@ -52,7 +52,7 @@
                 </h1>
                 <img src="<c:out value='${news.imageUrl}'/>" alt="News Image"/>
                 <p>
-                    <c:out value="${news.newsText}"/>
+                    <c:out value="${news.content}"/>
                 </p>
 
             </div>
