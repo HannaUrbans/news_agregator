@@ -3,15 +3,15 @@ package by.urban.web_project.service.impl;
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.DAOFactory;
 import by.urban.web_project.dao.INewsDAO;
-import by.urban.web_project.model.News;
-import by.urban.web_project.model.NewsImportance;
+import by.urban.web_project.bean.News;
+import by.urban.web_project.bean.NewsImportance;
 import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//Logic Stub For Adding News To Main Page
+//Former Logic Stub For Adding News To Main Page
 public class NewsServiceImpl implements INewsService {
     private List<News> regularNewsList = new ArrayList<>();
     private List<News> topNewsList = new ArrayList<>();

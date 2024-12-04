@@ -1,6 +1,6 @@
 package by.urban.web_project.dao;
 
-import by.urban.web_project.model.NewsCategory;
+import by.urban.web_project.bean.NewsCategory;
 
 public interface INewsCategoryDAO {
     void addCategory(NewsCategory category) throws DAOException;

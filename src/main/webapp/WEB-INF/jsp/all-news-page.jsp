@@ -1,3 +1,4 @@
+<%@ page import="by.urban.web_project.bean.Auth" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ include file="page_elems/title.jsp" %>
@@ -64,19 +65,28 @@
                     <em>${news.category}</em><br/>
                     <em>${news.brief}</em><br/>
                     <!-- Отображаем полный текст новости только для зарегистрированных пользователей -->
-                    <c:if test="${not empty sessionScope.id}">
+                    <c:if test="${not empty sessionScope.auth}">
                         <p>${news.imageUrl}</p>
                         <p>${news.content}</p>
                     </c:if>
+
                     <!-- Отображаем кнопку только для зарегистрированных админов -->
-                    <c:if test="${not empty sessionScope.admin}">
-                        <form action="Controller" method="Get">
+                    <c:if test="${sessionScope.role == 'admin'}">
+                        <form action="Controller" method="POST">
                             <input type="hidden" name="newsId" value="${news.newsId}"/>
                             <button type="submit" name="command" value="DELETE_FROM_DATABASE">Удалить</button>
                             <c:if test="${not empty sessionScope.deleteFailMessage}">
                                 <div class="alert alert-danger">${sessionScope.deleteFailMessage}</div>
                                 <c:remove var="deleteFailMessage" scope="session"/>
                             </c:if>
+                        </form>
+                    </c:if>
+                    <!-- Отображаем кнопку только для зарегистрированных авторов -->
+                    <c:if test="${sessionScope.role == 'author'}">
+                        <form action="Controller" method="POST">
+                            <input type="hidden" name="newsId" value="${news.newsId}"/>
+                            <input type="hidden" name="formType" value="newsArticle" />
+                            <button type="submit" name="command" value="GO_TO_CHANGE_FORM">Изменить</button>
                         </form>
                     </c:if>
                     <hr/>

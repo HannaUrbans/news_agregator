@@ -1,9 +1,9 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.model.News;
-import by.urban.web_project.model.NewsImportance;
-import by.urban.web_project.model.UserRole;
+import by.urban.web_project.bean.News;
+import by.urban.web_project.bean.NewsImportance;
+import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;

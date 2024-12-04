@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ include file="page_elems/title.jsp" %>
+<%@ include file="../page_elems/title.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
@@ -36,13 +36,13 @@
 
         <form action="Controller" method="post">
             <label for="newBio">Отредактируйте биографию:</label>
-            <textarea id="newBio" name="newBio" required><c:choose><c:when test="${not empty sessionScope.newBio}">${sessionScope.newBio}</c:when><c:otherwise>${sessionScope.bioFromDb}</c:otherwise></c:choose></textarea>
+            <textarea id="newBio" name="newBio" required><c:choose><c:when test="${not empty sessionScope.newBio}">${sessionScope.newBio}</c:when><c:otherwise>${sessionScope.bio}</c:otherwise></c:choose></textarea>
             <button type="submit" name="command" value="CHANGE_BIO">Готово</button>
         </form>
     </div>
 </div>
 <div class="footer">
-    <%@ include file="page_elems/footer.jsp" %>
+    <%@ include file="../page_elems/footer.jsp" %>
 </div>
 </body>
 </html>

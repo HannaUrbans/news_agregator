@@ -1,6 +1,6 @@
 package by.urban.web_project.mockdb;
 
-import by.urban.web_project.model.NewsCategory;
+import by.urban.web_project.bean.NewsCategory;
 
 import java.util.HashMap;
 import java.util.Map;

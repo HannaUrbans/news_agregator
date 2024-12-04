@@ -1,7 +1,7 @@
 package by.urban.web_project.service;
 
 
-import by.urban.web_project.model.UserRole;
+import by.urban.web_project.bean.UserRole;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface IRegistrationService {

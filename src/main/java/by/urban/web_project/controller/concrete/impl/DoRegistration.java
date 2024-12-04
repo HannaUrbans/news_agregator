@@ -1,7 +1,7 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.model.UserRole;
+import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.IRegistrationService;
 import by.urban.web_project.service.ServiceException;
@@ -88,7 +88,7 @@ public class DoRegistration implements Command {
         }
 
         // Проверяем, что повторно введённый пароль верный
-        if (!check.checkPassword(request, password, confirmPassword)) {
+        if (!check.checkFieldsEquality(password, confirmPassword)) {
             request.getSession().setAttribute("regError", "Пароли не совпадают");
             redirectToRegistrationPage(request, response);
             return true;

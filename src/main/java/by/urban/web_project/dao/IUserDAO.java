@@ -1,8 +1,7 @@
 package by.urban.web_project.dao;
 
-import by.urban.web_project.model.ProfileDataField;
-import by.urban.web_project.model.User;
-import by.urban.web_project.model.UserRole;
+import by.urban.web_project.bean.User;
+import by.urban.web_project.bean.UserRole;
 
 import java.util.Map;
 
@@ -17,6 +16,8 @@ public interface IUserDAO {
     int registerExclusiveUserInDatabase(String name, String email, String password, String regKey, UserRole userRole) throws DAOException;
 
     void updateName(int id, String newName) throws DAOException;
+
+    void updateEmail(int id, String newEmail) throws DAOException;
 
     void updatePassword(int id, String newPassword) throws DAOException;
 

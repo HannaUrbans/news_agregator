@@ -1,6 +1,7 @@
 package by.urban.web_project.controller.concrete;
 
 import by.urban.web_project.controller.concrete.impl.*;
+import by.urban.web_project.controller.concrete.impl.ChangeAccount;
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.service.ServiceException;
 
@@ -23,7 +24,6 @@ public class CommandProvider {
         commands.put(CommandName.GO_TO_USER_ACCOUNT_PAGE, new GoToUserAccountPage());
         commands.put(CommandName.GO_TO_AUTHOR_ACCOUNT_PAGE, new GoToAuthorAccountPage());
         commands.put(CommandName.GO_TO_ADMIN_ACCOUNT_PAGE, new GoToAdminAccountPage());
-        commands.put(CommandName.GO_TO_CHANGE_FORM, new GoToChangeForm());
         commands.put(CommandName.GO_TO_ADD_NEWS_FORM_PAGE, new GoToAddNewsFormPage());
         commands.put(CommandName.SHOW_STUB_PAGE, new ShowStub());
 
@@ -34,8 +34,8 @@ public class CommandProvider {
         commands.put(CommandName.DELETE_FROM_DATABASE, new DeleteFromDatabase());
 
         // 4. Управление профилем пользователя
-        commands.put(CommandName.CHANGE_NAME, new ChangeName());
-        commands.put(CommandName.CHANGE_PASSWORD, new ChangePassword());
+        commands.put(CommandName.GO_TO_CHANGE_FORM, new GoToChangeForm());
+        commands.put(CommandName.CHANGE_ACCOUNT, new ChangeAccount());
         commands.put(CommandName.CHANGE_BIO, new ChangeBio());
 
         // 5. Иное

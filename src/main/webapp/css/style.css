@@ -377,8 +377,15 @@ h4 .breaking_news {
 }
 
 .form_to_fill_in button {
+    margin: 15px 0;
+}
+
+#change_news_form form {
     width: 100%;
-    margin-top: 15px;
+}
+
+#change_news_form button {
+    width: 100%;
 }
 
 .enter_button {
@@ -542,7 +549,9 @@ h4 .breaking_news {
     padding-right: 10px;
     padding-bottom: 10px;
 }
-
+.alerts{
+    margin:10px;
+}
 .alert-success {
     color: green;
 }
@@ -550,9 +559,11 @@ h4 .breaking_news {
 .alert-danger {
     color: red;
 }
+
 #author_account_page .alert-danger {
     background-color: white;
 }
+
 .form_to_fill_in .alert {
     font-size: 16px;
     padding-top: 15px;
@@ -577,13 +588,40 @@ h4 .breaking_news {
     width: fit-content;
 }
 
+.account_button {
+    margin-top: 10px;
+}
+
+.account_button button {
+    margin-bottom: 5px;
+    text-align: left;
+    font-size: 12px;
+    background-color: #DD7700;
+}
+
+#user_buttons {
+    font-size: 12px;
+}
+
+#author_buttons {
+    width: 300px;
+}
+
+.account_button_inside {
+    text-align: left;
+}
+
+.account_button_inside button {
+    width: fit-content;
+}
+
 .news_button button {
     width: 250px;
     font-size: 16px;
     background-color: #DD7700;
 }
 
-.news_button button:hover {
+.news_button button:hover, .account_button button:hover {
     transform: scale(1.1); /* Увеличение на 10% при наведении */
 }
 
@@ -691,7 +729,7 @@ h4 .breaking_news {
 .photo_text_align {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
     width: 100%;
 }
 
@@ -713,14 +751,18 @@ h4 .breaking_news {
 
 #newBio, #newNewsContent {
     height: 600px;
-    width: 300px;
-    padding: 10px;
+    width: 400px;
 }
+
 #newNewsBrief {
     height: 200px;
-    width: 300px;
-    padding: 10px;
+    width: 400px;
 }
+
+#newNewsCategory {
+    width: 400px;
+}
+
 .note {
     /*background-image: url("../images/note_back.png");
     background-repeat: no-repeat;

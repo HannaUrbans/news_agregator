@@ -3,7 +3,7 @@ package by.urban.web_project.service.impl;
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.DAOFactory;
 import by.urban.web_project.dao.IUserDAO;
-import by.urban.web_project.model.User;
+import by.urban.web_project.bean.User;
 import by.urban.web_project.service.IAuthorizationService;
 import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.ServiceException;

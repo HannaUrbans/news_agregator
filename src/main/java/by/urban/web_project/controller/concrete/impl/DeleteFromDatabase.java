@@ -1,12 +1,15 @@
 package by.urban.web_project.controller.concrete.impl;
 
+import by.urban.web_project.bean.Auth;
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.model.UserRole;
+import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+
+import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedirectUrl;
 
 public class DeleteFromDatabase implements Command {
     private final IChangeProfileService updateTool;
@@ -21,8 +24,20 @@ public class DeleteFromDatabase implements Command {
         ICheckService checkService = serviceFactory.getCheckService();
         INewsService newsService = serviceFactory.getNewsService();
 
-        //проверяем, что в сессии админ и что сессия жива (неявно, но если request.getSession().getAttribute(sessionAttribute) равно null, то сессия не жива
-        if (!checkService.checkIfRoleAuthorizedForAction(request, response, "admin", UserRole.ADMIN)) {
+        Auth auth = (Auth) request.getSession(false).getAttribute("auth");
+        // если не в сессии
+        if (auth == null) {
+            System.out.println("Пользователь не залогинен и пытается открыть страницу личного кабинета");
+            request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
+            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+            return;
+        }
+
+        // если от другой роли
+        if (!UserRole.ADMIN.equals(auth.getRole())) {
+            System.out.println("Пользователь пытается войти в личный кабинет не своей роли");
+            request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
+            response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole().name()));
             return;
         }
 

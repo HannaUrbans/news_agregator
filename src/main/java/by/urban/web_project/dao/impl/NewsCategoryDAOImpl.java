@@ -2,7 +2,7 @@ package by.urban.web_project.dao.impl;
 
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.INewsCategoryDAO;
-import by.urban.web_project.model.NewsCategory;
+import by.urban.web_project.bean.NewsCategory;
 
 public class NewsCategoryDAOImpl implements INewsCategoryDAO {
     public void addCategory(NewsCategory category) throws DAOException {

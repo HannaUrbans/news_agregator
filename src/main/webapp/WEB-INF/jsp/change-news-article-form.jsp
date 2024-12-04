@@ -31,21 +31,20 @@
 </header>
 <body>
 <div class="not_footer">
-    <div class="form_to_fill_in">
+    <div class="form_to_fill_in" id = "change_news_form">
 
         <form action="Controller" method="post">
             <label for="newNewsTitle">Изменить заголовок статьи:</label>
             <input type="text" id="newNewsTitle" name="newNewsTitle" required value="${news.title}">
-            <label for="newNewsCategory">Изменить категорию статьи:<br>
+            <label for="newNewsCategory">Изменить категорию статьи:</label>
                 <select id="newNewsCategory" name="newNewsCategory" required>
-                    <option value="1" ${news.category == '1' ? 'selected' : ''}>3D печать</option>
-                    <option value="2" ${news.category == '2' ? 'selected' : ''}>3D моделирование</option>
-                    <option value="3" ${news.category == '3' ? 'selected' : ''}>Литьё фотополимером</option>
-                    <option value="4" ${news.category == '4' ? 'selected' : ''}>Экология</option>
-                    <option value="5" ${news.category == '5' ? 'selected' : ''}>Косплей</option>
-                    <option value="6" ${news.category == '6' ? 'selected' : ''}>Материалы для работы</option>
+                    <option value="1" ${news.category == '1'}>3D печать</option>
+                    <option value="2" ${news.category == '2'}>3D моделирование</option>
+                    <option value="3" ${news.category == '3'}>Литьё фотополимером</option>
+                    <option value="4" ${news.category == '4'}>Экология</option>
+                    <option value="5" ${news.category == '5'}>Косплей</option>
+                    <option value="6" ${news.category == '6'}>Материалы для работы</option>
                 </select>
-            </label>
             <label for="newNewsBrief">Изменить бриф статьи:</label>
             <textarea id="newNewsBrief" name="newNewsBrief" required>${news.brief}</textarea>
             <label for="newNewsContent">Изменить текст статьи:</label>

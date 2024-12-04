@@ -1,6 +1,6 @@
 package by.urban.web_project.dao;
 
-import by.urban.web_project.model.NewsComment;
+import by.urban.web_project.bean.NewsComment;
 
 public interface INewsCommentDAO {
     void addComment(NewsComment comment) throws DAOException;

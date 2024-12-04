@@ -4,9 +4,8 @@ import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.DAOFactory;
 import by.urban.web_project.dao.IDatabaseConnectionDAO;
 import by.urban.web_project.dao.IUserDAO;
-import by.urban.web_project.model.ProfileDataField;
-import by.urban.web_project.model.User;
-import by.urban.web_project.model.UserRole;
+import by.urban.web_project.bean.User;
+import by.urban.web_project.bean.UserRole;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -164,6 +163,26 @@ public class UserDAOImpl implements IUserDAO {
     }
 
     /**
+     * Метод обновляет поле "email" (информация добавляется в личном кабинете)
+     */
+    @Override
+    public void updateEmail(int id, String newEmail) throws DAOException {
+        String query = "UPDATE news_management.users SET email = ? WHERE id=?";
+        try (Connection connection = dbConnectionTool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, newEmail);
+            preparedStatement.setInt(2, id);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new DAOException("Не удалось обновить email пользователя с ID " + id);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
+
+    /**
      * Метод обновляет поле "пароль" (информация добавляется в личном кабинете)
      */
     @Override
@@ -223,12 +242,10 @@ public class UserDAOImpl implements IUserDAO {
     }
 
     public Map<String, String> getUserProfileById(int id) throws DAOException {
-        String query = "SELECT u.email, u.password, ud.bio " +
-                "FROM news_management.users u " +
-                "JOIN news_management.user_details ud ON u.id = ud.user_id " +
-                "WHERE u.id = ?";
+        String query = "SELECT u.email, u.password, ud.bio FROM news_management.users u LEFT JOIN news_management.user_details ud ON u.id = ud.user_id WHERE u.id = ?";
 
         Map<String, String> userProfile = new HashMap<>();
+        System.out.println("это метод userProfile");
 
         try (Connection connection = dbConnectionTool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -236,9 +253,18 @@ public class UserDAOImpl implements IUserDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                userProfile.put("email", resultSet.getString("email"));
-                userProfile.put("password", resultSet.getString("password"));
-                userProfile.put("bio", resultSet.getString("bio"));
+
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                String bio = resultSet.getString("bio");
+
+                System.out.println("email: " + email);
+                System.out.println("password: " + password);
+                System.out.println("bio: " + bio);
+
+                userProfile.put("email", email);
+                userProfile.put("password", password);
+                userProfile.put("bio", bio);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -246,4 +272,6 @@ public class UserDAOImpl implements IUserDAO {
 
         return userProfile;
     }
+
+
 }

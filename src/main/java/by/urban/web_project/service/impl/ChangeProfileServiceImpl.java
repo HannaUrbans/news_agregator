@@ -1,10 +1,15 @@
 package by.urban.web_project.service.impl;
 
+import by.urban.web_project.bean.ProfileDataField;
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.DAOFactory;
 import by.urban.web_project.dao.IUserDAO;
 import by.urban.web_project.service.IChangeProfileService;
+import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.ServiceException;
+import by.urban.web_project.service.ServiceFactory;
+
+import java.util.Map;
 
 public class ChangeProfileServiceImpl implements IChangeProfileService {
 
@@ -19,6 +24,27 @@ public class ChangeProfileServiceImpl implements IChangeProfileService {
         }
     }
 
+    @Override
+    public String getFieldData(int id, ProfileDataField profileDataField) throws ServiceException {
+        System.out.println("Мы в методе getFieldData");
+        try {
+
+            Map<String, String> fields = userDAO.getUserProfileById(id);
+            String fieldKey = (profileDataField.name()).toLowerCase();
+            String fieldValue = fields.get(fieldKey);
+            if (fieldValue == null) {
+                throw new IllegalArgumentException("Такого поля не существует");
+            }
+
+            return fieldValue;
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        } catch (IllegalArgumentException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    //переделац
     @Override
     public void updateBio(int id, String newBio) throws ServiceException {
         try {
@@ -38,9 +64,18 @@ public class ChangeProfileServiceImpl implements IChangeProfileService {
     }
 
     @Override
+    public void updateEmail(int id, String newEmail) throws ServiceException {
+        try {
+            userDAO.updateEmail(id, newEmail);
+        } catch (DAOException e) {
+            throw new ServiceException("Ошибка при обновлении почты пользователя", e);
+        }
+    }
+
+    @Override
     public void updatePassword(int id, String newPassword) throws ServiceException {
         try {
-            userDAO.updatePassword(id, newPassword);
+                userDAO.updatePassword(id, newPassword);
         } catch (DAOException e) {
             throw new ServiceException("Ошибка при обновлении пароля пользователя", e);
         }

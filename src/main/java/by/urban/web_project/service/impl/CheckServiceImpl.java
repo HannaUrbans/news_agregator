@@ -3,8 +3,8 @@ package by.urban.web_project.service.impl;
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.DAOFactory;
 import by.urban.web_project.dao.IUserDAO;
-import by.urban.web_project.model.User;
-import by.urban.web_project.model.UserRole;
+import by.urban.web_project.bean.User;
+import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.ServiceException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,10 +30,11 @@ public class CheckServiceImpl implements ICheckService {
 
     /**
      * Проверка, правильно ли повторно введен в форме регистрации пароль
+     * Также будет использоваться в для изменения email и пароля (проверять совпадают ли старый и новый)
      */
     @Override
-    public boolean checkPassword(HttpServletRequest request, String passwordForRegistration, String confirmPassword) throws ServiceException {
-        return passwordForRegistration.equals(confirmPassword);
+    public boolean checkFieldsEquality (String field1, String field2) throws ServiceException {
+        return field1.equals(field2);
     }
 
     /**

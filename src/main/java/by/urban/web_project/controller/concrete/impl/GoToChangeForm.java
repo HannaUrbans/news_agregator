@@ -1,7 +1,7 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.model.News;
+import by.urban.web_project.bean.News;
 import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
@@ -32,14 +32,11 @@ public class GoToChangeForm implements Command {
 
         String page = "";
         switch (formType) {
-            case "password":
-                page = "/WEB-INF/jsp/change-password-form.jsp";
-                break;
-            case "name":
-                page = "/WEB-INF/jsp/change-name-form.jsp";
+            case "account":
+                page = "/WEB-INF/jsp/change-user-data-pages/change-account.jsp";
                 break;
             case "bio":
-                page = "/WEB-INF/jsp/change-bio-form.jsp";
+                page = "/WEB-INF/jsp/change-user-data-pages/change-bio-form.jsp";
                 break;
             case "newsArticle":
                 page = "/WEB-INF/jsp/change-news-article-form.jsp";
@@ -56,7 +53,6 @@ public class GoToChangeForm implements Command {
                 request.getSession().setAttribute("news", newsToEdit);
             }
         }
-
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(page);
         dispatcher.forward(request, response);

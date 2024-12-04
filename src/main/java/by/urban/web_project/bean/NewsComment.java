@@ -1,4 +1,4 @@
-package by.urban.web_project.model;
+package by.urban.web_project.bean;
 
 import java.io.Serializable;
 import java.util.Objects;

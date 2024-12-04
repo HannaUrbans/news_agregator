@@ -12,7 +12,6 @@ public final class ServiceFactory {
     private IAuthorizationService authorizationService;
     private IRegistrationService registrationService;
     private IChangeProfileService changeProfileService;
-    private IProfileDataService profileDataService;
 
     // Статический блок для инициализации фабрики
     static {
@@ -71,12 +70,5 @@ public final class ServiceFactory {
             changeProfileService = new ChangeProfileServiceImpl();
         }
         return changeProfileService;
-    }
-
-    public IProfileDataService getProfileDataService() throws ServiceException {
-        if (profileDataService == null) {
-            profileDataService = new ProfileDataServiceImpl();
-        }
-        return profileDataService;
     }
 }

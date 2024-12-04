@@ -1,51 +1,78 @@
 package by.urban.web_project.controller.concrete.impl;
 
+import by.urban.web_project.bean.Auth;
+import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.model.User;
+import by.urban.web_project.controller.utils.UpdateUtil;
+import by.urban.web_project.controller.utils.UrlFormatterUtil;
 import by.urban.web_project.service.IChangeProfileService;
+import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
 import by.urban.web_project.utils.ProfileFieldToChange;
-import by.urban.web_project.utils.UpdateUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedirectUrl;
+
 public class ChangeBio implements Command {
 
-    private final IChangeProfileService updateTool;
+    private final IChangeProfileService changeProfileService;
+    private final ICheckService checkService;
 
+    //может объединить с ChangeAccount?????????
     public ChangeBio() throws ServiceException {
-        this.updateTool = ServiceFactory.getInstance().getChangeProfileService();
+        this.changeProfileService = ServiceFactory.getInstance().getChangeProfileService();
+        this.checkService = ServiceFactory.getInstance().getCheckService();
     }
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        //проверяем, жива ли сессия
-        if (request.getSession(false) == null){
-            request.setAttribute("errorMessage", "Вы не авторизованы.");
+        Auth auth = (Auth) request.getSession(false).getAttribute("auth");
+        String role = (String) request.getSession().getAttribute("role");
+        // если не в сессии
+        if (auth == null) {
+            System.out.println("Пользователь не залогинен и пытается открыть страницу личного кабинета");
+            request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
             response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+            return;
         }
 
-        // Получаем пользователя из сессии
-        User user = (User) request.getSession().getAttribute("author");
-        String newValue = request.getParameter("newBio"); // Пример для биографии
-        ProfileFieldToChange field = ProfileFieldToChange.BIO; // Указание, что обновляется биография
+        // если от другой роли
+        // надо в другом месте (страница с формой открывается при любой роли, но именно отправить не дает, надо шагом ранее эту проверку
+        if (!UserRole.AUTHOR.equals(auth.getRole())) {
+            System.out.println("Пользователь пытается войти в личный кабинет не своей роли");
+            request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
+            response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole().name()));
+            return;
+        }
 
-        if (newValue != null && !newValue.trim().isEmpty()) {
-            boolean isUpdated = UpdateUtils.updateProfileField(user, newValue, field, updateTool);
+        int id = (int) request.getSession().getAttribute("id");
 
-            if (isUpdated) {
-                request.getSession().setAttribute("newBio", newValue);
-                request.getSession().setAttribute("changeBioSuccess", "Биография успешно обновлена");
+        // Получаем данные из формы
+        String newBio = request.getParameter("newBio");
+
+        boolean updated = false;
+
+        if (newBio != null && !newBio.trim().isEmpty()) {
+            boolean updateBio = UpdateUtil.updateProfileField(auth, newBio, ProfileFieldToChange.BIO, changeProfileService);
+            if (updateBio) {
+                updated = true;
             } else {
                 request.getSession().setAttribute("changeBioError", "Произошла ошибка при обновлении биографии");
             }
+        }
+        // Проверка, были ли изменения
+        if (updated) {
+            request.getSession().setAttribute("changeBioSuccess", "Биография успешно обновлена!");
         } else {
-            request.getSession().setAttribute("changeBioError", "Вы не написали ничего в поле");
+            request.getSession().setAttribute("changeBioError", "Не было внесено изменений в биографию.");
         }
 
-        response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
-    }}
+        // Перенаправление на страницу профиля
+        response.sendRedirect("Controller?command=" + UrlFormatterUtil.formatRedirectUrl(role));
+    }
+}
