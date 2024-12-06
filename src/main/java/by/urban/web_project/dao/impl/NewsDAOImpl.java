@@ -1,13 +1,13 @@
 package by.urban.web_project.dao.impl;
 
-import by.urban.web_project.dao.DAOException;
-import by.urban.web_project.dao.DAOFactory;
-import by.urban.web_project.dao.IDatabaseConnectionDAO;
-import by.urban.web_project.dao.INewsDAO;
 import by.urban.web_project.bean.News;
 import by.urban.web_project.bean.NewsImportance;
 import by.urban.web_project.bean.User;
 import by.urban.web_project.bean.UserRole;
+import by.urban.web_project.dao.DAOException;
+import by.urban.web_project.dao.DAOFactory;
+import by.urban.web_project.dao.IDatabaseConnectionDAO;
+import by.urban.web_project.dao.INewsDAO;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -23,15 +23,14 @@ public class NewsDAOImpl implements INewsDAO {
     }
 
     @Override
-    public News addNews(News news) throws DAOException {
-        String query1 = "INSERT INTO news_management.news (importance, title, image, brief, content, publish_date, categories_id) VALUES (?, ?, ?, ?, ?, ?, (SELECT id FROM news_management.categories WHERE title = ? LIMIT 1))";
-        String query2 = "INSERT INTO news_management.news_authors (news_id, users_id) VALUES ((SELECT id FROM news_management.news WHERE id = ? LIMIT 1), (SELECT id FROM news_management.users WHERE id = (SELECT id FROM news_management.roles WHERE name = ? LIMIT 1) LIMIT 1))";
+    public int addNews(News news) throws DAOException {
+        //автора добавляем отдельно
+        String query = "INSERT INTO news_management.news (importance, title, image, brief, content, publish_date, categories_id) VALUES (?, ?, ?, ?, ?, ?, (SELECT id FROM news_management.categories WHERE title = ? LIMIT 1))";
         int id;
         LocalDateTime publishDate;
 
         try (Connection connection = dbConnectionTool.getConnection();
-             PreparedStatement preparedStatement1 = connection.prepareStatement(query1, Statement.RETURN_GENERATED_KEYS);
-             PreparedStatement preparedStatement2 = connection.prepareStatement(query2)) {
+             PreparedStatement preparedStatement1 = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 
             preparedStatement1.setString(1, news.getImportance().name());
             preparedStatement1.setString(2, news.getTitle());
@@ -47,15 +46,6 @@ public class NewsDAOImpl implements INewsDAO {
                 try (ResultSet resultSet1 = preparedStatement1.getGeneratedKeys()) {
                     if (resultSet1.next()) {
                         id = resultSet1.getInt(1);
-
-                        for (User author : news.getNewsAuthor()) {
-                            preparedStatement2.setInt(1, id);
-                            preparedStatement2.setString(2, author.getName());
-                            int affectedRowsForAuthor = preparedStatement2.executeUpdate();
-                            if (affectedRowsForAuthor == 0) {
-                                throw new SQLException("Ошибка при добавлении автора: " + author);
-                            }
-                        }
                     } else {
                         throw new SQLException("Не удалось получить ID новостей");
                     }
@@ -68,8 +58,23 @@ public class NewsDAOImpl implements INewsDAO {
             throw new DAOException(e);
         }
 
-        return new News(id, news.getImportance(), news.getTitle(), news.getImageUrl(), news.getBrief(), news.getContent(), publishDate, news.getNewsAuthor(), news.getCategory());
+        return id;
     }
+
+    public boolean addInitialAuthor(int newsId, int authId) throws DAOException{
+        String query = "INSERT INTO news_management.news_authors (news_id, users_id) VALUES ((SELECT id FROM news_management.news WHERE id = ? LIMIT 1), (SELECT id FROM news_management.users WHERE id = ? ))";
+        try (Connection connection = dbConnectionTool.getConnection();
+             PreparedStatement preparedStatement2 = connection.prepareStatement(query)) {
+            // хоть у нас возможно авторство нескольких, но при добавлении статьи за новостью числится тот, от чьего id зашли в кабинет и отправили новость
+            preparedStatement2.setInt(1, newsId);
+            preparedStatement2.setInt(2, authId);
+            int affectedRowsForAuthor = preparedStatement2.executeUpdate();
+            return affectedRowsForAuthor >0;}
+            catch(SQLException e)
+            {
+                throw new DAOException(e);
+            }
+        }
 
     public boolean deleteNews(int newsId) throws DAOException {
         String query = "DELETE FROM news_management.news WHERE id = ?";
@@ -206,7 +211,6 @@ public class NewsDAOImpl implements INewsDAO {
     }
 
     public boolean changeNewsArticle(int newsId, News news) throws DAOException {
-        //попробовать реализовать с проверкой,изменилось ли поле
         String query = "UPDATE news_management.news SET importance = ?, title = ?, image = ?, brief = ?, content = ?, publish_date = ?, news.update_date = ?, categories_id = (SELECT id FROM news_management.categories WHERE title = ?) WHERE id = ?";
         try (Connection connection = dbConnectionTool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -219,6 +223,7 @@ public class NewsDAOImpl implements INewsDAO {
             preparedStatement.setTimestamp(6, Timestamp.valueOf(news.getPublishDate()));
             preparedStatement.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
             preparedStatement.setString(8, news.getCategory());
+            preparedStatement.setInt(9, newsId);
 
             int affectedRows = preparedStatement.executeUpdate();
             return affectedRows > 0;
@@ -227,14 +232,27 @@ public class NewsDAOImpl implements INewsDAO {
         }
     }
 
+    public boolean addCoauthor(int coauthorId, int newsId) throws DAOException{
+        //здесь мы уже не update запрос делаем, а именно добавляем еще одного автора
+        String query = "INSERT INTO news_management.news_authors (news_id, users_id) VALUES (?, ?)";
+        try (Connection connection = dbConnectionTool.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.setInt(1, newsId);
+            preparedStatement.setInt(2, coauthorId);
+            int affectedRows = preparedStatement.executeUpdate();
+            return affectedRows > 0;
+        }
+        catch(SQLException e){throw new DAOException("Не удалось добавить соавтора в новость " + newsId, e);}
+    }
+
     public List<News> findNewsByType(NewsImportance newsImportance) throws DAOException {
         List<News> resList = new ArrayList<>();
         String query = "SELECT * FROM news_management.news WHERE importance = ?";
         try (Connection connection = dbConnectionTool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, newsImportance.name());
-            try(ResultSet resultSet = preparedStatement.executeQuery()){
-                if(resultSet.next()){
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
                     resList.add(getNewsById(resultSet.getInt("id")));
                 }
             }

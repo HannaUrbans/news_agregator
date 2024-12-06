@@ -1,10 +1,10 @@
 package by.urban.web_project.controller.concrete.impl;
 
-import by.urban.web_project.controller.concrete.Command;
+import by.urban.web_project.bean.Auth;
 import by.urban.web_project.bean.News;
 import by.urban.web_project.bean.NewsImportance;
 import by.urban.web_project.bean.UserRole;
-import by.urban.web_project.service.ICheckService;
+import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
@@ -15,8 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
+
+import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedirectUrl;
 
 public class AddNews implements Command {
 
@@ -27,11 +27,23 @@ public class AddNews implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServiceException, ServletException {
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        ICheckService checkService = serviceFactory.getCheckService();
         INewsService newsService = serviceFactory.getNewsService();
 
-        //проверяем, что в сессии автор и что сессия жива (неявно, но если request.getSession().getAttribute(sessionAttribute) равно null, то сессия не жива
-        if (!checkService.checkIfRoleAuthorizedForAction(request, response, "author", UserRole.AUTHOR)) {
+        Auth auth = (Auth) request.getSession(false).getAttribute("auth");
+        UserRole role = UserRole.valueOf(((String) request.getSession().getAttribute("role")).toUpperCase());
+        // если не в сессии
+        if (auth == null) {
+            System.out.println("Пользователь не залогинен и пытается открыть страницу добавления новостей");
+            request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
+            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+            return;
+        }
+
+        // если от другой роли
+        if (!UserRole.AUTHOR.equals(auth.getRole())) {
+            System.out.println("Пользователь пытается войти на страницу добавления новостей не своей роли");
+            request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
+            response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
             return;
         }
 
@@ -43,7 +55,6 @@ public class AddNews implements Command {
             String newsBrief = request.getParameter("newsBrief");
             String newsContent = request.getParameter("newsContent");
             String newsCategory = request.getParameter("newsCategory");
-
             // Получаем файл изображения через интерфейс Part
             Part newsPicPart = request.getPart("newsPic");
 
@@ -69,14 +80,10 @@ public class AddNews implements Command {
             }
             newNews.setImageUrl(imageUrl);
 
-
-            int id = (int) request.getSession().getAttribute("id");
-
-            List<News> alteredAuthorNewsList = newsService.getAuthorNewsList(id);
-            Collections.reverse(alteredAuthorNewsList);
-
-            // Обновляем атрибут в сессии с новыми новостями автора
-            request.getSession().setAttribute("authorNewsList", alteredAuthorNewsList);
+            int newNewsId = newsService.addNewsToDatabase(newNews);
+            System.out.println(newNewsId);
+            System.out.println(auth.getId());
+            newsService.addAuthorToNews(newNewsId,auth.getId());
 
             // Перенаправляем на страницу с новостями автора
             response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
@@ -85,11 +92,15 @@ public class AddNews implements Command {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Неверный формат данных");
+            System.out.println("2");
             response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
+            System.out.println("3");
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Ошибка при добавлении новости.");
+            System.out.println("4");
             response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
+            System.out.println("5");
         }
     }
 }

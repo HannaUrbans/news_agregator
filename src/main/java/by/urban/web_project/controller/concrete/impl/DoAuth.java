@@ -58,11 +58,11 @@ public class DoAuth implements Command {
             request.getSession().setAttribute("auth", auth);
             request.getSession().setAttribute("id", auth.getId());
             request.getSession().setAttribute("role", auth.getRole().name().toLowerCase());
-            request.getSession().setAttribute("name", auth.getRole());
+            request.getSession().setAttribute("name", auth.getName());
             request.getSession().setAttribute("bio", changeProfileService.getFieldData(auth.getId(), ProfileDataField.BIO));
 
 
-            response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole().name()));
+            response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
 
         } catch (ServiceException e) {
             request.getSession().setAttribute("authError", "Произошла ошибка при авторизации");

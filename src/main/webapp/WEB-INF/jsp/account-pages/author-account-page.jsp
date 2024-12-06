@@ -91,7 +91,7 @@
                                 </button>
                                 <button type="submit" name="command" value="GO_TO_ADD_NEWS_FORM_PAGE">Добавить новость
                                 </button>
-                                <button type="submit" name="command" value="SHOW_STUB_PAGE">Просмотреть все
+                                <button type="submit" name="command" value="SHOW_ALL_AUTHOR_NEWS">Просмотреть все
                                     написанные статьи
                                 </button>
                                 <button type="submit" name="command" value="SHOW_STUB_PAGE">Просмотреть все
@@ -107,8 +107,8 @@
     <div class="bio_desc">
         <h4>Биография</h4>
         <c:choose>
-            <c:when test="${not empty sessionScope.newBio}">
-                ${sessionScope.newBio}
+            <c:when test="${not empty sessionScope.updatedBio}">
+                ${sessionScope.updatedBio}
             </c:when>
             <c:otherwise>
                 ${sessionScope.bio}

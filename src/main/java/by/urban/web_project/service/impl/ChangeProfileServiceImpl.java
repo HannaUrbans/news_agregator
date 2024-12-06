@@ -26,9 +26,7 @@ public class ChangeProfileServiceImpl implements IChangeProfileService {
 
     @Override
     public String getFieldData(int id, ProfileDataField profileDataField) throws ServiceException {
-        System.out.println("Мы в методе getFieldData");
         try {
-
             Map<String, String> fields = userDAO.getUserProfileById(id);
             String fieldKey = (profileDataField.name()).toLowerCase();
             String fieldValue = fields.get(fieldKey);

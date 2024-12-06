@@ -1,12 +1,12 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.bean.Auth;
+import by.urban.web_project.bean.ProfileDataField;
 import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.controller.utils.UpdateUtil;
 import by.urban.web_project.controller.utils.UrlFormatterUtil;
 import by.urban.web_project.service.IChangeProfileService;
-import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
 import by.urban.web_project.utils.ProfileFieldToChange;
@@ -20,19 +20,17 @@ import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedir
 public class ChangeBio implements Command {
 
     private final IChangeProfileService changeProfileService;
-    private final ICheckService checkService;
 
     //может объединить с ChangeAccount?????????
     public ChangeBio() throws ServiceException {
         this.changeProfileService = ServiceFactory.getInstance().getChangeProfileService();
-        this.checkService = ServiceFactory.getInstance().getCheckService();
     }
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         Auth auth = (Auth) request.getSession(false).getAttribute("auth");
-        String role = (String) request.getSession().getAttribute("role");
+        UserRole role = UserRole.valueOf(((String) request.getSession().getAttribute("role")).toUpperCase());
         // если не в сессии
         if (auth == null) {
             System.out.println("Пользователь не залогинен и пытается открыть страницу личного кабинета");
@@ -46,7 +44,7 @@ public class ChangeBio implements Command {
         if (!UserRole.AUTHOR.equals(auth.getRole())) {
             System.out.println("Пользователь пытается войти в личный кабинет не своей роли");
             request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
-            response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole().name()));
+            response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
             return;
         }
 
@@ -61,12 +59,20 @@ public class ChangeBio implements Command {
             boolean updateBio = UpdateUtil.updateProfileField(auth, newBio, ProfileFieldToChange.BIO, changeProfileService);
             if (updateBio) {
                 updated = true;
+
             } else {
                 request.getSession().setAttribute("changeBioError", "Произошла ошибка при обновлении биографии");
             }
         }
         // Проверка, были ли изменения
         if (updated) {
+            try {
+                String newBioFromDb = changeProfileService.getFieldData(id, ProfileDataField.BIO);
+                request.getSession().setAttribute("updatedBio", newBioFromDb);
+
+            } catch (ServiceException e) {
+                e.printStackTrace();
+            }
             request.getSession().setAttribute("changeBioSuccess", "Биография успешно обновлена!");
         } else {
             request.getSession().setAttribute("changeBioError", "Не было внесено изменений в биографию.");

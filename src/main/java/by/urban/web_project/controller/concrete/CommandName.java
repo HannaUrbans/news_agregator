@@ -18,6 +18,7 @@ public enum CommandName {
 
     // 3. Управление новостями
     SHOW_ALL_NEWS,                      // Просмотр всех новостей
+    SHOW_ALL_AUTHOR_NEWS,               // Просмотр всех новостей автора
     ADD_NEWS,                           // Добавление новой новости
     CHANGE_NEWS_ARTICLE,                // Изменение существующей новости
     DELETE_FROM_DATABASE,               // Удаление новости из базы данных

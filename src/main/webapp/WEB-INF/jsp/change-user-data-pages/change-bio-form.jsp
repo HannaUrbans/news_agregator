@@ -36,8 +36,11 @@
 
         <form action="Controller" method="post">
             <label for="newBio">Отредактируйте биографию:</label>
-            <textarea id="newBio" name="newBio" required><c:choose><c:when test="${not empty sessionScope.newBio}">${sessionScope.newBio}</c:when><c:otherwise>${sessionScope.bio}</c:otherwise></c:choose></textarea>
-            <button type="submit" name="command" value="CHANGE_BIO">Готово</button>
+            <textarea id="newBio" name="newBio" required><c:choose><c:when
+                    test="${not empty sessionScope.updatedBio}">${sessionScope.updatedBio}</c:when><c:otherwise>${sessionScope.bio}</c:otherwise></c:choose></textarea>
+            <div class = "wide_button">
+                <button type="submit" name="command" value="CHANGE_BIO">Готово</button>
+            </div>
         </form>
     </div>
 </div>

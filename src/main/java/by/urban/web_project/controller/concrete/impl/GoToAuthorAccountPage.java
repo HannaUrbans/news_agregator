@@ -29,7 +29,7 @@ public class GoToAuthorAccountPage implements Command {
         if (!UserRole.AUTHOR.equals(auth.getRole())) {
             System.out.println("Пользователь пытается войти в личный кабинет не своей роли");
             request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
-            response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole().name()));
+            response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
             return;
         }
 

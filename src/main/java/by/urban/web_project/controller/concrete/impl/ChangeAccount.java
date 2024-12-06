@@ -2,6 +2,7 @@ package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.bean.Auth;
 import by.urban.web_project.bean.ProfileDataField;
+import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.controller.utils.UpdateUtil;
 import by.urban.web_project.controller.utils.UrlFormatterUtil;
@@ -35,7 +36,9 @@ public class ChangeAccount implements Command {
 
         //кастуем, потому что getAttribute возвращает Object
         Auth auth = (Auth) request.getSession().getAttribute("auth");
-        String role = (String) request.getSession().getAttribute("role");
+
+        UserRole role = UserRole.valueOf(((String)request.getSession().getAttribute("role")).toUpperCase());
+        System.out.println(role);
         int id = (int) request.getSession().getAttribute("id");
         String name = (String) request.getSession().getAttribute("name");
 

@@ -29,6 +29,7 @@ public class CommandProvider {
 
         // 3. Управление новостями
         commands.put(CommandName.SHOW_ALL_NEWS, new ShowAllNews());
+        commands.put(CommandName.SHOW_ALL_AUTHOR_NEWS, new ShowAllAuthorNews());
         commands.put(CommandName.ADD_NEWS, new AddNews());
         commands.put(CommandName.CHANGE_NEWS_ARTICLE, new ChangeNewsArticle());
         commands.put(CommandName.DELETE_FROM_DATABASE, new DeleteFromDatabase());

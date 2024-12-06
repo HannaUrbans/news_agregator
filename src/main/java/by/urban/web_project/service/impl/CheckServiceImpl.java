@@ -1,5 +1,6 @@
 package by.urban.web_project.service.impl;
 
+import by.urban.web_project.bean.Auth;
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.DAOFactory;
 import by.urban.web_project.dao.IUserDAO;
@@ -33,7 +34,7 @@ public class CheckServiceImpl implements ICheckService {
      * Также будет использоваться в для изменения email и пароля (проверять совпадают ли старый и новый)
      */
     @Override
-    public boolean checkFieldsEquality (String field1, String field2) throws ServiceException {
+    public boolean checkFieldsEquality(String field1, String field2) throws ServiceException {
         return field1.equals(field2);
     }
 
@@ -45,36 +46,5 @@ public class CheckServiceImpl implements ICheckService {
         Pattern pattern = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
         Matcher matcher = pattern.matcher(email);
         return !matcher.matches();
-    }
-
-    /**
-     * Метод для проверки существования живой сесии и соответствия роли пользователя из сессии требованиям
-     * @param request - объект запроса, используется для получения информации из сессии
-     * @param response - объект ответа, используется для отправки редиректа на другую страницу
-     * @param sessionAttribute - имя атрибута в сессии, где хранится объект пользователя
-     * @param requiredRole - требуемая роль пользователя для выполнения действия
-     * @return true, если пользователь авторизован и имеет требуемую роль
-     */
-    public boolean checkIfRoleAuthorizedForAction(HttpServletRequest request, HttpServletResponse response, String sessionAttribute, UserRole requiredRole) throws ServiceException {
-        // Извлекаем пользователя из сессии
-        User user = (User) request.getSession().getAttribute(sessionAttribute);
-
-        try {
-            if (user == null) {
-                request.setAttribute("errorMessage", "Вы не авторизованы.");
-                response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
-                return false;
-            }
-
-            // Проверяем роль пользователя
-            if (user.getUserRole() != requiredRole) {
-                request.setAttribute("errorMessage", "У вас нет прав автора для выполнения данного действия.");
-                response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
-                return false;
-            }
-        } catch (IOException e) {
-            throw new ServiceException(e);
-        }
-        return true;
     }
 }

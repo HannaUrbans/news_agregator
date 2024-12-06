@@ -24,8 +24,14 @@ public class DatabaseConnectionDAOImpl implements IDatabaseConnectionDAO {
     public Connection getConnection() throws DAOException {
 
         try {
-            return DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (SQLException e) {
+            // Получаем соединение с базой данных
+            Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+
+            // Устанавливаем автоматический коммит в true
+            //connection.setAutoCommit(true);
+
+            return connection;
+        }catch (SQLException e) {
             throw new DAOException("Ошибка при установлении соединения с базой данных", e);
         }
     }

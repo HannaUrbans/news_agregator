@@ -61,12 +61,13 @@
 
             <label for="newsCategory">Выберите категорию новости
                 <select id="newsCategory" name="newsCategory">
-                    <option value="1">3D печать</option>
-                    <option value="2">3D моделирование</option>
-                    <option value="3">Литьё фотополимером</option>
-                    <option value="4">Экология</option>
-                    <option value="5">Косплей</option>
-                    <option value="6">Материалы для работы</option>
+                    <!-- КАК ИСПРАВИТЬ? ранее VALUE было id категории из бд, но слишком уж неинформативно, кириллицей передавать value рискованно -->
+                    <option value="3D печать">3D печать</option>
+                    <option value="3D моделирование">3D моделирование</option>
+                    <option value="Литьё фотополимером">Литьё фотополимером</option>
+                    <option value="Экология">Экология</option>
+                    <option value="Косплей">Косплей</option>
+                    <option value="Материалы для работы">Материалы для работы</option>
                 </select>
             </label>
             <button type="submit" name="command" value="ADD_NEWS">Добавить новость</button>

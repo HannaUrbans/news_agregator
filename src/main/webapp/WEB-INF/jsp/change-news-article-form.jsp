@@ -38,12 +38,12 @@
             <input type="text" id="newNewsTitle" name="newNewsTitle" required value="${news.title}">
             <label for="newNewsCategory">Изменить категорию статьи:</label>
                 <select id="newNewsCategory" name="newNewsCategory" required>
-                    <option value="1" ${news.category == '1'}>3D печать</option>
-                    <option value="2" ${news.category == '2'}>3D моделирование</option>
-                    <option value="3" ${news.category == '3'}>Литьё фотополимером</option>
-                    <option value="4" ${news.category == '4'}>Экология</option>
-                    <option value="5" ${news.category == '5'}>Косплей</option>
-                    <option value="6" ${news.category == '6'}>Материалы для работы</option>
+                    <option value="3D печать">3D печать</option>
+                    <option value="3D моделирование">3D моделирование</option>
+                    <option value="Литьё фотополимером">Литьё фотополимером</option>
+                    <option value="Экология">Экология</option>
+                    <option value="Косплей">Косплей</option>
+                    <option value="Материалы для работы">Материалы для работы</option>
                 </select>
             <label for="newNewsBrief">Изменить бриф статьи:</label>
             <textarea id="newNewsBrief" name="newNewsBrief" required>${news.brief}</textarea>

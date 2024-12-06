@@ -8,6 +8,4 @@ public interface ICheckService {
     boolean checkFieldsEquality(String field1, String field2) throws ServiceException;
 
     boolean checkInvalidEmail(String email) throws ServiceException;
-
-    boolean checkIfRoleAuthorizedForAction(HttpServletRequest request, HttpServletResponse response, String sessionAttribute, UserRole requiredRole) throws ServiceException;
 }

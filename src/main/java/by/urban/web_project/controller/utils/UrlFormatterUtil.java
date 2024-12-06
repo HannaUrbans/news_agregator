@@ -1,7 +1,9 @@
 package by.urban.web_project.controller.utils;
 
+import by.urban.web_project.bean.UserRole;
+
 public class UrlFormatterUtil {
-    public static String formatRedirectUrl(String role){
-        return "GO_TO_"+role.toUpperCase()+"_ACCOUNT_PAGE";
+    public static String formatRedirectUrl(UserRole role){
+        return "GO_TO_"+role+"_ACCOUNT_PAGE";
     }
 }

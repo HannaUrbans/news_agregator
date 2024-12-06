@@ -7,7 +7,9 @@ import by.urban.web_project.bean.User;
 import java.util.List;
 
 public interface INewsDAO {
-    News addNews(News news) throws DAOException;
+    int addNews(News news) throws DAOException;
+
+    boolean addInitialAuthor(int newsId, int authId) throws DAOException;
 
     boolean deleteNews(int newsId) throws DAOException;
 
@@ -20,6 +22,8 @@ public interface INewsDAO {
     List<News> getAllNewsByAuthor(int authorId) throws DAOException;
 
     boolean changeNewsArticle(int newsId, News news) throws DAOException;
+
+    boolean addCoauthor(int coauthorId, int newsId) throws DAOException;
 
     List <News> findNewsByType(NewsImportance newsImportance) throws DAOException;
 
