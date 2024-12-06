@@ -56,6 +56,14 @@ public class RegistrationServiceImpl implements IRegistrationService {
         }
     }
 
+    public boolean addInitialBioToExclusiveUser(int userId) throws ServiceException {
+        try {
+            return userRegistrationLogic.addInitialBioToExclusiveUser(userId);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     /**
      * Проверяем, вернулось ли true после поиска email в БД пользователей
      */

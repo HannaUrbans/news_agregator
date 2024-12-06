@@ -117,6 +117,7 @@ public class UserDAOImpl implements IUserDAO {
     @Override
     public int registerExclusiveUserInDatabase(String name, String email, String password, String regKey, UserRole userRole) throws DAOException {
         //вставляем данные
+        //био null ПОКА вставляем отдельным методом
         String query = "INSERT INTO news_management.users (registration_date, name, email, password, role_id, reg_keys_id) VALUES (?, ?, ?, ?, (SELECT id FROM news_management.roles WHERE name = ? LIMIT 1), (SELECT id FROM news_management.reg_keys WHERE value = ? LIMIT 1))";
         try (Connection connection = dbConnectionTool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -140,6 +141,20 @@ public class UserDAOImpl implements IUserDAO {
             throw new DAOException(e);
         }
         return 0;
+    }
+
+    public boolean addInitialBioToExclusiveUser(int userId) throws DAOException{
+        String query = "INSERT INTO news_management.user_details (bio, user_id) VALUES (?, ?)";
+        try (Connection connection = dbConnectionTool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setNull(1, java.sql.Types.INTEGER);
+            preparedStatement.setInt(2, userId);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            return  (affectedRows > 0);
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
     }
 
     /**

@@ -61,7 +61,6 @@ public class DoAuth implements Command {
             request.getSession().setAttribute("name", auth.getName());
             request.getSession().setAttribute("bio", changeProfileService.getFieldData(auth.getId(), ProfileDataField.BIO));
 
-
             response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
 
         } catch (ServiceException e) {

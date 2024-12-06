@@ -11,5 +11,7 @@ public interface IRegistrationService {
 
     int checkExclusiveUserReg(String name, String email, String password, String regKey, UserRole userRole) throws ServiceException;
 
+    boolean addInitialBioToExclusiveUser(int userId) throws ServiceException;
+
     boolean checkEmailExistsInDB(HttpServletRequest request, String email) throws ServiceException;
 }

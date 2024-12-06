@@ -43,12 +43,14 @@ public class DoRegistration implements Command {
                         redirectToRegistrationPage(request, response);
                         break;
                     case ADMIN:
-                        logicForRegistration.checkExclusiveUserReg(name, email, password, regKey, UserRole.ADMIN);
+                        int adminId = logicForRegistration.checkExclusiveUserReg(name, email, password, regKey, UserRole.ADMIN);
+                        logicForRegistration.addInitialBioToExclusiveUser(adminId);
                         request.getSession().setAttribute("regSuccess", name + ", поздравляем Вас с завершением регистрации в качестве администратора!");
                         response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
                         break;
                     case AUTHOR:
-                        logicForRegistration.checkExclusiveUserReg(name, email, password, regKey, UserRole.AUTHOR);
+                        int authorId = logicForRegistration.checkExclusiveUserReg(name, email, password, regKey, UserRole.AUTHOR);
+                        logicForRegistration.addInitialBioToExclusiveUser(authorId);
                         request.getSession().setAttribute("regSuccess", name + ", поздравляем Вас с завершением регистрации в качестве автора!");
                         response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
                         break;

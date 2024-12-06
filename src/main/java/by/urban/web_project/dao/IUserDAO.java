@@ -15,6 +15,8 @@ public interface IUserDAO {
 
     int registerExclusiveUserInDatabase(String name, String email, String password, String regKey, UserRole userRole) throws DAOException;
 
+    boolean addInitialBioToExclusiveUser(int userId) throws DAOException;
+
     void updateName(int id, String newName) throws DAOException;
 
     void updateEmail(int id, String newEmail) throws DAOException;
