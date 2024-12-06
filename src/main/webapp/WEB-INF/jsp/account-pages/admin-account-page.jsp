@@ -19,16 +19,7 @@
           href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <header>
-    <div class="enter_button">
-        <form action="Controller" method="Get">
-            <button type="submit" name="command" value="GO_TO_INDEX_PAGE">Главная</button>
-        </form>
-    </div>
-    <div class="enter_button">
-        <form action="Controller" method="Get">
-            <button type="submit" name="command" value="LOGOUT">Выйти</button>
-        </form>
-    </div>
+    <%@ include file="../page_elems/buttons-in-header.jsp" %>
 </header>
 <body>
 
@@ -90,7 +81,8 @@
                                 </button>
                                 <button type="submit" name="command" value="SHOW_STUB_PAGE">Добавить ключи в БД
                                 </button>
-                                <button type="submit" name="command" value="SHOW_STUB_PAGE">Просмотреть список всех зарегистрированных пользователей
+                                <button type="submit" name="command" value="SHOW_STUB_PAGE">Просмотреть список всех
+                                    зарегистрированных пользователей
                                 </button>
                             </div>
                         </form>

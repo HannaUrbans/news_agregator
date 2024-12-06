@@ -21,11 +21,7 @@
 
 <body>
 <header>
-    <div class="enter_button">
-        <form action="Controller" method="Get">
-            <button type="submit" name="command" value="GO_TO_INDEX_PAGE">Главная</button>
-        </form>
-    </div>
+    <%@ include file="page_elems/buttons-in-header.jsp" %>
 </header>
 <div class="not_footer">
     <div class="form_to_fill_in">

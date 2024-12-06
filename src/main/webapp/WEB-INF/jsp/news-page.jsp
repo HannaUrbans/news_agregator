@@ -18,28 +18,7 @@
           href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <header>
-    <div class="buttons_block">
-        <form action="Controller" method="Get">
-            <button type="submit" name="command" value="GO_TO_INDEX_PAGE">Главная</button>
-        </form>
-    </div>
-    <div class="buttons_block">
-        <form action="Controller" method="Get">
-            <button type="submit" name="command"
-                    value="GO_TO_AUTHENTIFICATION_PAGE">Войти
-            </button>
-        </form>
-
-        <form action="Controller" method="Get">
-            <button type="submit" name="command" value="LOGOUT">Выйти</button>
-        </form>
-
-        <form action="Controller" method="Get">
-            <button type="submit" name="command"
-                    value="GO_TO_REGISTRATION_PAGE">Регистрация
-            </button>
-        </form>
-    </div>
+    <%@ include file="page_elems/buttons-in-header.jsp" %>
 </header>
 <body>
 <div class="not_footer">

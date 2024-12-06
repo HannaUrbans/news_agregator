@@ -98,7 +98,7 @@ public class NewsDAOImpl implements INewsDAO {
     public List<News> getAllNews() throws DAOException {
         String query = "SELECT n.id, n.importance, n.title, n.image, n.brief, n.content, n.publish_date, n.categories_id, c.title AS category_title " +
                 "FROM news_management.news n " +
-                "JOIN news_management.categories c ON n.categories_id = c.id ORDER BY n.publish_date ASC";
+                "JOIN news_management.categories c ON n.categories_id = c.id ORDER BY n.publish_date DESC";
         List<News> newsList = new ArrayList<>();
 
         try (Connection connection = dbConnectionTool.getConnection();
@@ -194,7 +194,7 @@ public class NewsDAOImpl implements INewsDAO {
 
     public List<News> getAllNewsByAuthor(int authorId) throws DAOException {
         List<News> resList = new ArrayList<>();
-        String query = "SELECT news_id FROM news_management.news_authors WHERE users_id = ?";
+        String query = "SELECT news_id FROM news_management.news_authors WHERE users_id = ? ORDER BY (SELECT publish_date FROM news_management.news WHERE id = news_id)  DESC";
         try (Connection connection = dbConnectionTool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, authorId);

@@ -69,11 +69,13 @@ body {
     resize: none;
 }
 
-header {
+.header_buttons {
     display: flex;
     justify-content: space-between;
 }
-
+.header_buttons .enter_button button{
+    width:200px;
+}
 .header_and_news, .news {
     display: flex;
     justify-content: flex-start;

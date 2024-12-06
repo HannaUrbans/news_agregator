@@ -22,32 +22,7 @@
 <body>
 <div class="not_footer">
     <header>
-        <div class="buttons_block">
-            <form action="Controller" method="Get">
-                <button type="submit" name="command" value="GO_TO_INDEX_PAGE">Главная</button>
-            </form>
-        </div>
-        <div>
-            <div class="buttons_block">
-                <form action="Controller" method="GET">
-                    <button type="submit" name="command"
-                            value="GO_TO_AUTHENTIFICATION_PAGE">Войти
-                    </button>
-                </form>
-
-                <form action="Controller" method="Get">
-                    <button type="submit" name="command" value="LOGOUT">Выйти</button>
-                </form>
-
-                <form action="Controller" method="GET">
-                    <button type="submit" name="command"
-                            value="GO_TO_REGISTRATION_PAGE">Регистрация
-                    </button>
-                </form>
-
-
-            </div>
-        </div>
+        <%@ include file="page_elems/buttons-in-header.jsp" %>
     </header>
 </div>
 <div class="all_news_page"><h2>Все новости</h2>

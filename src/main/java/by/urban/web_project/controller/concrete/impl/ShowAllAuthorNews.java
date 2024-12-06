@@ -23,11 +23,9 @@ public class ShowAllAuthorNews implements Command {
 
         int id = (int) request.getSession().getAttribute("id");
         List<News> newsAuthorList = newsService.getAuthorNewsList(id);
-        //выводится в обратном порядке добавления в список
-        //убедись, что этот список тут нужен + мб можно заменить на order by ... desc
-        Collections.reverse(newsAuthorList);
 
-        request.getSession().setAttribute("newsAuthorList", newsAuthorList);
+        //НЕ В СЕССИИ, А ПРОСТО В АТРИБУТАХ ПЕРЕДАЕМ
+        request.setAttribute("newsAuthorList", newsAuthorList);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/author-news-page.jsp");
         dispatcher.forward(request, response);

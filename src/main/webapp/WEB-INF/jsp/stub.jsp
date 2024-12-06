@@ -15,6 +15,8 @@
 	href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
+<header>
+</header>
 	<div class="not_footer">
 		<h4>Это заглушка, информация скоро будет добавлена</h4>
 	</div>

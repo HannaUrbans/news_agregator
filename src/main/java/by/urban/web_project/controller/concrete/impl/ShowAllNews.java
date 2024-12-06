@@ -22,11 +22,9 @@ public class ShowAllNews implements Command {
         INewsService newsService = serviceFactory.getNewsService();
 
         List<News> newsList = newsService.getNewsList();
-        //выводится в обратном порядке добавления в список
-        //убедись, что этот список тут нужен + мб можно заменить на order by ... desc
-        Collections.reverse(newsList);
 
-        request.getSession().setAttribute("newsList", newsList);
+        //НЕ В СЕССИИ, А ПРОСТО В АТРИБУТАХ ПЕРЕДАЕМ
+        request.setAttribute("newsList", newsList);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/all-news-page.jsp");
         dispatcher.forward(request, response);

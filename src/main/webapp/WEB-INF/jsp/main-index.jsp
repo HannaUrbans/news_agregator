@@ -21,27 +21,7 @@
 <body>
 <div class="not_footer">
     <header>
-        <div></div>
-        <div>
-            <div class="buttons_block">
-                <form action="Controller" method="Get">
-                    <button type="submit" name="command"
-                            value="GO_TO_AUTHENTIFICATION_PAGE">Войти
-                    </button>
-                </form>
-
-                <form action="Controller" method="Get">
-                    <button type="submit" name="command" value="LOGOUT">Выйти</button>
-                </form>
-
-                <form action="Controller" method="Get">
-                    <button type="submit" name="command"
-                            value="GO_TO_REGISTRATION_PAGE">Регистрация
-                    </button>
-                </form>
-            </div>
-        </div>
-
+        <%@ include file="page_elems/buttons-in-header.jsp" %>
     </header>
     <div class="body_flexbox">
         <div class="header_and_news">
