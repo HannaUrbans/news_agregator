@@ -1,59 +1,40 @@
 package by.urban.web_project.utils;
 
-import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.Part;
 
-import java.io.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class ImageUtils {
-    // Абсолютный путь к директории для изображений на сервере (Tomcat)
-    private static final String IMAGES_DIRECTORY = "C:/tools/apache-tomcat-10.1.30/webapps/news_agregator_war/images";
 
-    public static String saveImage(Part inputFile) throws ServletException, IOException {
-        // Разрешаем только определенные типы изображений
-        Set<String> allowedMimeTypes = new HashSet<>();
-        allowedMimeTypes.add("image/png");
-        allowedMimeTypes.add("image/jpg");
-        allowedMimeTypes.add("image/jpeg");
+    public static String saveImage(Part part, ServletContext context) throws IOException {
+        // Указываем абсолютный путь к директории для сохранения изображений
+        String imagesDirPath = "E:\\практика\\webapps\\homeWork05\\news_agregator\\src\\main\\webapp\\images";
+        File imagesDir = new File(imagesDirPath);
 
-        String inputMimeType = inputFile.getContentType();
-        if (!allowedMimeTypes.contains(inputMimeType)) {
-            throw new ServletException("Разрешены только файлы форматов PNG, JPG и JPEG.");
+        // Создаем директорию, если она не существует
+        if (!imagesDir.exists()) {
+            imagesDir.mkdirs();
         }
 
         // Получаем имя файла
-        String fileName = inputFile.getSubmittedFileName();
+        String fileName = part.getSubmittedFileName();
+        // Удаляем путь из имени файла, оставляя только имя
+        String baseFileName = new File(fileName).getName();
+        File file = new File(imagesDir, baseFileName);
 
-        // Формируем полный путь для сохранения файла на сервере
-        String filePath = IMAGES_DIRECTORY + "/" + fileName;
-        System.out.println("Сохраняем изображение по пути: " + filePath);
-
-        // Сохраняем файл в указанную директорию
-        try (BufferedInputStream bis = new BufferedInputStream(inputFile.getInputStream());
-             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath))) {
-
+        // Сохраняем файл
+        try (InputStream inputStream = part.getInputStream();
+             FileOutputStream outputStream = new FileOutputStream(file)) {
             byte[] buffer = new byte[1024];
             int bytesRead;
-
-            while ((bytesRead = bis.read(buffer)) != -1) {
-                bos.write(buffer, 0, bytesRead);
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
             }
-
-        } catch (IOException exc) {
-            exc.printStackTrace();
-            throw new ServletException("Ошибка при сохранении изображения.");
         }
-
-        File file = new File(filePath);
-        if (file.exists()) {
-            System.out.println("File exists: " + filePath);
-        } else {
-            System.out.println("File does not exist: " + filePath);
-        }
-
-        // Возвращаем относительный путь для использования в HTML
-        return fileName;
+        return "images/" + baseFileName; // Возвращаем относительный путь для базы данных
     }
 }

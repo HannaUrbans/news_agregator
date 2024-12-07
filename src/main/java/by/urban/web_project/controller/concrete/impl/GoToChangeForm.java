@@ -1,5 +1,6 @@
 package by.urban.web_project.controller.concrete.impl;
 
+import by.urban.web_project.bean.Auth;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.bean.News;
 import by.urban.web_project.service.INewsService;
@@ -19,15 +20,22 @@ public class GoToChangeForm implements Command {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         INewsService newsService = serviceFactory.getNewsService();
 
-        //проверяем, жива ли сессия
-        if (request.getSession(false) == null){
-            request.setAttribute("errorMessage", "Вы не авторизованы.");
-            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
-        }
+        Auth auth = (Auth) request.getSession(false).getAttribute("auth");
 
+        //проверяем, жива ли сессия не в сессии
+        if (auth == null) {
+            System.out.println("Пользователь не залогинен и пытается открыть страницу личного кабинета");
+            request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
+            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+            return;
+        }
+        System.out.println("В сети находится: " + auth.toString());
         String formType = request.getParameter("formType");
+
         if (formType == null) {
+            request.getSession().setAttribute("authError", "Не указан тип формы");
             response.sendRedirect("Controller?command=NO_SUCH_COMMAND");
+            return;
         }
 
         String page = "";

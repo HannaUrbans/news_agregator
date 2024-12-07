@@ -25,7 +25,14 @@
         <%@ include file="page_elems/buttons-in-header.jsp" %>
     </header>
 </div>
-<div class="all_news_page"><h2>Все новости</h2>
+
+
+<div class="all_news_page">
+    <c:if test="${not empty sessionScope.addNewsSuccess}">
+        <div class="alert alert-success">${sessionScope.addNewsSuccess}</div>
+        <c:remove var="addNewsSuccess" scope="session"/>
+    </c:if>
+    <h2>Все новости</h2>
     <c:if test="${not empty sessionScope.changeArticleSuccess}">
         <div class="alert alert-success">${sessionScope.changeArticleSuccess}</div>
         <c:remove var="changeArticleSuccess" scope="session"/>
@@ -39,13 +46,18 @@
         <ul>
             <c:forEach var="news" items="${newsAuthorList}">
                 <li>
-                    <strong>${news.newsId}</strong><br/>
-                    <strong>${news.title}</strong><br/>
-                    <em>${news.category}</em><br/>
-                    <em>${news.brief}</em><br/>
-                    <p>${news.imageUrl}</p>
+                    <div class="news_preview">
+                        <div>
+                            <img src="${news.imageUrl}" alt="Изображение новости"/>
+                        </div>
+                        <div>
+                            <!--<strong>${news.newsId}</strong><br/>-->
+                            <strong>${news.title}</strong><br/>
+                            <em>${news.category}</em><br/>
+                            <p>${news.brief}</p><br/>
+                        </div>
+                    </div>
                     <p>${news.content}</p>
-
                     <!-- Отображаем кнопку только для зарегистрированных авторов -->
                     <c:if test="${sessionScope.role == 'author'}">
                         <form action="Controller" method="POST">

@@ -9,6 +9,7 @@ import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
 import by.urban.web_project.utils.ImageUtils;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +26,7 @@ public class AddNews implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServiceException, ServletException {
-
+        News newNews = new News();
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         INewsService newsService = serviceFactory.getNewsService();
 
@@ -58,49 +59,42 @@ public class AddNews implements Command {
             // Получаем файл изображения через интерфейс Part
             Part newsPicPart = request.getPart("newsPic");
 
+            // Сохранение изображения
             String fileName = null;
+            ServletContext context = request.getServletContext();
             if (newsPicPart != null && newsPicPart.getSize() > 0) {
-                // Сохраняем изображение и получаем его имя
-                fileName = ImageUtils.saveImage(newsPicPart);
+                fileName = ImageUtils.saveImage(newsPicPart, context);
             }
-            System.out.println("fileName " + fileName);
 
             // Формируем объект News
-            News newNews = new News();
             newNews.setImportance(newsImportance);
             newNews.setTitle(newsTitle);
             newNews.setBrief(newsBrief);
             newNews.setContent(newsContent);
             newNews.setCategory(newsCategory);
-
-            // Формируем URL для изображения (путь относительно корня web-приложения)
-            String imageUrl = null;
-            if (fileName != null) {
-                imageUrl = "/images/" + fileName; // Путь, по которому изображение будет доступно
-            }
-            newNews.setImageUrl(imageUrl);
+            newNews.setImageUrl(fileName);
 
             int newNewsId = newsService.addNewsToDatabase(newNews);
-            System.out.println(newNewsId);
-            System.out.println(auth.getId());
-            newsService.addAuthorToNews(newNewsId,auth.getId());
+            newsService.addAuthorToNews(newNewsId, auth.getId());
+            //request.setAttribute("newsId", newNewsId);
 
+            request.getSession().setAttribute("addNewsSuccess", "Новость успешно добавлена");
             // Перенаправляем на страницу с новостями автора
-            response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
+            response.sendRedirect("Controller?command=SHOW_ALL_AUTHOR_NEWS");
 
             // !!! не забыть проверить потом в джсп, выводятся ли эти ошибки
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Неверный формат данных");
-            System.out.println("2");
-            response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
-            System.out.println("3");
+
+            request.getSession().setAttribute("newNews", newNews);
+            request.getSession().setAttribute("addNewsError", "Неверный формат данных");
+            request.getRequestDispatcher("/WEB-INF/jsp/add-news-form-page.jsp").forward(request, response);
+
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Ошибка при добавлении новости.");
-            System.out.println("4");
-            response.sendRedirect("Controller?command=GO_TO_AUTHOR_ACCOUNT_PAGE");
-            System.out.println("5");
+            request.getSession().setAttribute("newNews", newNews);
+            request.getSession().setAttribute("errorMessage", "Ошибка при добавлении новости.");
+            request.getRequestDispatcher("/WEB-INF/jsp/add-news-form-page.jsp").forward(request, response);
         }
     }
 }

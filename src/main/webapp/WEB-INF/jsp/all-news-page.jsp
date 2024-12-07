@@ -35,13 +35,19 @@
         <ul>
             <c:forEach var="news" items="${newsList}">
                 <li>
-                    <strong>${news.newsId}</strong><br/>
-                    <strong>${news.title}</strong><br/>
-                    <em>${news.category}</em><br/>
-                    <em>${news.brief}</em><br/>
+                    <div class="news_preview">
+                        <div>
+                            <img src="${news.imageUrl}" alt="Изображение новости"/>
+                        </div>
+                        <div>
+                            <!--<strong>${news.newsId}</strong><br/>-->
+                            <strong>${news.title}</strong><br/>
+                            <em>${news.category}</em><br/>
+                            <p>${news.brief}</p><br/>
+                        </div>
+                    </div>
                     <!-- Отображаем полный текст новости только для зарегистрированных пользователей -->
                     <c:if test="${not empty sessionScope.auth}">
-                        <p>${news.imageUrl}</p>
                         <p>${news.content}</p>
                     </c:if>
 
@@ -60,7 +66,7 @@
                     <c:if test="${sessionScope.role == 'author'}">
                         <form action="Controller" method="POST">
                             <input type="hidden" name="newsId" value="${news.newsId}"/>
-                            <input type="hidden" name="formType" value="newsArticle" />
+                            <input type="hidden" name="formType" value="newsArticle"/>
                             <button type="submit" name="command" value="GO_TO_CHANGE_FORM">Изменить</button>
                         </form>
                     </c:if>

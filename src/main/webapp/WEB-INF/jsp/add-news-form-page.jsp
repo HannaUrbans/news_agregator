@@ -25,7 +25,15 @@
     <form action="Controller" method="post" enctype="multipart/form-data">
         <div class="wide_form">
             <h1>Для добавления новости, пожалуйста, заполните все поля</h1>
+            <c:if test="${not (sessionScope.addNewsError eq null)}">
+                <div class="alert alert-danger">${sessionScope.addNewsError}</div>
+                <c:remove var="addNewsError" scope="session"/>
+            </c:if>
 
+            <c:if test="${not (sessionScope.errorMessage eq null)}">
+                <div class="alert alert-danger">${sessionScope.errorMessage}</div>
+                <c:remove var="errorMessage" scope="session"/>
+            </c:if>
             <label for="newsImportance">Выберите категорию новости
                 <select id="newsImportance" name="newsImportance">
                     <option value="breaking">Breaking</option>
@@ -35,7 +43,7 @@
             </label>
 
             <label for="newsTitle">Заголовок новости
-                <textarea id="newsTitle" name="newsTitle" required></textarea>
+                <textarea id="newsTitle" name="newsTitle" required>${newNews.title != null ? newNews.title : ''}</textarea>
             </label>
 
             <label for="newsPic">Изображение
@@ -43,11 +51,11 @@
             </label>
 
             <label for="newsBrief">Бриф статьи
-                <textarea id="newsBrief" name="newsBrief" required></textarea>
+                <textarea id="newsBrief" name="newsBrief" required>${newNews.brief != null ? newNews.brief : ''}</textarea>
             </label>
 
             <label for="newsContent">Статья
-                <textarea id="newsContent" name="newsContent" required></textarea>
+                <textarea id="newsContent" name="newsContent" required>${newNews.content != null ? newNews.content : ''}</textarea>
             </label>
 
             <label for="newsCategory">Выберите категорию новости

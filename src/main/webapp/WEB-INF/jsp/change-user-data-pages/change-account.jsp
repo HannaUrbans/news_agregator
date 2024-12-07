@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ include file="../page_elems/title.jsp" %>
 <!DOCTYPE html>
 <html>
@@ -24,7 +25,7 @@
 
         <form action="Controller" method="post">
             <label for="newName">Новое имя:</label>
-            <input type="text" id="newName" name="newName">
+            <input type="text" id="newName" name="newName"  value="${auth.name}">
 
             <p>Чтобы изменить конфиденциальные данные, такие как email и пароль, требуется сначала прописать старые
                 данные, чтобы система убедилась, что доступ в личный кабинет в руках у настоящего владельца.</p>

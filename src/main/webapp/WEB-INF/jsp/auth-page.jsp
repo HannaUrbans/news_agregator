@@ -47,7 +47,7 @@
                 меня</label>
             <c:if test="${not (sessionScope.authError eq null)}">
                 <div class="alert alert-danger">${sessionScope.authError}</div>
-                <c:remove var="authSuccess" scope="session"/>
+                <c:remove var="authError" scope="session"/>
             </c:if>
             <button type="submit" name="command" value="DO_AUTH">Войти</button>
             <!-- <a href="Controller?command=GO_TO_REGISTRATION_PAGE">Регистрация
