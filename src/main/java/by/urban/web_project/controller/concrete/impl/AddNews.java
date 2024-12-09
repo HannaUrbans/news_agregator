@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
 import java.io.IOException;
+import java.util.List;
 
 import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedirectUrl;
 
@@ -77,6 +78,17 @@ public class AddNews implements Command {
             int newNewsId = newsService.addNewsToDatabase(newNews);
             newsService.addAuthorToNews(newNewsId, auth.getId());
             //request.setAttribute("newsId", newNewsId);
+
+
+            List<News> newsList = newsService.getNewsList();
+            newsList.add(newNews);
+            request.getSession().setAttribute("newsList", newsList);
+            switch (newNews.getImportance()){
+                case NewsImportance.BREAKING:
+                    request.getSession().setAttribute("breakingNews", newNews);
+                    break;
+            }
+
 
             request.getSession().setAttribute("addNewsSuccess", "Новость успешно добавлена");
             // Перенаправляем на страницу с новостями автора

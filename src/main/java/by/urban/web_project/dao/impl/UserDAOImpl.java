@@ -1,11 +1,11 @@
 package by.urban.web_project.dao.impl;
 
-import by.urban.web_project.dao.DAOException;
-import by.urban.web_project.dao.DAOFactory;
-import by.urban.web_project.dao.IDatabaseConnectionDAO;
-import by.urban.web_project.dao.IUserDAO;
 import by.urban.web_project.bean.User;
 import by.urban.web_project.bean.UserRole;
+import by.urban.web_project.dao.DAOException;
+import by.urban.web_project.dao.IUserDAO;
+import by.urban.web_project.dbmanager.ConnectionPool;
+import by.urban.web_project.dbmanager.ConnectionPoolException;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -14,11 +14,8 @@ import java.util.Map;
 
 public class UserDAOImpl implements IUserDAO {
 
-    private final IDatabaseConnectionDAO dbConnectionTool;
-
-    public UserDAOImpl() throws DAOException {
-        this.dbConnectionTool = DAOFactory.getInstance().getDbConnection();
-    }
+    //принцип работы: получаем соединение -> операция с бд -> возвращаем соединение в пул
+    ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     /**
      * Метод авторизации
@@ -35,9 +32,8 @@ public class UserDAOImpl implements IUserDAO {
                 "FROM news_management.users u " +
                 "JOIN news_management.roles r ON u.role_id = r.id " +
                 "WHERE u.email = ? AND u.password = ?";
-
-        try (Connection connection = dbConnectionTool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (Connection connection = connectionPool.takeConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(query)){
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, password);
 
@@ -52,7 +48,7 @@ public class UserDAOImpl implements IUserDAO {
                     throw new DAOException("Пользователь с email " + email + " и паролем " + password + " не найден.");
                 }
             }
-        } catch (SQLException e) {
+        } catch(SQLException | ConnectionPoolException e){
             throw new DAOException(e);
         }
     }
@@ -66,14 +62,14 @@ public class UserDAOImpl implements IUserDAO {
     @Override
     public boolean doesEmailExistInDB(String email) throws DAOException {
         String query = "SELECT 1 FROM news_management.users WHERE email = ?";
-        try (Connection connection = dbConnectionTool.getConnection();
+        try (Connection connection = connectionPool.takeConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, email);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 return resultSet.next();
             }
-        } catch (SQLException e) {
+        } catch (SQLException | ConnectionPoolException e) {
             throw new DAOException(e);
         }
     }
@@ -90,7 +86,7 @@ public class UserDAOImpl implements IUserDAO {
     public int registerUserInDatabase(String name, String email, String password) throws DAOException {
         //вставляем данные
         String query = "INSERT INTO news_management.users (registration_date, name, email, password, role_id, reg_keys_id) VALUES (?, ?, ?, ?, (SELECT id FROM news_management.roles WHERE name = ? LIMIT 1), ?)";
-        try (Connection connection = dbConnectionTool.getConnection();
+        try (Connection connection = connectionPool.takeConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             Date regDate = Date.valueOf(LocalDate.now());
             preparedStatement.setDate(1, regDate);
@@ -108,7 +104,7 @@ public class UserDAOImpl implements IUserDAO {
                     }
                 }
             }
-        } catch (SQLException e) {
+        } catch(SQLException | ConnectionPoolException e){
             throw new DAOException(e);
         }
         return 0;
@@ -119,7 +115,7 @@ public class UserDAOImpl implements IUserDAO {
         //вставляем данные
         //био null ПОКА вставляем отдельным методом
         String query = "INSERT INTO news_management.users (registration_date, name, email, password, role_id, reg_keys_id) VALUES (?, ?, ?, ?, (SELECT id FROM news_management.roles WHERE name = ? LIMIT 1), (SELECT id FROM news_management.reg_keys WHERE value = ? LIMIT 1))";
-        try (Connection connection = dbConnectionTool.getConnection();
+        try (Connection connection = connectionPool.takeConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             Date regDate = Date.valueOf(LocalDate.now());
             preparedStatement.setDate(1, regDate);
@@ -137,22 +133,61 @@ public class UserDAOImpl implements IUserDAO {
                     }
                 }
             }
-        } catch (SQLException e) {
+        } catch(SQLException | ConnectionPoolException e){
             throw new DAOException(e);
         }
         return 0;
     }
 
-    public boolean addInitialBioToExclusiveUser(int userId) throws DAOException{
-        String query = "INSERT INTO news_management.user_details (bio, user_id) VALUES (?, ?)";
-        try (Connection connection = dbConnectionTool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setNull(1, java.sql.Types.INTEGER);
-            preparedStatement.setInt(2, userId);
+//    public boolean addInitialBioToExclusiveUser(int userId) throws DAOException{
+//        String query = "INSERT INTO news_management.user_details (bio, user_id) VALUES (?, ?)";
+//        try (Connection connection = dbConnectionTool.getConnection();
+//             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+//            preparedStatement.setNull(1, java.sql.Types.INTEGER);
+//            preparedStatement.setInt(2, userId);
+//
+//            int affectedRows = preparedStatement.executeUpdate();
+//            return  (affectedRows > 0);
+//        } catch (SQLException e) {
+//            throw new DAOException(e);
+//        }
+//    }
 
-            int affectedRows = preparedStatement.executeUpdate();
-            return  (affectedRows > 0);
-        } catch (SQLException e) {
+    /**
+     * Метод добавляет новую биографию или обновляет существующую биографию пользователя.
+     */
+    public boolean addOrUpdateBio(int userId, String newBio) throws DAOException {
+        String selectQuery = "SELECT COUNT(*) FROM news_management.user_details WHERE user_id = ?";
+        String insertQuery = "INSERT INTO news_management.user_details (bio, user_id) VALUES (?, ?)";
+        String updateQuery = "UPDATE news_management.user_details SET bio = ? WHERE user_id = ?";
+
+        try (Connection connection = connectionPool.takeConnection()) {
+            // Проверяем, существует ли запись для данного userId
+            try (PreparedStatement selectStatement = connection.prepareStatement(selectQuery)) {
+                selectStatement.setInt(1, userId);
+                ResultSet resultSet = selectStatement.executeQuery();
+                resultSet.next();
+                int count = resultSet.getInt(1);
+
+                if (count > 0) {
+                    // Если запись существует, обновляем её
+                    try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
+                        updateStatement.setString(1, newBio);
+                        updateStatement.setInt(2, userId);
+                        int affectedRows = updateStatement.executeUpdate();
+                        return affectedRows > 0;
+                    }
+                } else {
+                    // Если записи нет, создаем новую
+                    try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+                        insertStatement.setString(1, newBio);
+                        insertStatement.setInt(2, userId);
+                        int affectedRows = insertStatement.executeUpdate();
+                        return affectedRows > 0;
+                    }
+                }
+            }
+        } catch(SQLException | ConnectionPoolException e){
             throw new DAOException(e);
         }
     }
@@ -163,7 +198,7 @@ public class UserDAOImpl implements IUserDAO {
     @Override
     public void updateName(int id, String newName) throws DAOException {
         String query = "UPDATE news_management.users SET name = ? WHERE id=?";
-        try (Connection connection = dbConnectionTool.getConnection();
+        try (Connection connection = connectionPool.takeConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, newName);
             preparedStatement.setInt(2, id);
@@ -172,7 +207,7 @@ public class UserDAOImpl implements IUserDAO {
             if (affectedRows == 0) {
                 throw new DAOException("Не удалось обновить имя пользователя с ID " + id);
             }
-        } catch (SQLException e) {
+        } catch(SQLException | ConnectionPoolException e){
             throw new DAOException(e);
         }
     }
@@ -183,7 +218,7 @@ public class UserDAOImpl implements IUserDAO {
     @Override
     public void updateEmail(int id, String newEmail) throws DAOException {
         String query = "UPDATE news_management.users SET email = ? WHERE id=?";
-        try (Connection connection = dbConnectionTool.getConnection();
+        try (Connection connection = connectionPool.takeConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, newEmail);
             preparedStatement.setInt(2, id);
@@ -192,7 +227,7 @@ public class UserDAOImpl implements IUserDAO {
             if (affectedRows == 0) {
                 throw new DAOException("Не удалось обновить email пользователя с ID " + id);
             }
-        } catch (SQLException e) {
+        } catch(SQLException | ConnectionPoolException e){
             throw new DAOException(e);
         }
     }
@@ -203,7 +238,7 @@ public class UserDAOImpl implements IUserDAO {
     @Override
     public void updatePassword(int id, String newPassword) throws DAOException {
         String query = "UPDATE news_management.users SET password = ? WHERE id=?";
-        try (Connection connection = dbConnectionTool.getConnection();
+        try (Connection connection = connectionPool.takeConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, newPassword);
             preparedStatement.setInt(2, id);
@@ -212,36 +247,36 @@ public class UserDAOImpl implements IUserDAO {
             if (affectedRows == 0) {
                 throw new DAOException("Не удалось обновить пароль пользователя с ID " + id);
             }
-        } catch (SQLException e) {
+        } catch(SQLException | ConnectionPoolException e){
             throw new DAOException(e);
         }
     }
 
-    /**
-     * Метод обновляет поле "биография" (информация добавляется в личном кабинете)
-     */
-    @Override
-    public void updateBio(int id, String newBio) throws DAOException {
-        String query = "UPDATE news_management.user_details SET bio = ? WHERE user_id=?";
-        try (Connection connection = dbConnectionTool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, newBio);
-            preparedStatement.setInt(2, id);
-
-            int affectedRows = preparedStatement.executeUpdate();
-            if (affectedRows == 0) {
-                throw new DAOException("Не удалось обновить био автора с ID " + id);
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }
-    }
+//    /**
+//     * Метод обновляет поле "биография" (информация добавляется в личном кабинете)
+//     */
+//    @Override
+//    public void updateBio(int id, String newBio) throws DAOException {
+//        String query = "UPDATE news_management.user_details SET bio = ? WHERE user_id=?";
+//        try (Connection connection = dbConnectionTool.getConnection();
+//             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+//            preparedStatement.setString(1, newBio);
+//            preparedStatement.setInt(2, id);
+//
+//            int affectedRows = preparedStatement.executeUpdate();
+//            if (affectedRows == 0) {
+//                throw new DAOException("Не удалось обновить био автора с ID " + id);
+//            }
+//        } catch (SQLException e) {
+//            throw new DAOException(e);
+//        }
+//    }
 
     @Override
     public UserRole specifyKeyTypeIfItIsNotReserved(String registrationKey) throws DAOException {
         String query = "SELECT r.name FROM news_management.reg_keys rk JOIN news_management.roles r ON rk.roles_id = r.id WHERE rk.value = ? && rk.is_reserved = ?";
         UserRole userRole = null;
-        try (Connection connection = dbConnectionTool.getConnection();
+        try (Connection connection = connectionPool.takeConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, registrationKey);
             preparedStatement.setBoolean(2, false);
@@ -250,7 +285,7 @@ public class UserDAOImpl implements IUserDAO {
                     return UserRole.valueOf(resultSet.getString("name").toUpperCase());
                 }
             }
-        } catch (SQLException e) {
+        } catch(SQLException | ConnectionPoolException e){
             throw new DAOException(e);
         }
         return null;
@@ -262,7 +297,7 @@ public class UserDAOImpl implements IUserDAO {
         Map<String, String> userProfile = new HashMap<>();
         System.out.println("это метод userProfile");
 
-        try (Connection connection = dbConnectionTool.getConnection();
+        try (Connection connection = connectionPool.takeConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -281,7 +316,7 @@ public class UserDAOImpl implements IUserDAO {
                 userProfile.put("password", password);
                 userProfile.put("bio", bio);
             }
-        } catch (SQLException e) {
+        } catch(SQLException | ConnectionPoolException e){
             throw new DAOException(e);
         }
 

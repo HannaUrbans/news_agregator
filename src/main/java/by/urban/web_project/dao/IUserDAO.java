@@ -11,11 +11,13 @@ public interface IUserDAO {
 
     boolean doesEmailExistInDB(String email) throws DAOException;
 
-    int registerUserInDatabase(String name, String email, String password)  throws DAOException;
+    int registerUserInDatabase(String name, String email, String password) throws DAOException;
 
     int registerExclusiveUserInDatabase(String name, String email, String password, String regKey, UserRole userRole) throws DAOException;
 
-    boolean addInitialBioToExclusiveUser(int userId) throws DAOException;
+    //boolean addInitialBioToExclusiveUser(int userId) throws DAOException;
+
+    boolean addOrUpdateBio(int userId, String newBio) throws DAOException;
 
     void updateName(int id, String newName) throws DAOException;
 
@@ -23,9 +25,9 @@ public interface IUserDAO {
 
     void updatePassword(int id, String newPassword) throws DAOException;
 
-    void updateBio(int id, String newBio) throws DAOException;
+    //void updateBio(int id, String newBio) throws DAOException;
 
-    UserRole specifyKeyTypeIfItIsNotReserved(String registrationKey)  throws DAOException;
+    UserRole specifyKeyTypeIfItIsNotReserved(String registrationKey) throws DAOException;
 
     Map<String, String> getUserProfileById(int id) throws DAOException;
 

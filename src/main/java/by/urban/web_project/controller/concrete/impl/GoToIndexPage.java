@@ -21,8 +21,10 @@ public class GoToIndexPage implements Command {
         INewsService newsService = serviceFactory.getNewsService();
 
         try {
-            News breakingNews = newsService.getNewsByType(NewsImportance.BREAKING).get(0);
-            News topNews = newsService.getNewsByType(NewsImportance.TOP).get(0);
+            List<News> breakingNewsList = newsService.getNewsByType(NewsImportance.BREAKING);
+            News breakingNews = breakingNewsList.get(breakingNewsList.size()-1);
+            List<News> topNewsList = newsService.getNewsByType(NewsImportance.TOP);
+            News topNews = topNewsList.get(topNewsList.size()-1);
             List<News> regularNewsList = newsService.getNewsByType(NewsImportance.REGULAR);
 
             if (breakingNews != null) {
@@ -33,7 +35,7 @@ public class GoToIndexPage implements Command {
             }
 
             request.setAttribute("regularNews", regularNewsList);
-
+            System.out.println(regularNewsList.size());
         } catch (ServiceException e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Ошибка при получении новостей.");

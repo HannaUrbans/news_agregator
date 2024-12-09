@@ -6,7 +6,7 @@ public interface IChangeProfileService {
 
    String getFieldData (int id, ProfileDataField profileDataField) throws ServiceException;
 
-    void updateBio(int id, String newBio) throws ServiceException;
+    boolean updateBio(int id, String newBio) throws ServiceException;
 
     void updateName(int id, String newName) throws ServiceException;
 

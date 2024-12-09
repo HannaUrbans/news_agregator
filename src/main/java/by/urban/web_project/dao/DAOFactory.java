@@ -7,7 +7,7 @@ public class DAOFactory {
     private static DAOFactory instance;
 
     // Экземпляры DAO объектов, инициализируются по мере необходимости
-    private IDatabaseConnectionDAO sqlDatabaseConnection;
+    //private IDatabaseConnectionDAO sqlDatabaseConnection;
     private IUserDAO sqlUserImpl;
     private IFavoritesDAO sqlFavoritesImpl;
     private INewsCategoryDAO sqlNewsCategoryImpl;
@@ -25,13 +25,13 @@ public class DAOFactory {
         return instance;
     }
 
-    // Метод для получения экземпляра DatabaseConnectionDAO
-    public IDatabaseConnectionDAO getDbConnection() throws DAOException {
-        if (sqlDatabaseConnection == null) {
-            sqlDatabaseConnection = new DatabaseConnectionDAOImpl();
-        }
-        return sqlDatabaseConnection;
-    }
+//    // Метод для получения экземпляра DatabaseConnectionDAO
+//    public IDatabaseConnectionDAO getDbConnection() throws DAOException {
+//        if (sqlDatabaseConnection == null) {
+//            sqlDatabaseConnection = new DatabaseConnectionDAOImpl();
+//        }
+//        return sqlDatabaseConnection;
+//    }
 
     // Методы для получения DAO объектов
     public IUserDAO getUserDAO() throws DAOException {

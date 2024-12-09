@@ -23,8 +23,7 @@ public class ShowAllNews implements Command {
 
         List<News> newsList = newsService.getNewsList();
 
-        //НЕ В СЕССИИ, А ПРОСТО В АТРИБУТАХ ПЕРЕДАЕМ
-        request.setAttribute("newsList", newsList);
+        request.getSession().setAttribute("newsList", newsList);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/all-news-page.jsp");
         dispatcher.forward(request, response);

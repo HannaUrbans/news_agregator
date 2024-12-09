@@ -58,7 +58,8 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
     public boolean addInitialBioToExclusiveUser(int userId) throws ServiceException {
         try {
-            return userRegistrationLogic.addInitialBioToExclusiveUser(userId);
+           //return userRegistrationLogic.addInitialBioToExclusiveUser(userId);
+            return userRegistrationLogic.addOrUpdateBio(userId, null);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }

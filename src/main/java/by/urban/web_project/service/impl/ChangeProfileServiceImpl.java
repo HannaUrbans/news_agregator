@@ -44,9 +44,9 @@ public class ChangeProfileServiceImpl implements IChangeProfileService {
 
     //переделац
     @Override
-    public void updateBio(int id, String newBio) throws ServiceException {
+    public boolean updateBio(int id, String newBio) throws ServiceException {
         try {
-            userDAO.updateBio(id, newBio);
+            return userDAO.addOrUpdateBio(id, newBio);
         } catch (DAOException e) {
             throw new ServiceException("Ошибка при обновлении био автора", e);
         }
