@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.9.3</version>
+			<version>5.11.3</version>
 			<!-- не включается в варник-->
 			<scope>test</scope>
 		</dependency>
@@ -42,8 +42,8 @@
 			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
 			<version>3.0.1</version>
 		</dependency>
-		
-		<!-- для подключения сервлетов + там же включена EL-->
+
+		<!-- для подключения сервлетов + там же включена EL + там же фильтры-->
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
@@ -52,6 +52,7 @@
 			не будет включена в варник-->
 			<scope>provided</scope>
 		</dependency>
+
 		<!-- для отправки письма через форму-->
 		<dependency>
 			<groupId>com.sun.mail</groupId>
@@ -90,6 +91,16 @@
 					<source>${maven.compiler.source}</source>
 					<target>${maven.compiler.target}</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>3.1.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.9.1</version>
 			</plugin>
 		</plugins>
 	</build>
