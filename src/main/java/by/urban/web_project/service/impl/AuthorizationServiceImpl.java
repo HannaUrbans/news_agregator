@@ -1,5 +1,6 @@
 package by.urban.web_project.service.impl;
 
+import by.urban.web_project.bean.Auth;
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.DAOFactory;
 import by.urban.web_project.dao.IUserDAO;
@@ -8,6 +9,8 @@ import by.urban.web_project.service.IAuthorizationService;
 import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
+
+import java.util.Map;
 
 public class AuthorizationServiceImpl implements IAuthorizationService {
 
@@ -48,4 +51,5 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
         //если не удалось авторизовать
         return null;
     }
+
 }

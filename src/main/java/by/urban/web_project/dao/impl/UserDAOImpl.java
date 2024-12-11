@@ -308,10 +308,6 @@ public class UserDAOImpl implements IUserDAO {
                 String password = resultSet.getString("password");
                 String bio = resultSet.getString("bio");
 
-                System.out.println("email: " + email);
-                System.out.println("password: " + password);
-                System.out.println("bio: " + bio);
-
                 userProfile.put("email", email);
                 userProfile.put("password", password);
                 userProfile.put("bio", bio);
