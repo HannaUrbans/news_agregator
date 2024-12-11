@@ -1,6 +1,8 @@
 package by.urban.web_project.controller.concrete.impl;
 
+import by.urban.web_project.bean.Auth;
 import by.urban.web_project.bean.News;
+import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;
@@ -14,10 +16,20 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
+import static by.urban.web_project.controller.utils.RolePresenceUtil.checkRolePresence;
+
 
 public class ShowAllAuthorNews implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ServiceException {
+        Auth auth = (Auth) request.getSession(false).getAttribute("auth");
+
+        // если не в сессии
+        checkAuthPresence(request, response, auth);
+        // если от другой роли
+        checkRolePresence(request, response, UserRole.AUTHOR);
+
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         INewsService newsService = serviceFactory.getNewsService();
 

@@ -1,6 +1,7 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.bean.Auth;
+import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.bean.News;
 import by.urban.web_project.service.INewsService;
@@ -13,6 +14,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
+import static by.urban.web_project.controller.utils.RolePresenceUtil.checkRolePresence;
+
 public class GoToChangeForm implements Command {
 
     @Override
@@ -21,14 +25,9 @@ public class GoToChangeForm implements Command {
         INewsService newsService = serviceFactory.getNewsService();
 
         Auth auth = (Auth) request.getSession(false).getAttribute("auth");
+        // если не в сессии
+        checkAuthPresence(request, response, auth);
 
-        //проверяем, жива ли сессия не в сессии
-        if (auth == null) {
-            System.out.println("Пользователь не залогинен и пытается открыть страницу личного кабинета");
-            request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
-            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
-            return;
-        }
         System.out.println("В сети находится: " + auth.toString());
         String formType = request.getParameter("formType");
 

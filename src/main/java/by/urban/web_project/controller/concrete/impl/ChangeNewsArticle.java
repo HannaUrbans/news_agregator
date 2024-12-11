@@ -3,6 +3,7 @@ package by.urban.web_project.controller.concrete.impl;
 import by.urban.web_project.bean.Auth;
 import by.urban.web_project.bean.News;
 import by.urban.web_project.bean.User;
+import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;
@@ -14,17 +15,22 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
+import static by.urban.web_project.controller.utils.RolePresenceUtil.checkRolePresence;
+
 public class ChangeNewsArticle implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ServiceException {
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         INewsService newsService = serviceFactory.getNewsService();
 
+        Auth auth = (Auth) request.getSession().getAttribute("auth");
+        checkAuthPresence(request, response, auth);
+        checkRolePresence(request, response, UserRole.AUTHOR);
+
         //пришло из GoToChangeForm.java
         String newsIdString = (String) request.getSession().getAttribute("newsId");
         int newsId = Integer.valueOf(newsIdString);
-
-        Auth auth = (Auth) request.getSession().getAttribute("auth");
 
         String newNewsTitle = request.getParameter("newNewsTitle");
         String newNewsBrief = request.getParameter("newNewsBrief");
@@ -66,14 +72,11 @@ public class ChangeNewsArticle implements Command {
                 }
             }
 
-            //request.getSession().setAttribute("authorNewsList", authorNewsList);
             request.getSession().setAttribute("changeArticleSuccess", "Статья успешно обновлена");
         } else {
             request.getSession().setAttribute("changeArticleError", "Все поля обязательны к заполнению");
 
         }
-
         response.sendRedirect("Controller?command=SHOW_ALL_AUTHOR_NEWS");
-
     }
 }

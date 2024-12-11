@@ -18,6 +18,8 @@ import jakarta.servlet.http.Part;
 import java.io.IOException;
 import java.util.List;
 
+import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
+import static by.urban.web_project.controller.utils.RolePresenceUtil.checkRolePresence;
 import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedirectUrl;
 
 public class AddNews implements Command {
@@ -32,22 +34,12 @@ public class AddNews implements Command {
         INewsService newsService = serviceFactory.getNewsService();
 
         Auth auth = (Auth) request.getSession(false).getAttribute("auth");
-        UserRole role = UserRole.valueOf(((String) request.getSession().getAttribute("role")).toUpperCase());
+
         // если не в сессии
-        if (auth == null) {
-            System.out.println("Пользователь не залогинен и пытается открыть страницу добавления новостей");
-            request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
-            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
-            return;
-        }
+        checkAuthPresence(request, response, auth);
 
         // если от другой роли
-        if (!UserRole.AUTHOR.equals(auth.getRole())) {
-            System.out.println("Пользователь пытается войти на страницу добавления новостей не своей роли");
-            request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
-            response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
-            return;
-        }
+        checkRolePresence(request, response, UserRole.ADMIN);
 
         try {
             // Получаем параметры из запроса, которые в запрос передавались через форму

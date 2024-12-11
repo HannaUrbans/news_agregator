@@ -1,10 +1,12 @@
 package by.urban.web_project.controller.filters;
 
 import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpFilter;
 
 import java.io.IOException;
 
+@WebFilter(filterName = "encodingFilter", urlPatterns = "/*")
 public class EncodingFilter implements Filter {
 
     @Override

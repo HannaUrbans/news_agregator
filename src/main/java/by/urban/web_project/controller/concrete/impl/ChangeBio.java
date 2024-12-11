@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
+import static by.urban.web_project.controller.utils.RolePresenceUtil.checkRolePresence;
 import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedirectUrl;
 
 public class ChangeBio implements Command {
@@ -30,23 +32,13 @@ public class ChangeBio implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         Auth auth = (Auth) request.getSession(false).getAttribute("auth");
-        UserRole role = UserRole.valueOf(((String) request.getSession().getAttribute("role")).toUpperCase());
+
         // если не в сессии
-        if (auth == null) {
-            System.out.println("Пользователь не залогинен и пытается открыть страницу личного кабинета");
-            request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
-            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
-            return;
-        }
+        checkAuthPresence(request, response, auth);
 
         // если от другой роли
         // надо в другом месте (страница с формой открывается при любой роли, но именно отправить не дает, надо шагом ранее эту проверку
-        if (!UserRole.AUTHOR.equals(auth.getRole())) {
-            System.out.println("Пользователь пытается войти в личный кабинет не своей роли");
-            request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
-            response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
-            return;
-        }
+        checkRolePresence(request, response, UserRole.AUTHOR);
 
         int id = (int) request.getSession().getAttribute("id");
 
@@ -79,6 +71,6 @@ public class ChangeBio implements Command {
         }
 
         // Перенаправление на страницу профиля
-        response.sendRedirect("Controller?command=" + UrlFormatterUtil.formatRedirectUrl(role));
+        response.sendRedirect("Controller?command=" + UrlFormatterUtil.formatRedirectUrl(UserRole.valueOf(((String) request.getSession().getAttribute("role")).toUpperCase())));
     }
 }

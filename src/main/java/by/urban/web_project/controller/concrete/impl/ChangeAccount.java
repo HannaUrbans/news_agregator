@@ -16,6 +16,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
+
 public class ChangeAccount implements Command {
     private final IChangeProfileService changeProfileService;
     private final ICheckService checkService;
@@ -28,14 +30,10 @@ public class ChangeAccount implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        //проверяем, жива ли сессия
-        if (request.getSession(false) == null) {
-            request.setAttribute("errorMessage", "Вы не авторизованы.");
-            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
-        }
-
-        //кастуем, потому что getAttribute возвращает Object
         Auth auth = (Auth) request.getSession().getAttribute("auth");
+
+        //проверяем, жива ли сессия
+        checkAuthPresence(request, response, auth);
 
         UserRole role = UserRole.valueOf(((String)request.getSession().getAttribute("role")).toUpperCase());
         System.out.println(role);

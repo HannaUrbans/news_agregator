@@ -38,6 +38,10 @@
                     </h4>
                 </div>
                 <div class="alerts">
+                    <c:if test="${not empty sessionScope.authError}">
+                        <div class="alert alert-danger">${sessionScope.authError}</div>
+                        <c:remove var="authError" scope="session"/>
+                    </c:if>
 
                     <c:if test="${not empty sessionScope.changeNameError}">
                         <div class="alert alert-danger">${sessionScope.changeNameError}</div>

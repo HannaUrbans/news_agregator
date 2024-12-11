@@ -19,8 +19,8 @@ public class GoToAuthentificationPage implements Command {
 
         // Проверка, если уже есть авторизованный пользователь
         if (auth != null) {
-            response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
             System.out.println("Запрос кнопки войти, хотя уже зарегистрирован");
+            response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
             return;
         }
 
