@@ -18,4 +18,12 @@
 	<listener>
 		<listener-class>by.urban.web_project.listener.ConnectionPoolInitializer</listener-class>
 	</listener>
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>by.urban.web_project.controller.filters.EncodingFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>  <!-- Фильтр будет применяться ко всем запросам -->
+	</filter-mapping>
 </web-app>
