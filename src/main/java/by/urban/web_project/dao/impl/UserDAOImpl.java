@@ -116,44 +116,97 @@ public class UserDAOImpl implements IUserDAO {
     public int registerExclusiveUserInDatabase(String name, String email, String password, String regKey, UserRole userRole) throws DAOException {
         //вставляем данные
         //био null ПОКА вставляем отдельным методом
-        String query = "INSERT INTO news_management.users (registration_date, name, email, password, role_id, reg_keys_id) VALUES (?, ?, ?, ?, (SELECT id FROM news_management.roles WHERE name = ? LIMIT 1), (SELECT id FROM news_management.reg_keys WHERE value = ? LIMIT 1))";
-        try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            Date regDate = Date.valueOf(LocalDate.now());
-            preparedStatement.setDate(1, regDate);
-            preparedStatement.setString(2, name);
-            preparedStatement.setString(3, email);
-            preparedStatement.setString(4, password);
-            preparedStatement.setString(5, userRole.name());
-            preparedStatement.setString(6, regKey);
+        String insertQuery = "INSERT INTO news_management.users (registration_date, name, email, password, role_id, reg_keys_id) VALUES (?, ?, ?, ?, (SELECT id FROM news_management.roles WHERE name = ? LIMIT 1), (SELECT id FROM news_management.reg_keys WHERE value = ? LIMIT 1))";
+        String updateQuery = "UPDATE news_management.reg_keys SET is_reserved = 1 WHERE value = ?";
 
-            int affectedRows = preparedStatement.executeUpdate();
-            if (affectedRows > 0) {
-                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        return generatedKeys.getInt(1);
-                    }
+        Connection connection = null;
+        PreparedStatement insertStatement = null;
+        PreparedStatement updateStatement = null;
+        ResultSet generatedKeys = null;
+
+
+        try {
+            connection = connectionPool.takeConnection();
+
+            connection.setAutoCommit(false);
+
+            insertStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+
+            Date regDate = Date.valueOf(LocalDate.now());
+            insertStatement.setDate(1, regDate);
+            insertStatement.setString(2, name);
+            insertStatement.setString(3, email);
+            insertStatement.setString(4, password);
+            insertStatement.setString(5, userRole.name());
+            insertStatement.setString(6, regKey);
+
+            int affectedRows = insertStatement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new DAOException("Новый пользователь не добавлен в БД");
+            }
+
+            generatedKeys = insertStatement.getGeneratedKeys();
+            int userId = 0;
+            if (generatedKeys.next()) {
+                userId = generatedKeys.getInt(1);
+            }
+
+            updateStatement = connection.prepareStatement(updateQuery);
+            updateStatement.setString(1, regKey);
+
+            int updatedRows = updateStatement.executeUpdate();
+            if (updatedRows == 0) {
+                throw new DAOException("Не удалось сменить состояние регистрационного ключа в бд с false на true");
+            }
+
+            connection.commit();
+
+            return userId;
+
+
+        } catch (SQLException | ConnectionPoolException e) {
+            // В случае ошибки откатываем изменения
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException rollbackException) {
+                    // Логируем ошибку отката
+                    e.printStackTrace();
                 }
             }
-        } catch (SQLException | ConnectionPoolException e) {
-            throw new DAOException(e);
-        }
-        return 0;
-    }
+            throw new DAOException("Ошибка при регистрации пользователя: " + e.getMessage(), e);
+        } finally {
+            // Восстанавливаем автокоммит в нормальное состояние
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    // Логируем ошибку восстановления автокоммита
+                    e.printStackTrace();
+                }
+                try {
+                    connection.close(); // Закрытие соединения
+                } catch (SQLException e) {
+                    e.printStackTrace(); // Логируем ошибку при закрытии соединения
+                }
+            }
 
-//    public boolean addInitialBioToExclusiveUser(int userId) throws DAOException{
-//        String query = "INSERT INTO news_management.user_details (bio, user_id) VALUES (?, ?)";
-//        try (Connection connection = dbConnectionTool.getConnection();
-//             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-//            preparedStatement.setNull(1, java.sql.Types.INTEGER);
-//            preparedStatement.setInt(2, userId);
-//
-//            int affectedRows = preparedStatement.executeUpdate();
-//            return  (affectedRows > 0);
-//        } catch (SQLException e) {
-//            throw new DAOException(e);
-//        }
-//    }
+            // Закрытие ресурсов
+            try {
+                if (generatedKeys != null) {
+                    generatedKeys.close();
+                }
+                if (insertStatement != null) {
+                    insertStatement.close();
+                }
+                if (updateStatement != null) {
+                    updateStatement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     /**
      * Метод добавляет новую биографию или обновляет существующую биографию пользователя.
@@ -253,26 +306,6 @@ public class UserDAOImpl implements IUserDAO {
             throw new DAOException(e);
         }
     }
-
-//    /**
-//     * Метод обновляет поле "биография" (информация добавляется в личном кабинете)
-//     */
-//    @Override
-//    public void updateBio(int id, String newBio) throws DAOException {
-//        String query = "UPDATE news_management.user_details SET bio = ? WHERE user_id=?";
-//        try (Connection connection = dbConnectionTool.getConnection();
-//             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-//            preparedStatement.setString(1, newBio);
-//            preparedStatement.setInt(2, id);
-//
-//            int affectedRows = preparedStatement.executeUpdate();
-//            if (affectedRows == 0) {
-//                throw new DAOException("Не удалось обновить био автора с ID " + id);
-//            }
-//        } catch (SQLException e) {
-//            throw new DAOException(e);
-//        }
-//    }
 
     @Override
     public UserRole specifyKeyTypeIfItIsNotReserved(String registrationKey) throws DAOException {
