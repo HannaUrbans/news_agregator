@@ -7,6 +7,15 @@ public class Auth {
     private String name;
     private UserRole role;
 
+    public Auth() {
+    }
+
+    public Auth(int id, String name, UserRole role) {
+        this.id = id;
+        this.name = name;
+        this.role = role;
+    }
+
     public int getId() {
         return id;
     }

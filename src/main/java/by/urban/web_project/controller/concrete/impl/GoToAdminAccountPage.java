@@ -17,6 +17,7 @@ import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedir
 public class GoToAdminAccountPage implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         Auth auth = (Auth) request.getSession(false).getAttribute("auth");
         // если не в сессии
         checkAuthPresence(request, response, auth);

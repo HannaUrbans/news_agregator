@@ -1,8 +1,9 @@
 package by.urban.web_project.controller.concrete.impl;
 
-import by.urban.web_project.controller.concrete.Command;
+import by.urban.web_project.bean.Auth;
 import by.urban.web_project.bean.News;
 import by.urban.web_project.bean.NewsImportance;
+import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
@@ -17,14 +18,16 @@ import java.util.List;
 public class GoToIndexPage implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ServiceException {
+        Auth auth = (Auth) request.getSession(false).getAttribute("auth");
+
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         INewsService newsService = serviceFactory.getNewsService();
 
         try {
             List<News> breakingNewsList = newsService.getNewsByType(NewsImportance.BREAKING);
-            News breakingNews = breakingNewsList.get(breakingNewsList.size()-1);
+            News breakingNews = breakingNewsList.get(breakingNewsList.size() - 1);
             List<News> topNewsList = newsService.getNewsByType(NewsImportance.TOP);
-            News topNews = topNewsList.get(topNewsList.size()-1);
+            News topNews = topNewsList.get(topNewsList.size() - 1);
             List<News> regularNewsList = newsService.getNewsByType(NewsImportance.REGULAR);
 
             if (breakingNews != null) {
@@ -35,13 +38,17 @@ public class GoToIndexPage implements Command {
             }
 
             request.setAttribute("regularNews", regularNewsList);
-            System.out.println(regularNewsList.size());
+
+            if (auth != null) {
+                System.out.println("В сети " + auth.toString());
+            } else {
+                System.out.println("В сети нет зарегистрированного пользователя");
+            }
         } catch (ServiceException e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Ошибка при получении новостей.");
         }
 
-        System.out.println("Номер сессии при открытии главной страницы: " + request.getSession().getId());
         RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/main-index.jsp");
         dispatcher.forward(request, response);
     }

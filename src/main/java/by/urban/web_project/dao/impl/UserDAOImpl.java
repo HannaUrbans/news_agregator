@@ -1,5 +1,6 @@
 package by.urban.web_project.dao.impl;
 
+import by.urban.web_project.bean.Token;
 import by.urban.web_project.bean.User;
 import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.dao.DAOException;
@@ -9,6 +10,7 @@ import by.urban.web_project.dbmanager.ConnectionPoolException;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +35,7 @@ public class UserDAOImpl implements IUserDAO {
                 "JOIN news_management.roles r ON u.role_id = r.id " +
                 "WHERE u.email = ? AND u.password = ?";
         try (Connection connection = connectionPool.takeConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(query)){
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, password);
 
@@ -48,7 +50,7 @@ public class UserDAOImpl implements IUserDAO {
                     throw new DAOException("Пользователь с email " + email + " и паролем " + password + " не найден.");
                 }
             }
-        } catch(SQLException | ConnectionPoolException e){
+        } catch (SQLException | ConnectionPoolException e) {
             throw new DAOException(e);
         }
     }
@@ -104,7 +106,7 @@ public class UserDAOImpl implements IUserDAO {
                     }
                 }
             }
-        } catch(SQLException | ConnectionPoolException e){
+        } catch (SQLException | ConnectionPoolException e) {
             throw new DAOException(e);
         }
         return 0;
@@ -133,7 +135,7 @@ public class UserDAOImpl implements IUserDAO {
                     }
                 }
             }
-        } catch(SQLException | ConnectionPoolException e){
+        } catch (SQLException | ConnectionPoolException e) {
             throw new DAOException(e);
         }
         return 0;
@@ -187,7 +189,7 @@ public class UserDAOImpl implements IUserDAO {
                     }
                 }
             }
-        } catch(SQLException | ConnectionPoolException e){
+        } catch (SQLException | ConnectionPoolException e) {
             throw new DAOException(e);
         }
     }
@@ -207,7 +209,7 @@ public class UserDAOImpl implements IUserDAO {
             if (affectedRows == 0) {
                 throw new DAOException("Не удалось обновить имя пользователя с ID " + id);
             }
-        } catch(SQLException | ConnectionPoolException e){
+        } catch (SQLException | ConnectionPoolException e) {
             throw new DAOException(e);
         }
     }
@@ -227,7 +229,7 @@ public class UserDAOImpl implements IUserDAO {
             if (affectedRows == 0) {
                 throw new DAOException("Не удалось обновить email пользователя с ID " + id);
             }
-        } catch(SQLException | ConnectionPoolException e){
+        } catch (SQLException | ConnectionPoolException e) {
             throw new DAOException(e);
         }
     }
@@ -247,7 +249,7 @@ public class UserDAOImpl implements IUserDAO {
             if (affectedRows == 0) {
                 throw new DAOException("Не удалось обновить пароль пользователя с ID " + id);
             }
-        } catch(SQLException | ConnectionPoolException e){
+        } catch (SQLException | ConnectionPoolException e) {
             throw new DAOException(e);
         }
     }
@@ -285,7 +287,7 @@ public class UserDAOImpl implements IUserDAO {
                     return UserRole.valueOf(resultSet.getString("name").toUpperCase());
                 }
             }
-        } catch(SQLException | ConnectionPoolException e){
+        } catch (SQLException | ConnectionPoolException e) {
             throw new DAOException(e);
         }
         return null;
@@ -295,7 +297,6 @@ public class UserDAOImpl implements IUserDAO {
         String query = "SELECT u.email, u.password, ud.bio FROM news_management.users u LEFT JOIN news_management.user_details ud ON u.id = ud.user_id WHERE u.id = ?";
 
         Map<String, String> userProfile = new HashMap<>();
-        System.out.println("это метод userProfile");
 
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -312,12 +313,118 @@ public class UserDAOImpl implements IUserDAO {
                 userProfile.put("password", password);
                 userProfile.put("bio", bio);
             }
-        } catch(SQLException | ConnectionPoolException e){
+        } catch (SQLException | ConnectionPoolException e) {
             throw new DAOException(e);
         }
 
         return userProfile;
     }
 
+    public boolean checkTokenPresence(int userId) throws DAOException {
+        String query = "SELECT * FROM news_management.tokens WHERE users_id = ?";
+        try (
+                Connection connection = connectionPool.takeConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+        ) {
+            preparedStatement.setInt(1, userId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        } catch (SQLException | ConnectionPoolException e) {
+            throw new DAOException(e);
+        }
+    }
 
+    public Token getFullTokenByUsersId(int userId) throws DAOException {
+        String query = "SELECT * FROM news_management.tokens WHERE users_id = ?";
+        try (
+                Connection connection = connectionPool.takeConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        ) {
+            preparedStatement.setInt(1, userId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                if (resultSet.next()) {
+                    return new Token(
+                            resultSet.getInt(1),
+                            resultSet.getString(2),
+                            resultSet.getTimestamp(3).toLocalDateTime(),
+                            resultSet.getTimestamp(4).toLocalDateTime(),
+                            userId);
+                }
+            }
+        } catch (SQLException | ConnectionPoolException e) {
+            throw new DAOException(e);
+        }
+        return null;
+    }
+
+    public Token saveTokenInDb(int userId, String token) throws DAOException {
+
+            String query = "INSERT INTO news_management.tokens (token, reg_date, exp_date, users_id) VALUES (?, ?, ?, ?)";
+            System.out.println("query " + query);
+            try (
+                    Connection connection = connectionPool.takeConnection();
+                    PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ) {
+                LocalDateTime regDate = LocalDateTime.now();
+                int tokenDurationInMonths = 12;
+                preparedStatement.setString(1, token);
+                preparedStatement.setTimestamp(2, Timestamp.valueOf(regDate));
+                preparedStatement.setTimestamp(3, Timestamp.valueOf(regDate.plusMonths(tokenDurationInMonths)));
+                preparedStatement.setInt(4, userId);
+
+                int affectedRows = preparedStatement.executeUpdate();
+                if (affectedRows > 0) {
+                    try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                        if (generatedKeys.next()) {
+                            int generatedId = generatedKeys.getInt(1);
+                            System.out.println("Generated key: " + generatedId);
+
+                            return new Token(
+                                    generatedId,
+                                    token,
+                                    regDate,
+                                    regDate.plusMonths(tokenDurationInMonths),
+                                    userId
+                            );
+                        }
+                    }
+                }
+            } catch (SQLException | ConnectionPoolException e) {
+                throw new DAOException(e);
+        }
+            return null;
+    }
+
+    public boolean deleteTokenFromDb(int userId)  throws DAOException{
+       String query = "DELETE FROM news_management.tokens WHERE users_id = ?";
+       try
+           (Connection connection = connectionPool.takeConnection();
+           PreparedStatement preparedStatement = connection.prepareStatement(query)
+           ) {
+           preparedStatement.setInt(1, userId);
+           int affectedRows = preparedStatement.executeUpdate();
+           return affectedRows > 0;
+       }
+       catch (SQLException | ConnectionPoolException e) {
+           throw new DAOException(e);
+       }
+    }
+
+    public User findUserByTokenInDb(String token) throws DAOException {
+        String query = "SELECT u.id, u.name, r.name AS role_name FROM news_management.users u JOIN news_management.tokens t ON u.id = t.users_id JOIN news_management.roles r ON u.role_id = r.id WHERE token = ?";
+        try (Connection connection = connectionPool.takeConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, token);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                   return new User(resultSet.getInt("id"), resultSet.getString("name"), UserRole.valueOf((resultSet.getString("role_name")).toUpperCase()));
+                }
+            }
+        } catch (SQLException | ConnectionPoolException e) {
+            throw new DAOException(e);
+        }
+        return null;
+    }
 }

@@ -1,5 +1,6 @@
 package by.urban.web_project.dao;
 
+import by.urban.web_project.bean.Token;
 import by.urban.web_project.bean.User;
 import by.urban.web_project.bean.UserRole;
 
@@ -31,6 +32,15 @@ public interface IUserDAO {
 
     Map<String, String> getUserProfileById(int id) throws DAOException;
 
+    Token saveTokenInDb (int userId, String token) throws DAOException;
+
+    boolean deleteTokenFromDb(int userId)  throws DAOException;
+
+    User findUserByTokenInDb(String token) throws DAOException;
+
+    boolean checkTokenPresence(int userId) throws DAOException;
+
+    Token getFullTokenByUsersId(int userId) throws DAOException;
     //void logOut(String loggedVisitorEmail) throws DAOException;
     //void addProfilePic(String loggedVisitorEmail, String profilePicUrl) throws DAOException;
     //void changeName(String loggedVisitorEmail, String name) throws DAOException;

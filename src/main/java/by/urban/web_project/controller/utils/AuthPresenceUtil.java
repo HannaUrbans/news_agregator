@@ -11,7 +11,7 @@ public class AuthPresenceUtil {
     public static void checkAuthPresence(HttpServletRequest request, HttpServletResponse response, Auth auth) throws IOException {
         // если не в сессии
         if (auth == null) {
-            System.out.println("Пользователь не залогинен и пытается открыть страницу добавления новостей");
+            System.out.println("Пользователь не залогинен и пытается открыть скрытую для неавторизованного пользователя страницу");
             request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
             response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
         }

@@ -12,6 +12,8 @@ public final class ServiceFactory {
     private IAuthorizationService authorizationService;
     private IRegistrationService registrationService;
     private IChangeProfileService changeProfileService;
+    private ICookiesService cookiesService;
+
 
     // Статический блок для инициализации фабрики
     static {
@@ -70,5 +72,12 @@ public final class ServiceFactory {
             changeProfileService = new ChangeProfileServiceImpl();
         }
         return changeProfileService;
+    }
+
+    public ICookiesService getCookiesService() throws ServiceException {
+        if (cookiesService == null) {
+            cookiesService = new CookiesServiceImpl();
+        }
+        return cookiesService;
     }
 }

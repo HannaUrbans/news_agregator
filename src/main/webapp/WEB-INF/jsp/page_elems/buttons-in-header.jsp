@@ -12,7 +12,8 @@
         <c:if test="${not empty sessionScope.auth}">
             <div class="enter_button">
                 <form action="Controller" method="Get">
-                    <button type="submit" name="command" value="GO_TO_ADMIN_ACCOUNT_PAGE">Личный кабинет</button>
+                    <c:set var="commandValue" value="GO_TO_${sessionScope.auth.getRole()}_ACCOUNT_PAGE" />
+                    <button type="submit" name="command" value="${commandValue}">Личный кабинет</button>
 
                     <button type="submit" name="command" value="LOGOUT">Выйти</button>
                 </form>

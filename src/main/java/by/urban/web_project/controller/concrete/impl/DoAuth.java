@@ -6,17 +6,18 @@ import by.urban.web_project.bean.User;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.service.*;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-
 import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedirectUrl;
 
 public class DoAuth implements Command {
     private final ServiceFactory serviceFactory = ServiceFactory.getInstance();
     private final IAuthorizationService authorizationService = serviceFactory.getAuthorizationService();
-    private final IChangeProfileService changeProfileService = ServiceFactory.getInstance().getChangeProfileService();
+    private final IChangeProfileService changeProfileService = serviceFactory.getChangeProfileService();
+    private final ICookiesService cookiesService = serviceFactory.getCookiesService();
 
     //idea заставила пробросить в конструкторе исключение из-за serviceFactory.getAuthorizationService()
     public DoAuth() throws ServiceException {
@@ -47,7 +48,7 @@ public class DoAuth implements Command {
 
             Auth auth = new Auth();
             auth.setId(authorizedUser.getId());
-            auth.setRole(authorizedUser.getUserRole());
+            auth.setRole(authorizedUser.getRole());
             auth.setName(authorizedUser.getName());
 
             //передаем в атрибуты для дальнейшего отображения на джсп страницах
@@ -61,6 +62,18 @@ public class DoAuth implements Command {
             request.getSession().setAttribute("name", auth.getName());
             request.getSession().setAttribute("bio", changeProfileService.getFieldData(auth.getId(), ProfileDataField.BIO));
 
+            System.out.println("В личном кабинете: " + auth.toString());
+
+            //параметр из формы на странице авторизации
+            String rememberMe = request.getParameter("rememberMe");
+            //чекбокс "запомни меня" установлен
+            if (rememberMe != null && rememberMe.equals("on")) {
+                Cookie rememberMeCookie = cookiesService.createOrUpdateRememberMeCookie (request, auth);
+                response.addCookie(rememberMeCookie);
+            //чекбокс "запомни меня" не установлен
+            } else {
+                System.out.println("Чекбокс 'Remember Me' не установлен.");
+            }
             response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
 
         } catch (ServiceException e) {

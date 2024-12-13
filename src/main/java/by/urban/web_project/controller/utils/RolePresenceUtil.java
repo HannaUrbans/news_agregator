@@ -14,7 +14,7 @@ public class RolePresenceUtil {
         Auth auth = (Auth) request.getSession(false).getAttribute("auth");
 
         if (!role.equals(auth.getRole())) {
-            System.out.println("Пользователь пытается войти на страницу добавления новостей не своей роли");
+            System.out.println("Пользователь пытается войти на страницу, закрытую для его роли");
             request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
             response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
         }

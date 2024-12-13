@@ -8,13 +8,13 @@ public class User implements Serializable {
 
     private final int id;
     private String name;
-    private UserRole userRole;
+    private UserRole role;
 
 
     public User(int id, String name, UserRole userRole) {
         this.id = id;
         this.name = name;
-        this.userRole = userRole;
+        this.role = userRole;
     }
 
     public int getId() {
@@ -29,12 +29,12 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public UserRole getUserRole() {
-        return userRole;
+    public UserRole getRole() {
+        return role;
     }
 
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
+    public void setRole(UserRole userRole) {
+        this.role = userRole;
     }
 
     @Override
@@ -42,12 +42,12 @@ public class User implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && Objects.equals(name, user.name) && userRole == user.userRole;
+        return id == user.id && Objects.equals(name, user.name) && role == user.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, userRole);
+        return Objects.hash(id, name, role);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class User implements Serializable {
         return getClass().getName() + "{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", userRole=" + userRole +
+                ", role=" + role +
                 '}';
     }
 }
