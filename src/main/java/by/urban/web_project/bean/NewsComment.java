@@ -1,6 +1,7 @@
 package by.urban.web_project.bean;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class NewsComment implements Serializable {
@@ -11,9 +12,9 @@ public class NewsComment implements Serializable {
     //это может быть как автор, так и пользователь
     private String loggedVisitorEmail;
     private String commentText;
-    private String dateCreated;
+    private LocalDateTime dateCreated;
 
-    public NewsComment(int commentId, int commentedNewsId, String loggedVisitorEmail, String commentText, String dateCreated) {
+    public NewsComment(int commentId, int commentedNewsId, String loggedVisitorEmail, String commentText, LocalDateTime dateCreated) {
         this.commentId = commentId;
         this.commentedNewsId = commentedNewsId;
         this.loggedVisitorEmail = loggedVisitorEmail;
@@ -53,11 +54,11 @@ public class NewsComment implements Serializable {
         this.commentText = commentText;
     }
 
-    public String getDateCreated() {
+    public LocalDateTime getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
     }
 

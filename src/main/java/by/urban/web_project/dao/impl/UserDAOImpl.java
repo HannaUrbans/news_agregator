@@ -1,5 +1,6 @@
 package by.urban.web_project.dao.impl;
 
+import by.urban.web_project.bean.Auth;
 import by.urban.web_project.bean.Token;
 import by.urban.web_project.bean.User;
 import by.urban.web_project.bean.UserRole;
@@ -27,7 +28,8 @@ public class UserDAOImpl implements IUserDAO {
      * @return сформированный из БД объект, который был авторизован в сессии по переданным логину и паролю
      */
     @Override
-    public User logIn(String email, String password) throws DAOException {
+    //ранее здесь быд user
+    public Auth logIn(String email, String password) throws DAOException {
         //для сохранения в Объекте User выбираем не все поля
         //u и r - это псевдонимы
         String query = "SELECT u.id, u.name AS user_name, u.email, r.name AS role_name " +
@@ -45,7 +47,7 @@ public class UserDAOImpl implements IUserDAO {
                     String name = resultSet.getString("user_name");  // Используем псевдоним user_name, который ранее задавали с помощью AS
                     String roleName = resultSet.getString("role_name");  // Используем псевдоним role_name, который ранее задавали с помощью AS
                     UserRole userRole = UserRole.valueOf(roleName.toUpperCase());
-                    return new User(id, name, userRole);
+                    return new Auth(id, name, userRole);
                 } else {
                     throw new DAOException("Пользователь с email " + email + " и паролем " + password + " не найден.");
                 }

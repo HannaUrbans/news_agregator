@@ -1,6 +1,7 @@
 package by.urban.web_project.bean;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Session implements Serializable {
@@ -8,11 +9,11 @@ public class Session implements Serializable {
 
     private int sessionId;
     private String email;
-    private String dateCreated;
-    private String lastAccessed;    // Дата последнего доступа (для отслеживания активности)
+    private LocalDateTime dateCreated;
+    private LocalDateTime lastAccessed;    // Дата последнего доступа (для отслеживания активности)
 
 
-    public Session(int sessionId, String email, String dateCreated, String lastAccessed) {
+    public Session(int sessionId, String email, LocalDateTime dateCreated, LocalDateTime lastAccessed) {
         this.sessionId = sessionId;
         this.email = email;
         this.dateCreated = dateCreated;
@@ -36,19 +37,19 @@ public class Session implements Serializable {
         this.email = email;
     }
 
-    public String getDateCreated() {
+    public LocalDateTime getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public String getLastAccessed() {
+    public LocalDateTime getLastAccessed() {
         return lastAccessed;
     }
 
-    public void setLastAccessed(String lastAccessed) {
+    public void setLastAccessed(LocalDateTime lastAccessed) {
         this.lastAccessed = lastAccessed;
     }
 

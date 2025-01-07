@@ -22,14 +22,11 @@ public class Controller extends HttpServlet {
 
 	private final CommandProvider provider = new CommandProvider();
 
-	public Controller() throws DAOException, ServiceException {
-		super();
-	}
+    public Controller() throws ServiceException {
+    }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-//		request.setCharacterEncoding("UTF-8");
-//		response.setContentType("text/html; charset=UTF-8");
         try {
             doRequest(request, response);
         } catch (MessagingException | ServiceException e) {

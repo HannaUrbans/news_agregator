@@ -1,5 +1,6 @@
 package by.urban.web_project.service.impl;
 
+import by.urban.web_project.bean.Auth;
 import by.urban.web_project.bean.Token;
 import by.urban.web_project.bean.User;
 import by.urban.web_project.dao.DAOException;
@@ -31,7 +32,7 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
     }
 
     @Override
-    public User checkAuth(String email, String password) throws ServiceException {
+    public Auth checkAuth(String email, String password) throws ServiceException {
 
         // Проверка формата email
         if (checkTool.checkInvalidEmail(email)) {
@@ -40,7 +41,7 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
 
         // проверка, авторизирован ли посетитель
         try {
-            User authorizedUser = authorizationLogic.logIn(email, password);
+            Auth authorizedUser = authorizationLogic.logIn(email, password);
             if (authorizedUser != null) {
                 return authorizedUser;
             }

@@ -37,6 +37,12 @@ public class GoToChangeForm implements Command {
             return;
         }
 
+        // Проверка роли перед переходом на страницу
+        if ("bio".equals(formType)) {
+            checkRolePresence(request, response, UserRole.AUTHOR);
+            return;
+        }
+
         String page = "";
         switch (formType) {
             case "account":

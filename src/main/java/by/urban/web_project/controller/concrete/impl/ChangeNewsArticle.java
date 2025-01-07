@@ -38,26 +38,18 @@ public class ChangeNewsArticle implements Command {
         String newNewsCategory = request.getParameter("newNewsCategory");
 
         News news = newsService.getNewsFromDatabaseById(newsId);
-        if (news.getNewsId() == newsId) {
-            if (newNewsTitle != null && !newNewsTitle.trim().isEmpty()) {
-                news.setTitle(newNewsTitle);
-            }
-            if (newNewsBrief != null && !newNewsBrief.trim().isEmpty()) {
-                news.setBrief(newNewsBrief);
-            }
-            if (newNewsContent != null && !newNewsContent.trim().isEmpty()) {
-                news.setContent(newNewsContent);
-            }
-            if (newNewsCategory != null && !newNewsCategory.trim().isEmpty()) {
-                news.setCategory(newNewsCategory);
-            }
+        if (news == null) {
+            request.getSession().setAttribute("changeArticleError", "Новость с указанным ID не найдена.");
+            response.sendRedirect("Controller?command=SHOW_ALL_AUTHOR_NEWS");
+            return;
+        }
 
-            if (newsService.changeFieldData(newsId, news)) {
-                System.out.println("Новость изменена");
-            } else {
-                System.out.println("Произошла ошибка при изменении новости");
-            }
+        news.updateFields(newNewsTitle, newNewsBrief, newNewsContent, newNewsCategory);
 
+        //если текст, введенный в поле, слишком длинный, то ошибка возникает на уровне слоя дао, если ее не перехватить, то выскакивает 500 ошибка
+        try {
+        // проверка через слой дао, изменилось ли в базе данных поле/поля из новостей
+        if (newsService.changeFieldData(newsId, news)) {
             //добавить автора если id, закрепленное за автором из новости, отличается от id из сессии
             // к тому моменту как мы изменяем новость, авторов может быть уже несколько
             List<User> newsAuthors = newsService.getAuthorByNewsId(newsId);
@@ -71,12 +63,12 @@ public class ChangeNewsArticle implements Command {
                     }
                 }
             }
-
             request.getSession().setAttribute("changeArticleSuccess", "Статья успешно обновлена");
-        } else {
-            request.getSession().setAttribute("changeArticleError", "Все поля обязательны к заполнению");
-
         }
+        } catch (ServiceException e) {
+            request.getSession().setAttribute("changeArticleError", "Ошибка при обновлении новости: " + e.getMessage());
+        }
+
         response.sendRedirect("Controller?command=SHOW_ALL_AUTHOR_NEWS");
     }
 }

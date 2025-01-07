@@ -1,5 +1,6 @@
 package by.urban.web_project.dao;
 
+import by.urban.web_project.bean.Auth;
 import by.urban.web_project.bean.Token;
 import by.urban.web_project.bean.User;
 import by.urban.web_project.bean.UserRole;
@@ -8,7 +9,7 @@ import java.util.Map;
 
 public interface IUserDAO {
 
-    User logIn(String email, String password) throws DAOException;
+    Auth logIn(String email, String password) throws DAOException;
 
     boolean doesEmailExistInDB(String email) throws DAOException;
 

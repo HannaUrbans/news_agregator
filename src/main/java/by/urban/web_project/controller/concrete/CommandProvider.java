@@ -11,7 +11,7 @@ import java.util.Map;
 public class CommandProvider {
     private Map<CommandName, Command> commands = new HashMap<>();
 
-    public CommandProvider() throws ServiceException, DAOException {
+    public CommandProvider() throws ServiceException{
         // 1. Аутентификация и регистрация
         commands.put(CommandName.DO_AUTH, new DoAuth());
         commands.put(CommandName.DO_REGISTRATION, new DoRegistration());

@@ -12,11 +12,7 @@ import by.urban.web_project.service.ServiceException;
 import java.util.ArrayList;
 import java.util.List;
 
-//Former Logic Stub For Adding News To Main Page
 public class NewsServiceImpl implements INewsService {
-    private List<News> regularNewsList = new ArrayList<>();
-    private List<News> topNewsList = new ArrayList<>();
-    private List<News> breakingNewsList = new ArrayList<>();
 
     private final DAOFactory daoFactory;
     private final INewsDAO newsTool;
@@ -87,7 +83,7 @@ public class NewsServiceImpl implements INewsService {
 
     public boolean changeFieldData(int newsId, News news) throws ServiceException {
         try {
-            return newsTool.changeNewsArticle(newsId, news);
+            return newsTool.updateNewsArticle(newsId, news);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
@@ -95,7 +91,7 @@ public class NewsServiceImpl implements INewsService {
 
     public boolean addAuthorToNews(int newsId, int authId) throws ServiceException {
         try {
-            return newsTool.addInitialAuthor(newsId, authId);
+            return newsTool.addPrimaryAuthor(newsId, authId);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }

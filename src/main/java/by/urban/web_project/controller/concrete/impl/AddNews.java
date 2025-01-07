@@ -20,11 +20,10 @@ import java.util.List;
 
 import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
 import static by.urban.web_project.controller.utils.RolePresenceUtil.checkRolePresence;
-import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedirectUrl;
 
 public class AddNews implements Command {
 
-    public AddNews() throws ServiceException {
+    public AddNews() {
     }
 
     @Override
@@ -39,7 +38,7 @@ public class AddNews implements Command {
         checkAuthPresence(request, response, auth);
 
         // если от другой роли
-        checkRolePresence(request, response, UserRole.ADMIN);
+        checkRolePresence(request, response, UserRole.AUTHOR);
 
         try {
             // Получаем параметры из запроса, которые в запрос передавались через форму
@@ -78,6 +77,9 @@ public class AddNews implements Command {
             switch (newNews.getImportance()){
                 case NewsImportance.BREAKING:
                     request.getSession().setAttribute("breakingNews", newNews);
+                    break;
+                case NewsImportance.TOP:
+                    request.getSession().setAttribute("topNews", newNews);
                     break;
             }
 

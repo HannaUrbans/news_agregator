@@ -35,15 +35,10 @@ public class ChangeAccount implements Command {
         //проверяем, жива ли сессия
         checkAuthPresence(request, response, auth);
 
-        UserRole role = UserRole.valueOf(((String)request.getSession().getAttribute("role")).toUpperCase());
-        System.out.println(role);
+        //получаем данные из сессии
         int id = (int) request.getSession().getAttribute("id");
         String name = (String) request.getSession().getAttribute("name");
 
-        if (auth == null) {
-            request.setAttribute("errorMessage", "Не удалось получить данные о пользователе из сессии.");
-            response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
-        }
         // Получаем данные из формы
         String newName = request.getParameter("newName");
         String newEmail = request.getParameter("newEmail");
@@ -61,6 +56,7 @@ public class ChangeAccount implements Command {
                 request.getSession().setAttribute("changeEmailError", "Внимание, старое имя совпадает с новым именем");
             }
 
+            // через слой дао меняем в БД поле с именем
             boolean updateName = UpdateUtil.updateProfileField(auth, newName, ProfileFieldToChange.NAME, changeProfileService);
             if (updateName) {
                 updated = true;
@@ -131,6 +127,7 @@ public class ChangeAccount implements Command {
         }
 
         // Перенаправление на страницу профиля
+        UserRole role = UserRole.valueOf(((String)request.getSession().getAttribute("role")).toUpperCase());
         response.sendRedirect("Controller?command=" + UrlFormatterUtil.formatRedirectUrl(role));
     }
 }

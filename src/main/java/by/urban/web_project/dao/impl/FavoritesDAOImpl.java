@@ -4,6 +4,7 @@ import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.IFavoritesDAO;
 import by.urban.web_project.bean.Favorites;
 
+//НЕ БУДЕТ РЕАЛИЗОВАН
 public class FavoritesDAOImpl implements IFavoritesDAO {
     public void addFavorites(Favorites favorites) throws DAOException {
         System.out.println(favorites.toString());

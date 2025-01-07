@@ -4,6 +4,7 @@ import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.INewsCommentDAO;
 import by.urban.web_project.bean.NewsComment;
 
+//НЕ БУДЕТ РЕАЛИЗОВАН
 public class NewsCommentDAOImpl implements INewsCommentDAO {
     public void addComment(NewsComment comment) throws DAOException {
         System.out.println(comment);

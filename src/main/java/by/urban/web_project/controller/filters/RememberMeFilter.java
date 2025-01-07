@@ -38,7 +38,6 @@ public class RememberMeFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
@@ -55,7 +54,9 @@ public class RememberMeFilter implements Filter {
                                 User userFromCookies = null;
                                 try {
                                     userFromCookies = authorizationLogic.findUserByToken(token);
-                                    System.out.println(userFromCookies.toString());
+                                    if (userFromCookies != null) {
+                                        System.out.println(userFromCookies.toString());
+                                    }
                                 } catch (ServiceException e) {
                                     throw new RuntimeException(e);
                                 }
@@ -67,29 +68,36 @@ public class RememberMeFilter implements Filter {
                                     httpRequest.getSession().setAttribute("id", authFromCookies.getId());
                                     httpRequest.getSession().setAttribute("role", authFromCookies.getRole().name().toLowerCase());
                                     httpRequest.getSession().setAttribute("name", authFromCookies.getName());
+
                                     String bio = null;
                                     try {
+                                        // Получаем поле BIO для пользователя
                                         bio = changeProfileService.getFieldData(authFromCookies.getId(), ProfileDataField.BIO);
+                                        // Если поле не существует или равно null, устанавливаем его как null в сессии
+                                        if (bio == null) {
+                                            session.setAttribute("bio", null);
+                                        } else {
+                                            session.setAttribute("bio", bio);
+                                        }
                                     } catch (ServiceException e) {
-                                        throw new RuntimeException(e);
+                                        // Если возникла ошибка при получении BIO, установим в null
+                                        session.setAttribute("bio", null);
+                                        System.out.println("Ошибка при получении BIO: " + e.getMessage());
                                     }
-                                    session.setAttribute("bio", bio);
-                                    break;
+
+                                    break; // Завершаем цикл после того, как нашли нужного пользователя
                                 }
                             }
                         }
                     }
                 }
-
             }
         }
         chain.doFilter(request, response);
     }
-
 
     @Override
     public void destroy() {
         Filter.super.destroy();
     }
 }
-

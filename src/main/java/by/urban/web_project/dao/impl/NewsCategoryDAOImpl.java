@@ -4,6 +4,7 @@ import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.INewsCategoryDAO;
 import by.urban.web_project.bean.NewsCategory;
 
+//НЕ БУДЕТ РЕАЛИЗОВАН
 public class NewsCategoryDAOImpl implements INewsCategoryDAO {
     public void addCategory(NewsCategory category) throws DAOException {
         System.out.println(category);

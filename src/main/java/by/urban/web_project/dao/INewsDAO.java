@@ -9,7 +9,7 @@ import java.util.List;
 public interface INewsDAO {
     int addNews(News news) throws DAOException;
 
-    boolean addInitialAuthor(int newsId, int authId) throws DAOException;
+    boolean addPrimaryAuthor(int newsId, int authId) throws DAOException;
 
     boolean deleteNews(int newsId) throws DAOException;
 
@@ -21,7 +21,7 @@ public interface INewsDAO {
 
     List<News> getAllNewsByAuthor(int authorId) throws DAOException;
 
-    boolean changeNewsArticle(int newsId, News news) throws DAOException;
+    boolean updateNewsArticle(int newsId, News news) throws DAOException;
 
     boolean addCoauthor(int coauthorId, int newsId) throws DAOException;
 

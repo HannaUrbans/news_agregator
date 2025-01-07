@@ -2,7 +2,7 @@ package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.bean.Auth;
 import by.urban.web_project.bean.ProfileDataField;
-import by.urban.web_project.bean.User;
+import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.service.*;
 import jakarta.servlet.ServletException;
@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+
 import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedirectUrl;
 
 public class DoAuth implements Command {
@@ -37,41 +38,56 @@ public class DoAuth implements Command {
 
         try {
             //проверяем формат email + авторизован ли посетитель
-            //пока оставлю так, впоследствии изменю checkAuth и уберу отсюда authorizedUser
-            User authorizedUser = authorizationService.checkAuth(email, password);
-
-            if (authorizedUser == null) {
+            Auth auth = authorizationService.checkAuth(email, password);
+            if (auth == null) {
                 request.getSession().setAttribute("authError", "Неверный email или пароль.");
                 response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
                 return;
             }
-
-            Auth auth = new Auth();
-            auth.setId(authorizedUser.getId());
-            auth.setRole(authorizedUser.getRole());
-            auth.setName(authorizedUser.getName());
 
             //передаем в атрибуты для дальнейшего отображения на джсп страницах
             //если передавать на страницах "GO_To_....", то получается переписывание одного и того же кода
             //если передавать сразу объект, то получается, что на джсп странице ты используешь скриплет типа
             // <% Auth auth = (Auth) session.getAttribute("auth");
             //    String role = (auth != null) ? auth.getRole().name() : "Неизвестно";%>
+
             request.getSession().setAttribute("auth", auth);
             request.getSession().setAttribute("id", auth.getId());
             request.getSession().setAttribute("role", auth.getRole().name().toLowerCase());
             request.getSession().setAttribute("name", auth.getName());
-            request.getSession().setAttribute("bio", changeProfileService.getFieldData(auth.getId(), ProfileDataField.BIO));
+            if (auth.getRole() == UserRole.AUTHOR) {
+                try {
+                    // Пытаемся получить поле BIO из базы данных
+                    String bio = changeProfileService.getFieldData(auth.getId(), ProfileDataField.BIO);
 
-            System.out.println("В личном кабинете: " + auth.toString());
+                    // Если поле BIO не null, сохраняем его, иначе сохраняем null
+                    if (bio == null) {
+                        request.getSession().setAttribute("bio", null);
+                    } else {
+                        request.getSession().setAttribute("bio", bio);
+                    }
+                } catch (ServiceException e) {
+                    // В случае ошибки сохраняем null
+                    request.getSession().setAttribute("bio", null);
+                    System.out.println("Ошибка при получении BIO: " + e.getMessage());
+                }
+            } else {
+                // Если не автор, устанавливаем bio в null
+                request.getSession().setAttribute("bio", null);
+            }
 
             //параметр из формы на странице авторизации
             String rememberMe = request.getParameter("rememberMe");
+
             //чекбокс "запомни меня" установлен
             if (rememberMe != null && rememberMe.equals("on")) {
-                Cookie rememberMeCookie = cookiesService.createOrUpdateRememberMeCookie (request, auth);
+                Cookie rememberMeCookie = cookiesService.createOrUpdateRememberMeCookie(request, auth);
                 response.addCookie(rememberMeCookie);
+                System.out.println("чекбокс 'Remember Me' установлен");
+
+            }
             //чекбокс "запомни меня" не установлен
-            } else {
+            else {
                 System.out.println("Чекбокс 'Remember Me' не установлен.");
             }
             response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));

@@ -36,11 +36,9 @@ public class ChangeBio implements Command {
         // если не в сессии
         checkAuthPresence(request, response, auth);
 
-        // если от другой роли
-        // надо в другом месте (страница с формой открывается при любой роли, но именно отправить не дает, надо шагом ранее эту проверку
-        checkRolePresence(request, response, UserRole.AUTHOR);
+        // если от другой роли мы проверяем шагом ранее (в контроллере GoToChangeForm), иначе на страницу заходило, только не давало отправить
 
-        int id = (int) request.getSession().getAttribute("id");
+       int id = (int) request.getSession().getAttribute("id");
 
         // Получаем данные из формы
         String newBio = request.getParameter("newBio");
