@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="page_elems/title.jsp"%>
+<%@ include file="page-elems/title.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,7 +21,7 @@
 		<h4>Это заглушка, информация скоро будет добавлена</h4>
 	</div>
 	<div class="footer">
-		<%@ include file="page_elems/footer.jsp"%>
+		<%@ include file="page-elems/footer.jsp"%>
 	</div>
 </body>
 </html>

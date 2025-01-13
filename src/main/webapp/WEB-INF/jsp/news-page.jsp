@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ include file="page_elems/title.jsp" %>
+<%@ include file="page-elems/title.jsp" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
@@ -18,7 +18,7 @@
           href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <header>
-    <%@ include file="page_elems/buttons-in-header.jsp" %>
+    <%@ include file="page-elems/buttons-in-header.jsp" %>
 </header>
 <body>
 <div class="not_footer">
@@ -45,7 +45,7 @@
     <div class = "note">Если Вы хотите стать нашим автором, пожалуйста, пришлите образцы своих статей на адрес admin@news.by.</div>
 </div>
 <div class="footer">
-    <%@ include file="page_elems/footer.jsp" %>
+    <%@ include file="page-elems/footer.jsp" %>
 </div>
 </body>
 </html>

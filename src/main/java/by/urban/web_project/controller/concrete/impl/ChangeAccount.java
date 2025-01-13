@@ -18,6 +18,8 @@ import java.io.IOException;
 
 import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
 
+//отдельно, на одну форму по одной команде контроллера + эта форма доступна для всех ролей, в отличие от changeBio
+
 public class ChangeAccount implements Command {
     private final IChangeProfileService changeProfileService;
     private final ICheckService checkService;
@@ -52,7 +54,6 @@ public class ChangeAccount implements Command {
         if (newName != null && !newName.trim().isEmpty()) {
             try{
             if (checkService.checkFieldsEquality(name, newName)) {
-                //подумай мб лучше не обновлять, а выписать ошибку и редирект (но тогда надо проверить, передадутся ли остальные измененные поля)
                 request.getSession().setAttribute("changeEmailError", "Внимание, старое имя совпадает с новым именем");
             }
 
@@ -75,7 +76,6 @@ public class ChangeAccount implements Command {
 
                 if (checkService.checkFieldsEquality(emailFromDb, oldEmail)) {
                     if (checkService.checkFieldsEquality(oldEmail, newEmail)) {
-                        //подумай мб лучше не обновлять, а выписать ошибку и редирект (но тогда надо проверить, передадутся ли остальные измененные поля)
                         request.getSession().setAttribute("changeEmailError", "Внимание, старый email совпадает с новым email");
                     }
 
@@ -101,7 +101,6 @@ public class ChangeAccount implements Command {
 
                 if (checkService.checkFieldsEquality(passwordFromDb, oldPassword)) {
                     if (checkService.checkFieldsEquality(oldPassword, newPassword)) {
-                        //подумай мб лучше не обновлять, а выписать ошибку и редирект (но тогда надо проверить, передадутся ли остальные измененные поля)
                         request.getSession().setAttribute("changePasswordError", "Внимание, старый пароль совпадает с новым паролем");
                     }
 

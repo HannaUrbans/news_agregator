@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ include file="page_elems/title.jsp" %>
+<%@ include file="page-elems/title.jsp" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
@@ -21,7 +21,7 @@
 
 <body>
 <header>
-    <%@ include file="page_elems/buttons-in-header.jsp" %>
+    <%@ include file="page-elems/buttons-in-header.jsp" %>
 </header>
 <div class="not_footer">
     <div class="form_to_fill_in">
@@ -63,7 +63,7 @@
     </div>
 </div>
 <div class="footer">
-    <%@ include file="page_elems/footer.jsp" %>
+    <%@ include file="page-elems/footer.jsp" %>
 </div>
 </body>
 </html>

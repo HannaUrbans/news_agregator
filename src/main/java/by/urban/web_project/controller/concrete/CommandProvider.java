@@ -11,7 +11,7 @@ import java.util.Map;
 public class CommandProvider {
     private Map<CommandName, Command> commands = new HashMap<>();
 
-    public CommandProvider() throws ServiceException{
+    public CommandProvider() throws ServiceException {
         // 1. Аутентификация и регистрация
         commands.put(CommandName.DO_AUTH, new DoAuth());
         commands.put(CommandName.DO_REGISTRATION, new DoRegistration());
@@ -48,7 +48,6 @@ public class CommandProvider {
     public Command takeCommand(String userCommand) {
         CommandName commandName;
         Command command;
-        //System.out.println("Attempting to take command: " + userCommand);
         try {
             commandName = CommandName.valueOf(userCommand.toUpperCase());
             command = commands.get(commandName);

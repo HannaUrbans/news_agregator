@@ -7,6 +7,7 @@ import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.utils.ProfileFieldToChange;
 
 public class UpdateUtil {
+
     public static boolean updateProfileField(Auth auth, String newValue, ProfileFieldToChange field, IChangeProfileService updateTool) {
         try {
             switch (field) {

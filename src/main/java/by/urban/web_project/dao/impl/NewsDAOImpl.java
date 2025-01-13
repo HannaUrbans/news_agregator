@@ -15,18 +15,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewsDAOImpl implements INewsDAO {
-
+    private static final String ADD_NEWS_QUERY = "INSERT INTO news_management.news (importance, title, image, brief, content, publish_date, categories_id) VALUES (?, ?, ?, ?, ?, ?, (SELECT id FROM news_management.categories WHERE title = ? LIMIT 1))";
+    private static final String ADD_PRIMARY_AUTHOR_QUERY = "INSERT INTO news_management.news_authors (news_id, users_id) VALUES ((SELECT id FROM news_management.news WHERE id = ? LIMIT 1), (SELECT id FROM news_management.users WHERE id = ? ))";
+    private static final String ADD_COAUTHOR_QUERY = "INSERT INTO news_management.news_authors (news_id, users_id) VALUES (?, ?)";
+    private static final String DELETE_NEWS_AUTHORS_QUERY = "DELETE FROM news_management.news_authors WHERE news_id = ?";
+    private static final String DELETE_NEWS_QUERY = "DELETE FROM news_management.news WHERE id = ?";
+    private static final String GET_ALL_NEWS_QUERY = "SELECT n.id, n.importance, n.title, n.image, n.brief, n.content, n.publish_date, n.categories_id, c.title AS category_title FROM news_management.news n JOIN news_management.categories c ON n.categories_id = c.id ORDER BY n.publish_date DESC";
+    private static final String GET_AUTHORS_BY_NEWS_ID_QUERY = "SELECT u.id, u.name FROM news_management.users u JOIN news_management.news_authors na ON u.id = na.users_id WHERE na.news_id = ?";
+    private static final String GET_NEWS_BY_ID_QUERY = "SELECT * FROM news_management.news WHERE id = ?";
+    private static final String GET_CATEGORY_BY_ID_QUERY = "SELECT title FROM news_management.categories WHERE id = ?";
+    private static final String GET_ALL_NEWS_BY_AUTHOR_QUERY = "SELECT news_id FROM news_management.news_authors WHERE users_id = ? ORDER BY (SELECT publish_date FROM news_management.news WHERE id = news_id) DESC";
+    private static final String UPDATE_NEWS_QUERY = "UPDATE news_management.news SET importance = ?, title = ?, image = ?, brief = ?, content = ?, publish_date = ?, news.update_date = ?, categories_id = (SELECT id FROM news_management.categories WHERE title = ?) WHERE id = ?";
+    private static final String FIND_NEWS_BY_TYPE_QUERY = "SELECT * FROM news_management.news WHERE importance = ?";
     ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     @Override
     public int addNews(News news) throws DAOException {
         //автора добавляем отдельно
-        String query = "INSERT INTO news_management.news (importance, title, image, brief, content, publish_date, categories_id) VALUES (?, ?, ?, ?, ?, ?, (SELECT id FROM news_management.categories WHERE title = ? LIMIT 1))";
         int id;
         LocalDateTime publishDate;
 
         try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement preparedStatement1 = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
+             PreparedStatement preparedStatement1 = connection.prepareStatement(ADD_NEWS_QUERY, Statement.RETURN_GENERATED_KEYS);) {
             preparedStatement1.setString(1, news.getImportance().name());
             preparedStatement1.setString(2, news.getTitle());
             preparedStatement1.setString(3, news.getImageUrl());
@@ -56,9 +66,8 @@ public class NewsDAOImpl implements INewsDAO {
     }
 
     public boolean addPrimaryAuthor(int newsId, int authId) throws DAOException {
-        String query = "INSERT INTO news_management.news_authors (news_id, users_id) VALUES ((SELECT id FROM news_management.news WHERE id = ? LIMIT 1), (SELECT id FROM news_management.users WHERE id = ? ))";
         try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement preparedStatement2 = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement2 = connection.prepareStatement(ADD_PRIMARY_AUTHOR_QUERY)) {
             // хоть у нас возможно авторство нескольких, но при добавлении статьи за новостью числится тот, от чьего id зашли в кабинет и отправили новость
             preparedStatement2.setInt(1, newsId);
             preparedStatement2.setInt(2, authId);
@@ -71,9 +80,8 @@ public class NewsDAOImpl implements INewsDAO {
 
     public boolean addCoauthor(int coauthorId, int newsId) throws DAOException {
         //здесь мы уже не update запрос делаем, а именно добавляем еще одного автора
-        String query = "INSERT INTO news_management.news_authors (news_id, users_id) VALUES (?, ?)";
         try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(ADD_COAUTHOR_QUERY)) {
             preparedStatement.setInt(1, newsId);
             preparedStatement.setInt(2, coauthorId);
             int affectedRows = preparedStatement.executeUpdate();
@@ -85,12 +93,9 @@ public class NewsDAOImpl implements INewsDAO {
 
     public boolean deleteNews(int newsId) throws DAOException {
         // Сначала удаляем связанные записи в news_authors
-        String deleteAuthorsQuery = "DELETE FROM news_management.news_authors WHERE news_id = ?";
-        String deleteNewsQuery = "DELETE FROM news_management.news WHERE id = ?";
-
         try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement deleteAuthorsStatement = connection.prepareStatement(deleteAuthorsQuery);
-             PreparedStatement deleteNewsStatement = connection.prepareStatement(deleteNewsQuery)
+             PreparedStatement deleteAuthorsStatement = connection.prepareStatement(DELETE_NEWS_AUTHORS_QUERY);
+             PreparedStatement deleteNewsStatement = connection.prepareStatement(DELETE_NEWS_QUERY)
         ) {
             // Удаляем связанные записи
             deleteAuthorsStatement.setInt(1, newsId);
@@ -110,14 +115,10 @@ public class NewsDAOImpl implements INewsDAO {
     }
 
     public List<News> getAllNews() throws DAOException {
-        String query = "SELECT n.id, n.importance, n.title, n.image, n.brief, n.content, n.publish_date, n.categories_id, c.title AS category_title " +
-                       "FROM news_management.news n " +
-                       "JOIN news_management.categories c ON n.categories_id = c.id ORDER BY n.publish_date DESC";
-
         List<News> newsList = new ArrayList<>();
 
         try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_NEWS_QUERY);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
@@ -143,14 +144,10 @@ public class NewsDAOImpl implements INewsDAO {
     }
 
     public List<User> getNewsAuthorsByNewsId(int newsId) throws DAOException {
-        String queryAuthors = "SELECT u.id, u.name FROM news_management.users u " +
-                              "JOIN news_management.news_authors na ON u.id = na.users_id " +
-                              "WHERE na.news_id = ?";
-
         List<User> authors = new ArrayList<>();
 
         try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(queryAuthors)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_AUTHORS_BY_NEWS_ID_QUERY)) {
             preparedStatement.setInt(1, newsId);  // Устанавливаем id новости в запрос
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
@@ -167,11 +164,8 @@ public class NewsDAOImpl implements INewsDAO {
     }
 
     public News getNewsById(int id) throws DAOException {
-        String query = "SELECT * FROM news_management.news WHERE id = ?";
-        String categoryQuery = "SELECT title FROM news_management.categories WHERE id = ?";
-
         try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_NEWS_BY_ID_QUERY)) {
 
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -179,7 +173,7 @@ public class NewsDAOImpl implements INewsDAO {
                     int categoryId = resultSet.getInt("categories_id");
 
                     // Теперь выполняем запрос, чтобы получить title категории
-                    try (PreparedStatement categoryStatement = connection.prepareStatement(categoryQuery)) {
+                    try (PreparedStatement categoryStatement = connection.prepareStatement(GET_CATEGORY_BY_ID_QUERY)) {
                         categoryStatement.setInt(1, categoryId);
                         try (ResultSet categoryResultSet = categoryStatement.executeQuery()) {
                             String categoryTitle = null;
@@ -209,9 +203,8 @@ public class NewsDAOImpl implements INewsDAO {
 
     public List<News> getAllNewsByAuthor(int authorId) throws DAOException {
         List<News> resList = new ArrayList<>();
-        String query = "SELECT news_id FROM news_management.news_authors WHERE users_id = ? ORDER BY (SELECT publish_date FROM news_management.news WHERE id = news_id)  DESC";
         try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_NEWS_BY_AUTHOR_QUERY)) {
             preparedStatement.setInt(1, authorId);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
@@ -226,9 +219,8 @@ public class NewsDAOImpl implements INewsDAO {
     }
 
     public boolean updateNewsArticle(int newsId, News news) throws DAOException {
-        String query = "UPDATE news_management.news SET importance = ?, title = ?, image = ?, brief = ?, content = ?, publish_date = ?, news.update_date = ?, categories_id = (SELECT id FROM news_management.categories WHERE title = ?) WHERE id = ?";
         try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_NEWS_QUERY)) {
 
             preparedStatement.setString(1, news.getImportance().name());
             preparedStatement.setString(2, news.getTitle());
@@ -249,9 +241,8 @@ public class NewsDAOImpl implements INewsDAO {
 
     public List<News> findNewsByType(NewsImportance newsImportance) throws DAOException {
         List<News> resList = new ArrayList<>();
-        String query = "SELECT * FROM news_management.news WHERE importance = ?";
         try (Connection connection = connectionPool.takeConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_NEWS_BY_TYPE_QUERY)) {
             preparedStatement.setString(1, newsImportance.name());
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
