@@ -11,8 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
-import static by.urban.web_project.controller.utils.RolePresenceUtil.checkRolePresence;
-import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedirectUrl;
+import static by.urban.web_project.controller.utils.RolePresenceUtil.isAuthRoleValid;
 
 public class GoToUserAccountPage implements Command {
     @Override
@@ -21,7 +20,9 @@ public class GoToUserAccountPage implements Command {
         // если не в сессии
         checkAuthPresence(request, response, auth);
         // если от другой роли
-        checkRolePresence(request, response, UserRole.USER);
+        if(!isAuthRoleValid(request, response, UserRole.USER)){
+            return;
+        }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/account-pages/user-account-page.jsp");
         dispatcher.forward(request, response);

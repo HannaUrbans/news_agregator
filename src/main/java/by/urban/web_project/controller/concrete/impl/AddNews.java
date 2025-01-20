@@ -2,7 +2,6 @@ package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.bean.Auth;
 import by.urban.web_project.bean.News;
-import by.urban.web_project.bean.NewsImportance;
 import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.controller.utils.NewsUtil;
@@ -17,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
-import static by.urban.web_project.controller.utils.RolePresenceUtil.checkRolePresence;
+import static by.urban.web_project.controller.utils.RolePresenceUtil.isAuthRoleValid;
 
 public class AddNews implements Command {
 
@@ -25,17 +24,20 @@ public class AddNews implements Command {
     }
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServiceException, ServletException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServiceException {
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         INewsService newsService = serviceFactory.getNewsService();
 
         Auth auth = (Auth) request.getSession(false).getAttribute("auth");
 
+
         // если не в сессии
         checkAuthPresence(request, response, auth);
         // если от другой роли
-        checkRolePresence(request, response, UserRole.AUTHOR);
+        if(!isAuthRoleValid(request, response, UserRole.AUTHOR)){
+            return;
+        }
 
         News newNews = null;
         try {
@@ -69,9 +71,14 @@ public class AddNews implements Command {
         }
     }
 
-    private static void errorHandling(HttpServletRequest request, News newNews, String errorClass, String errorMessage, HttpServletResponse response) throws ServletException, IOException {
+    private static void errorHandling(HttpServletRequest request, News newNews, String errorClass, String errorMessage, HttpServletResponse response)  {
         request.getSession().setAttribute("newNews", newNews);
         request.getSession().setAttribute(errorClass, errorMessage);
-        request.getRequestDispatcher("/WEB-INF/jsp/add-news-form-page.jsp").forward(request, response);
+        try {
+            request.getRequestDispatcher("/WEB-INF/jsp/add-news-form-page.jsp").forward(request, response);
+        }
+        catch (ServletException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }

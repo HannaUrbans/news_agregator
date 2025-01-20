@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
 import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedirectUrl;
 
 public class GoToRegistrationPage implements Command {

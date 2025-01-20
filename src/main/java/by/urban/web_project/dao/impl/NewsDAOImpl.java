@@ -27,8 +27,15 @@ public class NewsDAOImpl implements INewsDAO {
     private static final String GET_ALL_NEWS_BY_AUTHOR_QUERY = "SELECT news_id FROM news_management.news_authors WHERE users_id = ? ORDER BY (SELECT publish_date FROM news_management.news WHERE id = news_id) DESC";
     private static final String UPDATE_NEWS_QUERY = "UPDATE news_management.news SET importance = ?, title = ?, image = ?, brief = ?, content = ?, publish_date = ?, news.update_date = ?, categories_id = (SELECT id FROM news_management.categories WHERE title = ?) WHERE id = ?";
     private static final String FIND_NEWS_BY_TYPE_QUERY = "SELECT * FROM news_management.news WHERE importance = ?";
-    ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
+    /**
+     * Метод для добавления новости в БД
+     *
+     * @param news - объект класса News, представляет собой текст новости и сопутствующие поля
+     * @return id добавленной новости
+     * @throws DAOException
+     */
     @Override
     public int addNews(News news) throws DAOException {
         //автора добавляем отдельно
@@ -65,6 +72,14 @@ public class NewsDAOImpl implements INewsDAO {
         return id;
     }
 
+    /**
+     * Метод для добавления первоначального автора в новость. У новости может быть несколько авторов, соавторы добавляются с помощью метода addCoauthor.
+     *
+     * @param newsId - id новости, к которой будет добавляться автор
+     * @param authId - id первоначального автора, который будет закреплен за новостью
+     * @return true в случае успешного добавления автора
+     * @throws DAOException
+     */
     public boolean addPrimaryAuthor(int newsId, int authId) throws DAOException {
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement preparedStatement2 = connection.prepareStatement(ADD_PRIMARY_AUTHOR_QUERY)) {
@@ -78,6 +93,14 @@ public class NewsDAOImpl implements INewsDAO {
         }
     }
 
+    /**
+     * Метод для добавления соавтора автора в новость. У новости может быть несколько авторов, первоначальный автор добавляется с помощью метода addPrimaryAuthor.
+     *
+     * @param coauthorId - id соавтора, который вносил изменения в новость
+     * @param newsId     - id новости, за которой должен быть закреплен соавтор
+     * @return true в случае успешного добавления автора
+     * @throws DAOException
+     */
     public boolean addCoauthor(int coauthorId, int newsId) throws DAOException {
         //здесь мы уже не update запрос делаем, а именно добавляем еще одного автора
         try (Connection connection = connectionPool.takeConnection();
@@ -91,6 +114,13 @@ public class NewsDAOImpl implements INewsDAO {
         }
     }
 
+    /**
+     * Метод для удаления новости из БД
+     *
+     * @param newsId - id новости для удаления
+     * @return true в случае успешного удаления новости
+     * @throws DAOException
+     */
     public boolean deleteNews(int newsId) throws DAOException {
         // Сначала удаляем связанные записи в news_authors
         try (Connection connection = connectionPool.takeConnection();
@@ -114,6 +144,12 @@ public class NewsDAOImpl implements INewsDAO {
         return false;
     }
 
+    /**
+     * Метод для получения полного списка новостей всех категорий и авторов
+     *
+     * @return список объектов типа News
+     * @throws DAOException
+     */
     public List<News> getAllNews() throws DAOException {
         List<News> newsList = new ArrayList<>();
 
@@ -143,6 +179,13 @@ public class NewsDAOImpl implements INewsDAO {
         return newsList;
     }
 
+    /**
+     * Метод для получения списка авторов, закреплённых за новостью
+     *
+     * @param newsId - id новости, информацию об авторах которой необходимо получить
+     * @return список объектов типа User
+     * @throws DAOException
+     */
     public List<User> getNewsAuthorsByNewsId(int newsId) throws DAOException {
         List<User> authors = new ArrayList<>();
 
@@ -163,6 +206,13 @@ public class NewsDAOImpl implements INewsDAO {
         return authors;
     }
 
+    /**
+     * Метод для получения новости по ее id
+     *
+     * @param id - id новости, полную информацию о которой, необходимо получить
+     * @return объект типа News
+     * @throws DAOException
+     */
     public News getNewsById(int id) throws DAOException {
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_NEWS_BY_ID_QUERY)) {
@@ -201,6 +251,13 @@ public class NewsDAOImpl implements INewsDAO {
         return null;
     }
 
+    /**
+     * Метод для получения списка новостей, написанных определённым автором
+     *
+     * @param authorId - id автора
+     * @return список объектов типа News
+     * @throws DAOException
+     */
     public List<News> getAllNewsByAuthor(int authorId) throws DAOException {
         List<News> resList = new ArrayList<>();
         try (Connection connection = connectionPool.takeConnection();
@@ -218,6 +275,14 @@ public class NewsDAOImpl implements INewsDAO {
         return resList;
     }
 
+    /**
+     * Метод для изменения объекта типа News по id
+     *
+     * @param newsId - id новости, которую следует изменить
+     * @param news   - информация, которую следует переписать в новости
+     * @return true в случае успешного изменения
+     * @throws DAOException
+     */
     public boolean updateNewsArticle(int newsId, News news) throws DAOException {
         try (Connection connection = connectionPool.takeConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_NEWS_QUERY)) {
@@ -239,6 +304,13 @@ public class NewsDAOImpl implements INewsDAO {
         }
     }
 
+    /**
+     * Метод для получения списка новостей определённой степени важности (breaking, top, regular)
+     *
+     * @param newsImportance - тип важности новости
+     * @return список объектов типа News
+     * @throws DAOException
+     */
     public List<News> findNewsByType(NewsImportance newsImportance) throws DAOException {
         List<News> resList = new ArrayList<>();
         try (Connection connection = connectionPool.takeConnection();

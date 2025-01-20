@@ -21,14 +21,14 @@ import java.io.IOException;
 //делать фильтр "проверка на null в сессии" нет смысла, потому что часть страниц д.б. доступна без авторизации, проще вынести проверку в утилиты
 
 public class RememberMeFilter implements Filter {
-    private final ServiceFactory serviceFactoryFactory;
+    private final ServiceFactory serviceFactory;
     private final IAuthorizationService authorizationLogic;
     private final IChangeProfileService changeProfileService;
 
     public RememberMeFilter() throws ServiceException {
-        serviceFactoryFactory = ServiceFactory.getInstance(); // Инициализация фабрики
-        authorizationLogic = serviceFactoryFactory.getAuthorizationService();
-        changeProfileService = serviceFactoryFactory.getChangeProfileService();
+        serviceFactory = ServiceFactory.getInstance(); // Инициализация фабрики
+        authorizationLogic = serviceFactory.getAuthorizationService();
+        changeProfileService = serviceFactory.getChangeProfileService();
     }
 
     @Override
@@ -54,9 +54,9 @@ public class RememberMeFilter implements Filter {
                                 User userFromCookies = null;
                                 try {
                                     userFromCookies = authorizationLogic.findUserByToken(token);
-                                    if (userFromCookies != null) {
-                                        System.out.println(userFromCookies.toString());
-                                    }
+//                                    if (userFromCookies != null) {
+//                                        System.out.println(userFromCookies.toString());
+//                                    }
                                 } catch (ServiceException e) {
                                     throw new RuntimeException(e);
                                 }

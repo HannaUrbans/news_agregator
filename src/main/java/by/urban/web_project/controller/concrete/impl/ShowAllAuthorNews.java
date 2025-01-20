@@ -13,11 +13,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
-import static by.urban.web_project.controller.utils.RolePresenceUtil.checkRolePresence;
+import static by.urban.web_project.controller.utils.RolePresenceUtil.isAuthRoleValid;
 
 
 public class ShowAllAuthorNews implements Command {
@@ -28,7 +27,9 @@ public class ShowAllAuthorNews implements Command {
         // если не в сессии
         checkAuthPresence(request, response, auth);
         // если от другой роли
-        checkRolePresence(request, response, UserRole.AUTHOR);
+        if(!isAuthRoleValid(request, response, UserRole.AUTHOR)){
+            return;
+        }
 
         ServiceFactory serviceFactory = ServiceFactory.getInstance();
         INewsService newsService = serviceFactory.getNewsService();

@@ -2,7 +2,6 @@ package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.bean.Auth;
 import by.urban.web_project.bean.News;
-import by.urban.web_project.bean.User;
 import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.service.INewsService;
@@ -13,10 +12,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.List;
 
 import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
-import static by.urban.web_project.controller.utils.RolePresenceUtil.checkRolePresence;
+import static by.urban.web_project.controller.utils.NewsUtil.addCoauthorIfNeeded;
+import static by.urban.web_project.controller.utils.NewsUtil.checkNewsExists;
+import static by.urban.web_project.controller.utils.RolePresenceUtil.isAuthRoleValid;
 
 public class ChangeNewsArticle implements Command {
     @Override
@@ -26,49 +26,30 @@ public class ChangeNewsArticle implements Command {
 
         Auth auth = (Auth) request.getSession().getAttribute("auth");
         checkAuthPresence(request, response, auth);
-        checkRolePresence(request, response, UserRole.AUTHOR);
-
-        //пришло из GoToChangeForm.java
-        String newsIdString = (String) request.getSession().getAttribute("newsId");
-        int newsId = Integer.valueOf(newsIdString);
-
-        String newNewsTitle = request.getParameter("newNewsTitle");
-        String newNewsBrief = request.getParameter("newNewsBrief");
-        String newNewsContent = request.getParameter("newNewsContent");
-        String newNewsCategory = request.getParameter("newNewsCategory");
-
-        News news = newsService.getNewsFromDatabaseById(newsId);
-        if (news == null) {
-            request.getSession().setAttribute("changeArticleError", "Новость с указанным ID не найдена.");
-            response.sendRedirect("Controller?command=SHOW_ALL_AUTHOR_NEWS");
+        if (!isAuthRoleValid(request, response, UserRole.AUTHOR)) {
             return;
         }
 
-        news.updateFields(newNewsTitle, newNewsBrief, newNewsContent, newNewsCategory);
+        //пришло из GoToChangeForm.java
+        int newsId = Integer.parseInt((String) request.getSession().getAttribute("newsId"));
 
-        //если текст, введенный в поле, слишком длинный, то ошибка возникает на уровне слоя дао, если ее не перехватить, то выскакивает 500 ошибка
+        News news = newsService.getNewsFromDatabaseById(newsId);
+        checkNewsExists(request, response, news);
+
+        news.updateFields(request.getParameter("newNewsTitle"), request.getParameter("newNewsBrief"), request.getParameter("newNewsContent"), request.getParameter("newNewsCategory"));
+
         try {
-        // проверка через слой дао, изменилось ли в базе данных поле/поля из новостей
-        if (newsService.changeFieldData(newsId, news)) {
-            //добавить автора если id, закрепленное за автором из новости, отличается от id из сессии
-            // к тому моменту как мы изменяем новость, авторов может быть уже несколько
-            List<User> newsAuthors = newsService.getAuthorByNewsId(newsId);
-            System.out.println(newsAuthors.toString());
-            for (User newsAuthor : newsAuthors) {
-                if (newsAuthor.getId() != auth.getId()) {
-                    if (newsService.addCoauthorToNews(auth.getId(), newsId)) {
-                        System.out.println("Соавтор добавлен");
-                    } else {
-                        System.out.println("Произошла ошибка при добавлении соавтора");
-                    }
-                }
+            if (newsService.changeFieldData(newsId, news)) {
+                addCoauthorIfNeeded(auth.getId(), newsId, newsService);
+
+                request.getSession().setAttribute("changeArticleSuccess", "Статья успешно обновлена");
             }
-            request.getSession().setAttribute("changeArticleSuccess", "Статья успешно обновлена");
-        }
         } catch (ServiceException e) {
             request.getSession().setAttribute("changeArticleError", "Ошибка при обновлении новости: " + e.getMessage());
         }
 
         response.sendRedirect("Controller?command=SHOW_ALL_AUTHOR_NEWS");
     }
+
+
 }

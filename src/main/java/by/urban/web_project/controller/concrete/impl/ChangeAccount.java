@@ -4,121 +4,35 @@ import by.urban.web_project.bean.Auth;
 import by.urban.web_project.bean.ProfileDataField;
 import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.controller.utils.UpdateUtil;
 import by.urban.web_project.controller.utils.UrlFormatterUtil;
-import by.urban.web_project.service.IChangeProfileService;
-import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.ServiceException;
-import by.urban.web_project.service.ServiceFactory;
-import by.urban.web_project.utils.ProfileFieldToChange;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
 import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
+import static by.urban.web_project.controller.utils.UpdateUtil.isProfileFieldCheckedAndUpdated;
+import static by.urban.web_project.controller.utils.UpdateUtil.isProfileFieldUpdated;
 
 //отдельно, на одну форму по одной команде контроллера + эта форма доступна для всех ролей, в отличие от changeBio
 
 public class ChangeAccount implements Command {
-    private final IChangeProfileService changeProfileService;
-    private final ICheckService checkService;
-
-    public ChangeAccount() throws ServiceException {
-        this.changeProfileService = ServiceFactory.getInstance().getChangeProfileService();
-        this.checkService = ServiceFactory.getInstance().getCheckService();
-    }
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServiceException {
 
         Auth auth = (Auth) request.getSession().getAttribute("auth");
 
         //проверяем, жива ли сессия
         checkAuthPresence(request, response, auth);
 
-        //получаем данные из сессии
-        int id = (int) request.getSession().getAttribute("id");
-        String name = (String) request.getSession().getAttribute("name");
-
-        // Получаем данные из формы
-        String newName = request.getParameter("newName");
-        String newEmail = request.getParameter("newEmail");
-        String newPassword = request.getParameter("newPassword");
-        String oldEmail = request.getParameter("oldEmail");
-        String oldPassword = request.getParameter("oldPassword");
-
         boolean updated = false;
+        updated = isProfileFieldUpdated(request, auth, request.getParameter("newName"), ProfileDataField.NAME);
+        updated = isProfileFieldCheckedAndUpdated(request, auth, request.getParameter("oldEmail"), request.getParameter("newEmail"), ProfileDataField.EMAIL);
+        updated = isProfileFieldCheckedAndUpdated(request, auth, request.getParameter("oldPassword"), request.getParameter("newPassword"), ProfileDataField.PASSWORD);
 
-        // Проверка и обновление имени
-        if (newName != null && !newName.trim().isEmpty()) {
-            try{
-            if (checkService.checkFieldsEquality(name, newName)) {
-                request.getSession().setAttribute("changeEmailError", "Внимание, старое имя совпадает с новым именем");
-            }
-
-            // через слой дао меняем в БД поле с именем
-            boolean updateName = UpdateUtil.updateProfileField(auth, newName, ProfileFieldToChange.NAME, changeProfileService);
-            if (updateName) {
-                updated = true;
-            } else {
-                request.getSession().setAttribute("changeNameError", "Произошла ошибка при обновлении имени");
-            }} catch (ServiceException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Проверка и обновление email
-        if (newEmail != null && !newEmail.trim().isEmpty()) {
-            String emailFromDb = null;
-            try {
-                emailFromDb = changeProfileService.getFieldData(id, ProfileDataField.EMAIL);
-
-                if (checkService.checkFieldsEquality(emailFromDb, oldEmail)) {
-                    if (checkService.checkFieldsEquality(oldEmail, newEmail)) {
-                        request.getSession().setAttribute("changeEmailError", "Внимание, старый email совпадает с новым email");
-                    }
-
-                    boolean updateEmail = UpdateUtil.updateProfileField(auth, newEmail, ProfileFieldToChange.EMAIL, changeProfileService);
-                    if (updateEmail) {
-                        updated = true;
-                    } else {
-                        request.getSession().setAttribute("changeEmailError", "Произошла ошибка при обновлении email");
-                    }
-                } else {
-                    request.getSession().setAttribute("changeEmailError", "Старый email не совпадает с email из личного кабинета");
-                }
-            } catch (ServiceException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Проверка и обновление пароля
-        if (newPassword != null && !newPassword.trim().isEmpty()) {
-            String passwordFromDb = null;
-            try {
-                passwordFromDb = changeProfileService.getFieldData(id, ProfileDataField.PASSWORD);
-
-                if (checkService.checkFieldsEquality(passwordFromDb, oldPassword)) {
-                    if (checkService.checkFieldsEquality(oldPassword, newPassword)) {
-                        request.getSession().setAttribute("changePasswordError", "Внимание, старый пароль совпадает с новым паролем");
-                    }
-
-                    boolean updatePassword = UpdateUtil.updateProfileField(auth, newPassword, ProfileFieldToChange.PASSWORD, changeProfileService);
-                    if (updatePassword) {
-                        updated = true;
-                    } else {
-                        request.getSession().setAttribute("changePasswordError", "Произошла ошибка при обновлении пароля");
-                    }
-                } else {
-                    request.getSession().setAttribute("changePasswordError", "Старый пароль не совпадает с паролем из личного кабинета");
-                }
-            } catch (ServiceException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Проверка, были ли изменения
+        // проверяем, было ли изменено хотя бы одно поле
         if (updated) {
             request.getSession().setAttribute("changeAccountSuccess", "Профиль успешно обновлен!");
         } else {
@@ -126,7 +40,7 @@ public class ChangeAccount implements Command {
         }
 
         // Перенаправление на страницу профиля
-        UserRole role = UserRole.valueOf(((String)request.getSession().getAttribute("role")).toUpperCase());
+        UserRole role = UserRole.valueOf(((String) request.getSession().getAttribute("role")).toUpperCase());
         response.sendRedirect("Controller?command=" + UrlFormatterUtil.formatRedirectUrl(role));
     }
 }

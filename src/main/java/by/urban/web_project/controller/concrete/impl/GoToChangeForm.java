@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
-import static by.urban.web_project.controller.utils.RolePresenceUtil.checkRolePresence;
+import static by.urban.web_project.controller.utils.RolePresenceUtil.isAuthRoleValid;
 
 public class GoToChangeForm implements Command {
 
@@ -39,22 +39,12 @@ public class GoToChangeForm implements Command {
 
         // Проверка роли перед переходом на страницу
         if ("bio".equals(formType)) {
-            checkRolePresence(request, response, UserRole.AUTHOR);
-            return;
+            if(!isAuthRoleValid(request, response, UserRole.AUTHOR)){
+                return;
+            }
         }
 
-        String page = "";
-        switch (formType) {
-            case "account":
-                page = "/WEB-INF/jsp/change-user-data-pages/change-account.jsp";
-                break;
-            case "bio":
-                page = "/WEB-INF/jsp/change-user-data-pages/change-bio-form.jsp";
-                break;
-            case "newsArticle":
-                page = "/WEB-INF/jsp/change-news-article-form.jsp";
-                break;
-        }
+        String page = specifyPageAccordingToFormType(formType);
 
         //newsId передавалось в URL, его нужно передать далее в ChangeNewsArticle.java
         String newsId = request.getParameter("newsId");
@@ -69,5 +59,20 @@ public class GoToChangeForm implements Command {
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(page);
         dispatcher.forward(request, response);
+    }
+
+    /**
+     * Метод для определения страницы для перехода в зависимости от типа формы
+     * @param formType - берется из скрытого поля формы на странице джсп (<input type="hidden" name="formType" value="account">)
+     * @return стринговое значение адреса страницы, которое будет подставляться в request.getRequestDispatcher
+     */
+    private String specifyPageAccordingToFormType(String formType){
+
+        return switch (formType) {
+            case "account" -> "/WEB-INF/jsp/change-user-data-pages/change-account.jsp";
+            case "bio" -> "/WEB-INF/jsp/change-user-data-pages/change-bio-form.jsp";
+            case "newsArticle" -> "/WEB-INF/jsp/change-news-article-form.jsp";
+            default -> "";
+        };
     }
 }

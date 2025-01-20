@@ -10,14 +10,20 @@ import java.io.IOException;
 import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedirectUrl;
 
 public class RolePresenceUtil {
-    public static void checkRolePresence(HttpServletRequest request, HttpServletResponse response, UserRole role) throws IOException {
+    public static boolean isAuthRoleValid(HttpServletRequest request, HttpServletResponse response, UserRole role) {
         Auth auth = (Auth) request.getSession(false).getAttribute("auth");
 
-        if (!role.equals(auth.getRole())) {
-            System.out.println("Пользователь пытается войти на страницу, закрытую для его роли");
-            request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
-            response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
+        try {
+            if (!role.equals(auth.getRole())) {
+                System.out.println("Пользователь пытается войти на страницу, закрытую для его роли");
+                request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
+                response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
+                System.out.println("1");
+                return false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
+        return true;
     }
 }

@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
-import static by.urban.web_project.controller.utils.RolePresenceUtil.checkRolePresence;
+import static by.urban.web_project.controller.utils.RolePresenceUtil.isAuthRoleValid;
 
 public class DeleteFromDatabase implements Command {
     private final IChangeProfileService updateTool;
@@ -31,7 +31,9 @@ public class DeleteFromDatabase implements Command {
         // если не в сессии
         checkAuthPresence(request, response, auth);
         // если от другой роли
-        checkRolePresence(request, response, UserRole.ADMIN);
+        if(!isAuthRoleValid(request, response, UserRole.ADMIN)){
+            return;
+        }
 
         int newsId = Integer.parseInt(request.getParameter("newsId"));
         if (newsService.deleteNewsFromDatabase(newsId)) {

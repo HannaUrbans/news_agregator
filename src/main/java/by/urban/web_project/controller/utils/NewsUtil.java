@@ -2,17 +2,23 @@ package by.urban.web_project.controller.utils;
 
 import by.urban.web_project.bean.News;
 import by.urban.web_project.bean.NewsImportance;
+import by.urban.web_project.bean.User;
+import by.urban.web_project.service.INewsService;
+import by.urban.web_project.service.ServiceException;
+import by.urban.web_project.service.ServiceFactory;
 import by.urban.web_project.utils.ImageUtils;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 import java.util.List;
 
 public class NewsUtil {
-   public static void addNewsToSession(HttpServletRequest request, News newNews, List<News> newsList){
+
+    public static void addNewsToSession(HttpServletRequest request, News newNews, List<News> newsList){
 
        //добавляем обновленный список новостей (с учетом добавленной только что новости) в атрибуты
        request.getSession().setAttribute("newsList", newsList);
@@ -60,6 +66,22 @@ public class NewsUtil {
         }
 
         return imageUrl;
+    }
+
+    public static void checkNewsExists(HttpServletRequest request, HttpServletResponse response, News news) throws IOException {
+        if (news == null) {
+            request.getSession().setAttribute("changeArticleError", "Новость с указанным ID не найдена.");
+            response.sendRedirect("Controller?command=SHOW_ALL_AUTHOR_NEWS");
+        }
+    }
+
+    public static void addCoauthorIfNeeded(int authorId, int newsId, INewsService newsService) throws ServiceException {
+        List<User> newsAuthors = newsService.getAuthorByNewsId(newsId);
+        for (User newsAuthor : newsAuthors) {
+            if (newsAuthor.getId() != authorId) {
+                newsService.addCoauthorToNews(authorId, newsId);
+            }
+        }
     }
 
 }

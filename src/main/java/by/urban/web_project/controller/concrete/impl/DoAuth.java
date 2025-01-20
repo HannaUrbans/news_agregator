@@ -45,12 +45,6 @@ public class DoAuth implements Command {
                 return;
             }
 
-            //передаем в атрибуты для дальнейшего отображения на джсп страницах
-            //если передавать на страницах "GO_To_....", то получается переписывание одного и того же кода
-            //если передавать сразу объект, то получается, что на джсп странице ты используешь скриплет типа
-            // <% Auth auth = (Auth) session.getAttribute("auth");
-            //    String role = (auth != null) ? auth.getRole().name() : "Неизвестно";%>
-
             request.getSession().setAttribute("auth", auth);
             request.getSession().setAttribute("id", auth.getId());
             request.getSession().setAttribute("role", auth.getRole().name().toLowerCase());

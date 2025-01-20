@@ -1,7 +1,7 @@
 package by.urban.web_project.controller.concrete.impl;
 
-import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.bean.UserRole;
+import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.IRegistrationService;
 import by.urban.web_project.service.ServiceException;
@@ -33,29 +33,21 @@ public class DoRegistration implements Command {
             // Прописывается в личном кабинете, а не при регистрации
             String bio = "";
 
-            if (detectErrorsInRegistrationData(request, response, email, password, confirmPassword, regKey)) return;
+            if (detectErrorsInRegistrationData(request, response, email, password, confirmPassword)) {
+                return;
+            }
 
             // Проверяем поле "ключ автора" при наличии данных внутри него
             if (regKey != null && !regKey.trim().isEmpty()) {
                 switch (logicForRegistration.specifyRoleKeyBelongsTo(request, regKey)) {
-                    case null:
-                        request.getSession().setAttribute("invalidAuthorKey", "Вы ввели неверный ключ");
-                        redirectToRegistrationPage(request, response);
-                        break;
                     case ADMIN:
-                        int adminId = logicForRegistration.checkExclusiveUserReg(name, email, password, regKey, UserRole.ADMIN);
-                        logicForRegistration.addInitialBioToExclusiveUser(adminId);
-                        request.getSession().setAttribute("regSuccess", name + ", поздравляем Вас с завершением регистрации в качестве администратора!");
-                        response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+                        redirectIfSuccess(request, response, name, email, password, regKey, UserRole.ADMIN);
                         break;
                     case AUTHOR:
-                        int authorId = logicForRegistration.checkExclusiveUserReg(name, email, password, regKey, UserRole.AUTHOR);
-                        logicForRegistration.addInitialBioToExclusiveUser(authorId);
-                        request.getSession().setAttribute("regSuccess", name + ", поздравляем Вас с завершением регистрации в качестве автора!");
-                        response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+                        redirectIfSuccess(request, response, name, email, password, regKey, UserRole.AUTHOR);
                         break;
-                    default:
-                        redirectToRegistrationPage(request, response);
+                    case null, default:
+                        redirectIfError(request, response);
                         break;
                 }
             } else {
@@ -63,43 +55,54 @@ public class DoRegistration implements Command {
                     request.getSession().setAttribute("regSuccess", name + ", поздравляем Вас с завершением регистрации в качестве пользователя!");
                     response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
                 } else {
-                    redirectToRegistrationPage(request, response);
+                    redirectToRegistrationPage(response);
                 }
             }
         } catch (ServiceException e) {
             e.printStackTrace();
             request.getSession().setAttribute("regError", "Произошла ошибка при регистрации. Попробуйте позже.");
-            redirectToRegistrationPage(request, response);
+            redirectToRegistrationPage(response);
         }
     }
 
+    private void redirectIfError(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.getSession().setAttribute("invalidAuthorKey", "Вы ввели неверный ключ");
+        redirectToRegistrationPage(response);
+    }
+
+    private void redirectIfSuccess(HttpServletRequest request, HttpServletResponse response, String name, String email, String password, String regKey, UserRole userRole) throws IOException, ServiceException {
+        logicForRegistration.addInitialBioToExclusiveUser(logicForRegistration.checkExclusiveUserReg(name, email, password, regKey, userRole));
+        request.getSession().setAttribute("regSuccess", name + ", поздравляем Вас с завершением регистрации, теперь Вы " + userRole.name());
+        response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+    }
+
     private boolean detectErrorsInRegistrationData(HttpServletRequest request, HttpServletResponse response,
-                                                   String email, String password, String confirmPassword, String authorKey) throws IOException, ServiceException {
+                                                   String email, String password, String confirmPassword) throws IOException, ServiceException {
         // Проводим валидацию введённого email для передачи информации по пути из формы к БД
         if (check.checkInvalidEmail(email)) {
             request.getSession().setAttribute("regError", "Неверный формат email");
-            redirectToRegistrationPage(request, response);
+            redirectToRegistrationPage(response);
             return true;
         }
 
         // Проверяем, что в базе данных ещё нет пользователя с таким email
         if (logicForRegistration.checkEmailExistsInDB(request, email)) {
             request.getSession().setAttribute("emailDuplicate", "Пользователь с таким e-mail уже существует");
-            redirectToRegistrationPage(request, response);
+            redirectToRegistrationPage(response);
             return true;
         }
 
         // Проверяем, что повторно введённый пароль верный
         if (!check.checkFieldsEquality(password, confirmPassword)) {
             request.getSession().setAttribute("regError", "Пароли не совпадают");
-            redirectToRegistrationPage(request, response);
+            redirectToRegistrationPage(response);
             return true;
         }
 
         return false;
     }
 
-    private void redirectToRegistrationPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void redirectToRegistrationPage(HttpServletResponse response) throws IOException {
         response.sendRedirect("Controller?command=GO_TO_REGISTRATION_PAGE");
     }
 }
