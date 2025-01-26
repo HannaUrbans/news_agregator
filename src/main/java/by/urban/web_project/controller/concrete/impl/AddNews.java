@@ -20,17 +20,13 @@ import static by.urban.web_project.controller.utils.RolePresenceUtil.isAuthRoleV
 
 public class AddNews implements Command {
 
-    public AddNews() {
-    }
+    private final ServiceFactory serviceFactory = ServiceFactory.getInstance();
+    private INewsService newsService;
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServiceException {
-
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        INewsService newsService = serviceFactory.getNewsService();
+    public void execute(HttpServletRequest request, HttpServletResponse response) {
 
         Auth auth = (Auth) request.getSession(false).getAttribute("auth");
-
 
         // если не в сессии
         checkAuthPresence(request, response, auth);
@@ -41,6 +37,7 @@ public class AddNews implements Command {
 
         News newNews = null;
         try {
+            newsService = serviceFactory.getNewsService();
             //формируем новостной объект данными из формы
             newNews = NewsUtil.createNewsFromForm(request);
 
@@ -61,11 +58,11 @@ public class AddNews implements Command {
             // Перенаправляем на страницу с новостями автора
             response.sendRedirect("Controller?command=SHOW_ALL_AUTHOR_NEWS");
 
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | IOException e) {
             e.printStackTrace();
             errorHandling(request, newNews, "addNewsError", "Неверный формат данных", response);
 
-        } catch (Exception e) {
+        } catch (ServiceException e) {
             e.printStackTrace();
             errorHandling(request, newNews, "errorMessage", "Ошибка при добавлении новости", response);
         }

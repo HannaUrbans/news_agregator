@@ -13,21 +13,25 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class GoToNewsPage implements Command {
+    private final ServiceFactory serviceFactory = ServiceFactory.getInstance();
+    private INewsService newsService;
+
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ServiceException {
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        INewsService newsService = serviceFactory.getNewsService();
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         // получаем ID новости из параметров запроса
         String newsId = request.getParameter("newsId");
         // получаем новость по ID
+        try{
+        newsService = serviceFactory.getNewsService();
         News news = newsService.getNewsFromDatabaseById(Integer.parseInt(newsId));
 
         if (news != null) {
             request.setAttribute("news", news);
         } else {
             request.setAttribute("errorMessage", "Новость не найдена.");
-        }
+        }}
+        catch(ServiceException e){e.printStackTrace();}
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/news-page.jsp");
         dispatcher.forward(request, response);

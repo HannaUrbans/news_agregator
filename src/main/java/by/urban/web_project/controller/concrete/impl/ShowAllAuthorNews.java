@@ -21,24 +21,28 @@ import static by.urban.web_project.controller.utils.RolePresenceUtil.isAuthRoleV
 
 public class ShowAllAuthorNews implements Command {
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ServiceException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Auth auth = (Auth) request.getSession(false).getAttribute("auth");
 
         // если не в сессии
         checkAuthPresence(request, response, auth);
         // если от другой роли
-        if(!isAuthRoleValid(request, response, UserRole.AUTHOR)){
+        if (!isAuthRoleValid(request, response, UserRole.AUTHOR)) {
             return;
         }
 
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        INewsService newsService = serviceFactory.getNewsService();
+        try {
+            ServiceFactory serviceFactory = ServiceFactory.getInstance();
+            INewsService newsService = serviceFactory.getNewsService();
 
-        int id = (int) request.getSession().getAttribute("id");
-        List<News> newsAuthorList = newsService.getAuthorNewsList(id);
+            int id = (int) request.getSession().getAttribute("id");
+            List<News> newsAuthorList = newsService.getAuthorNewsList(id);
 
-        //НЕ В СЕССИИ, А ПРОСТО В АТРИБУТАХ ПЕРЕДАЕМ
-        request.setAttribute("newsAuthorList", newsAuthorList);
+            //НЕ В СЕССИИ, А ПРОСТО В АТРИБУТАХ ПЕРЕДАЕМ
+            request.setAttribute("newsAuthorList", newsAuthorList);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/author-news-page.jsp");
         dispatcher.forward(request, response);

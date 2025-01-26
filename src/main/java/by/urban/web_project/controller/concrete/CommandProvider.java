@@ -8,10 +8,10 @@ import by.urban.web_project.service.ServiceException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandProvider {
-    private Map<CommandName, Command> commands = new HashMap<>();
+public final class CommandProvider {
+    private final Map<CommandName, Command> commands = new HashMap<>();
 
-    public CommandProvider() throws ServiceException {
+    public CommandProvider() {
         // 1. Аутентификация и регистрация
         commands.put(CommandName.DO_AUTH, new DoAuth());
         commands.put(CommandName.DO_REGISTRATION, new DoRegistration());

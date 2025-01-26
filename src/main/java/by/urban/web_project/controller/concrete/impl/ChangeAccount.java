@@ -20,20 +20,19 @@ import static by.urban.web_project.controller.utils.UpdateUtil.isProfileFieldUpd
 public class ChangeAccount implements Command {
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServiceException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         Auth auth = (Auth) request.getSession().getAttribute("auth");
 
         //проверяем, жива ли сессия
         checkAuthPresence(request, response, auth);
 
-        boolean updated = false;
-        updated = isProfileFieldUpdated(request, auth, request.getParameter("newName"), ProfileDataField.NAME);
-        updated = isProfileFieldCheckedAndUpdated(request, auth, request.getParameter("oldEmail"), request.getParameter("newEmail"), ProfileDataField.EMAIL);
-        updated = isProfileFieldCheckedAndUpdated(request, auth, request.getParameter("oldPassword"), request.getParameter("newPassword"), ProfileDataField.PASSWORD);
+        boolean updatedName = isProfileFieldCheckedAndUpdated(auth, request.getParameter("newName"), auth.getName(), ProfileDataField.NAME);
+        boolean updatedEmail = isProfileFieldCheckedAndUpdated(request, auth, request.getParameter("oldEmail"), request.getParameter("newEmail"), ProfileDataField.EMAIL);
+        boolean updatedPassword = isProfileFieldCheckedAndUpdated(request, auth, request.getParameter("oldPassword"), request.getParameter("newPassword"), ProfileDataField.PASSWORD);
 
         // проверяем, было ли изменено хотя бы одно поле
-        if (updated) {
+        if (updatedName || updatedEmail || updatedPassword) {
             request.getSession().setAttribute("changeAccountSuccess", "Профиль успешно обновлен!");
         } else {
             request.getSession().setAttribute("changeAccountError", "Не было внесено ни одного изменения.");

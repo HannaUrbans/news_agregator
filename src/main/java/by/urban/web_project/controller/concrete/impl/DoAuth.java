@@ -16,16 +16,12 @@ import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedir
 
 public class DoAuth implements Command {
     private final ServiceFactory serviceFactory = ServiceFactory.getInstance();
-    private final IAuthorizationService authorizationService = serviceFactory.getAuthorizationService();
-    private final IChangeProfileService changeProfileService = serviceFactory.getChangeProfileService();
-    private final ICookiesService cookiesService = serviceFactory.getCookiesService();
-
-    //idea заставила пробросить в конструкторе исключение из-за serviceFactory.getAuthorizationService()
-    public DoAuth() throws ServiceException {
-    }
+    private IAuthorizationService authorizationService;
+    private IChangeProfileService changeProfileService;
+    private ICookiesService cookiesService;
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //эти данные приходят методом пост
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -37,6 +33,9 @@ public class DoAuth implements Command {
         }
 
         try {
+            authorizationService = serviceFactory.getAuthorizationService();
+            changeProfileService = serviceFactory.getChangeProfileService();
+            cookiesService = serviceFactory.getCookiesService();
             //проверяем формат email + авторизован ли посетитель
             Auth auth = authorizationService.checkAuth(email, password);
             if (auth == null) {

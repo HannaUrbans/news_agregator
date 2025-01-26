@@ -14,9 +14,6 @@ public class DAOFactory {
     private INewsCommentDAO sqlNewsCommentImpl;
     private INewsDAO sqlNewsImpl;
 
-    private DAOFactory() {
-    }
-
     // Метод для получения синглтон-экземпляра DAOFactory
     public static DAOFactory getInstance() {
         if (instance == null) {

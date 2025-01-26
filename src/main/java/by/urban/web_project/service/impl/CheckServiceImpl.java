@@ -30,15 +30,6 @@ public class CheckServiceImpl implements ICheckService {
     }
 
     /**
-     * Проверка, правильно ли повторно введен в форме регистрации пароль
-     * Также будет использоваться в для изменения email и пароля (проверять совпадают ли старый и новый)
-     */
-    @Override
-    public boolean checkFieldsEquality(String field1, String field2) throws ServiceException {
-        return field1.equals(field2);
-    }
-
-    /**
      * Валидация email на бэке
      */
     @Override

@@ -1,9 +1,9 @@
 package by.urban.web_project.controller.concrete.impl;
 
 import by.urban.web_project.bean.Auth;
+import by.urban.web_project.bean.News;
 import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.controller.concrete.Command;
-import by.urban.web_project.bean.News;
 import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
@@ -19,10 +19,11 @@ import static by.urban.web_project.controller.utils.RolePresenceUtil.isAuthRoleV
 
 public class GoToChangeForm implements Command {
 
+    private final ServiceFactory serviceFactory = ServiceFactory.getInstance();
+    private INewsService newsService;
+
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ServiceException {
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        INewsService newsService = serviceFactory.getNewsService();
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         Auth auth = (Auth) request.getSession(false).getAttribute("auth");
         // если не в сессии
@@ -39,7 +40,7 @@ public class GoToChangeForm implements Command {
 
         // Проверка роли перед переходом на страницу
         if ("bio".equals(formType)) {
-            if(!isAuthRoleValid(request, response, UserRole.AUTHOR)){
+            if (!isAuthRoleValid(request, response, UserRole.AUTHOR)) {
                 return;
             }
         }
@@ -48,13 +49,17 @@ public class GoToChangeForm implements Command {
 
         //newsId передавалось в URL, его нужно передать далее в ChangeNewsArticle.java
         String newsId = request.getParameter("newsId");
-        if (newsId != null) {
-            request.getSession().setAttribute("newsId", newsId);
-
-            News newsToEdit = newsService.getNewsFromDatabaseById(Integer.parseInt(newsId));
-            if (newsToEdit != null) {
-                request.getSession().setAttribute("news", newsToEdit);
+        try {
+            if (newsId != null) {
+                request.getSession().setAttribute("newsId", newsId);
+                newsService = serviceFactory.getNewsService();
+                News newsToEdit = newsService.getNewsFromDatabaseById(Integer.parseInt(newsId));
+                if (newsToEdit != null) {
+                    request.getSession().setAttribute("news", newsToEdit);
+                }
             }
+        } catch (ServiceException e) {
+            e.printStackTrace();
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(page);
@@ -63,10 +68,11 @@ public class GoToChangeForm implements Command {
 
     /**
      * Метод для определения страницы для перехода в зависимости от типа формы
+     *
      * @param formType - берется из скрытого поля формы на странице джсп (<input type="hidden" name="formType" value="account">)
      * @return стринговое значение адреса страницы, которое будет подставляться в request.getRequestDispatcher
      */
-    private String specifyPageAccordingToFormType(String formType){
+    private String specifyPageAccordingToFormType(String formType) {
 
         return switch (formType) {
             case "account" -> "/WEB-INF/jsp/change-user-data-pages/change-account.jsp";

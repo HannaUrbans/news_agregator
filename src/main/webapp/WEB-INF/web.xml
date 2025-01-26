@@ -18,4 +18,8 @@
 	<listener>
 		<listener-class>by.urban.web_project.listener.ConnectionPoolInitializer</listener-class>
 	</listener>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error-page.jsp</location>
+	</error-page>
 </web-app>

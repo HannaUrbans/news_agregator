@@ -19,10 +19,11 @@ import static by.urban.web_project.controller.utils.NewsUtil.checkNewsExists;
 import static by.urban.web_project.controller.utils.RolePresenceUtil.isAuthRoleValid;
 
 public class ChangeNewsArticle implements Command {
+    private final ServiceFactory serviceFactory = ServiceFactory.getInstance();
+    private INewsService newsService;
+
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, ServiceException {
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        INewsService newsService = serviceFactory.getNewsService();
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException{
 
         Auth auth = (Auth) request.getSession().getAttribute("auth");
         checkAuthPresence(request, response, auth);
@@ -32,13 +33,14 @@ public class ChangeNewsArticle implements Command {
 
         //пришло из GoToChangeForm.java
         int newsId = Integer.parseInt((String) request.getSession().getAttribute("newsId"));
-
+        try {
+        newsService = serviceFactory.getNewsService();
         News news = newsService.getNewsFromDatabaseById(newsId);
         checkNewsExists(request, response, news);
 
         news.updateFields(request.getParameter("newNewsTitle"), request.getParameter("newNewsBrief"), request.getParameter("newNewsContent"), request.getParameter("newNewsCategory"));
 
-        try {
+
             if (newsService.changeFieldData(newsId, news)) {
                 addCoauthorIfNeeded(auth.getId(), newsId, newsService);
 

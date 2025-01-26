@@ -17,17 +17,7 @@ public final class ServiceFactory {
 
     // Статический блок для инициализации фабрики
     static {
-        try {
             instance = new ServiceFactory();
-        } catch (ServiceException e) {
-            System.err.println("Ошибка инициализации ServiceFactory: " + e.getMessage());
-            e.printStackTrace();
-            //в статическом блоке нельзя вызывать checked исключения
-            throw new ExceptionInInitializerError(e);
-        }
-    }
-
-    private ServiceFactory() throws ServiceException {
     }
 
     // Метод для получения экземпляра фабрики

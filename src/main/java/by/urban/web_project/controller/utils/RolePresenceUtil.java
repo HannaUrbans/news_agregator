@@ -18,7 +18,6 @@ public class RolePresenceUtil {
                 System.out.println("Пользователь пытается войти на страницу, закрытую для его роли");
                 request.getSession().setAttribute("authError", "У Вас недостаточно прав для посещения этой страницы");
                 response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
-                System.out.println("1");
                 return false;
             }
         } catch (IOException e) {

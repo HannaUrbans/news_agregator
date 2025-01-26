@@ -16,14 +16,15 @@ import java.io.IOException;
 import java.util.List;
 
 public class GoToIndexPage implements Command {
+    private final ServiceFactory serviceFactory = ServiceFactory.getInstance();
+    private INewsService newsService;
+
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ServiceException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Auth auth = (Auth) request.getSession(false).getAttribute("auth");
 
-        ServiceFactory serviceFactory = ServiceFactory.getInstance();
-        INewsService newsService = serviceFactory.getNewsService();
-
         try {
+            newsService = serviceFactory.getNewsService();
             List<News> breakingNewsList = newsService.getNewsByType(NewsImportance.BREAKING);
             News breakingNews = breakingNewsList.get(breakingNewsList.size() - 1);
             List<News> topNewsList = newsService.getNewsByType(NewsImportance.TOP);

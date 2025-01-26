@@ -11,19 +11,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class DoRegistration implements Command {
 
     private final ServiceFactory serviceFactory = ServiceFactory.getInstance();
-    private final IRegistrationService logicForRegistration = serviceFactory.getRegistrationService();
-    private final ICheckService check = serviceFactory.getCheckService();
-
-    public DoRegistration() throws ServiceException {
-    }
+    private IRegistrationService logicForRegistration;
+    private ICheckService check;
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
+            logicForRegistration = serviceFactory.getRegistrationService();
+            check = serviceFactory.getCheckService();
             // Параметры приходят из формы регистрации
             String name = request.getParameter("name");
             String email = request.getParameter("email");
@@ -93,7 +93,7 @@ public class DoRegistration implements Command {
         }
 
         // Проверяем, что повторно введённый пароль верный
-        if (!check.checkFieldsEquality(password, confirmPassword)) {
+        if (!Objects.equals(password, confirmPassword)) {
             request.getSession().setAttribute("regError", "Пароли не совпадают");
             redirectToRegistrationPage(response);
             return true;

@@ -2,6 +2,7 @@ package by.urban.web_project.dao;
 
 import by.urban.web_project.bean.NewsCategory;
 
+//НЕ БУДЕТ РЕАЛИЗОВАН
 public interface INewsCategoryDAO {
     void addCategory(NewsCategory category) throws DAOException;
     void changeCategory(NewsCategory category) throws DAOException;

@@ -2,7 +2,6 @@ package by.urban.web_project.controller.filters;
 
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.HttpFilter;
 
 import java.io.IOException;
 
@@ -11,7 +10,6 @@ public class EncodingFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        Filter.super.init(filterConfig);
     }
 
     @Override
@@ -27,6 +25,5 @@ public class EncodingFilter implements Filter {
 
     @Override
     public void destroy() {
-        Filter.super.destroy();
     }
 }
