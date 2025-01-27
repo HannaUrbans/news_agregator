@@ -5,9 +5,7 @@ import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.DAOFactory;
 import by.urban.web_project.dao.IUserDAO;
 import by.urban.web_project.service.IChangeProfileService;
-import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.ServiceException;
-import by.urban.web_project.service.ServiceFactory;
 
 import java.util.Map;
 
@@ -73,7 +71,7 @@ public class ChangeProfileServiceImpl implements IChangeProfileService {
     @Override
     public void updatePassword(int id, String newPassword) throws ServiceException {
         try {
-                userDAO.updatePassword(id, newPassword);
+            userDAO.updatePassword(id, newPassword);
         } catch (DAOException e) {
             throw new ServiceException("Ошибка при обновлении пароля пользователя", e);
         }

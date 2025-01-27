@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
  * хранящимся в файле свойств (properties file). Этот класс реализует
  * паттерн Singleton, обеспечивая единственный экземпляр для доступа
  * к ресурсам в приложении.
- *
+ * <p>
  * Файл свойств должен находиться в classpath, в папке
  * src/main/resources, и будет автоматически скопирован в выходной
  * каталог (target/classes для проектов, использующих Maven).
@@ -19,7 +19,8 @@ public class DBResourceManager {
     public static DBResourceManager getInstance() {
         return instance;
     }
-    public String getValue(String key){
+
+    public String getValue(String key) {
         return bundle.getString(key);
     }
 }

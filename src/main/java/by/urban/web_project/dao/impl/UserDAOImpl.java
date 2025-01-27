@@ -37,9 +37,9 @@ public class UserDAOImpl implements IUserDAO {
     private static final String UPDATE_PASSWORD_QUERY = "UPDATE news_management.users SET password = ? WHERE id=?";
 
     private static final String GET_KEYTYPE_QUERY = "SELECT r.name FROM news_management.reg_keys rk JOIN news_management.roles r ON rk.roles_id = r.id " +
-                                                        "WHERE rk.value = ? && rk.is_reserved = ?";
+                                                    "WHERE rk.value = ? && rk.is_reserved = ?";
     private static final String GET_USERPROFILE_QUERY = "SELECT u.email, u.password, ud.bio FROM news_management.users u " +
-                                                  "LEFT JOIN news_management.user_details ud ON u.id = ud.user_id WHERE u.id = ?";
+                                                        "LEFT JOIN news_management.user_details ud ON u.id = ud.user_id WHERE u.id = ?";
 
     private static final String CHECK_TOKEN_PRESENCE_QUERY = "SELECT * FROM news_management.tokens WHERE users_id = ?";
     private static final String GET_USER_TOKEN_QUERY = "SELECT * FROM news_management.tokens WHERE users_id = ?";
@@ -50,7 +50,7 @@ public class UserDAOImpl implements IUserDAO {
                                                            "JOIN news_management.roles r ON u.role_id = r.id WHERE token = ?";
 
     //принцип работы: получаем соединение -> операция с бд -> возвращаем соединение в пул
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     /**
      * Метод авторизации

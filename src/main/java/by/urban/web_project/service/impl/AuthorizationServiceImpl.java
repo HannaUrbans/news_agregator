@@ -84,11 +84,10 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
     }
 
 
-    public boolean deleteToken(int id) throws ServiceException{
-        try{
+    public boolean deleteToken(int id) throws ServiceException {
+        try {
             return (authorizationLogic.deleteTokenFromDb(id));
-        }
-        catch (DAOException e) {
+        } catch (DAOException e) {
             throw new ServiceException(e);
         }
     }

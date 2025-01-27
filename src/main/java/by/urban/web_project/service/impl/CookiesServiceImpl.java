@@ -92,7 +92,7 @@ public class CookiesServiceImpl implements ICookiesService {
      * Устанавливает атрибуты для cookie, такие как максимальный возраст, возможность доступа к куки через джаваскрипт, путь.
      *
      * @param cookie cookie, которому нужно установить атрибуты
-     * @param token токен из БД, на основе которого рассчитываются атрибуты
+     * @param token  токен из БД, на основе которого рассчитываются атрибуты
      */
     private void setCookieAttributes(Cookie cookie, Token token) {
         Duration duration = Duration.between(token.getTokenRegDate(), token.getTokenExpirationDate());
@@ -105,8 +105,8 @@ public class CookiesServiceImpl implements ICookiesService {
      * Метод для создания и установки cookie "rememberMe".
      * Генерирует новый токен и сохраняет его в cookies.
      *
-     * @param auth объект с данными авторизованного пользователя
-     * @param tokenGenerated токен, который нужно установить в cookie
+     * @param auth             объект с данными авторизованного пользователя
+     * @param tokenGenerated   токен, который нужно установить в cookie
      * @param rememberMeCookie cookie, которую необходимо создать и установить
      */
     private Cookie createAndSetCookie(Auth auth, Token tokenGenerated, Cookie rememberMeCookie) throws RuntimeException {

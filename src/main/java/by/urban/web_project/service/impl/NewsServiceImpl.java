@@ -1,15 +1,14 @@
 package by.urban.web_project.service.impl;
 
+import by.urban.web_project.bean.News;
+import by.urban.web_project.bean.NewsImportance;
 import by.urban.web_project.bean.User;
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.DAOFactory;
 import by.urban.web_project.dao.INewsDAO;
-import by.urban.web_project.bean.News;
-import by.urban.web_project.bean.NewsImportance;
 import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NewsServiceImpl implements INewsService {
@@ -73,7 +72,8 @@ public class NewsServiceImpl implements INewsService {
             throw new ServiceException(e);
         }
     }
-    public List<User> getAuthorByNewsId(int newsId) throws ServiceException{
+
+    public List<User> getAuthorByNewsId(int newsId) throws ServiceException {
         try {
             return newsTool.getNewsAuthorsByNewsId(newsId);
         } catch (DAOException e) {
@@ -97,7 +97,7 @@ public class NewsServiceImpl implements INewsService {
         }
     }
 
-    public boolean addCoauthorToNews(int coauthorId, int newsId) throws ServiceException{
+    public boolean addCoauthorToNews(int coauthorId, int newsId) throws ServiceException {
         try {
             return newsTool.addCoauthor(coauthorId, newsId);
         } catch (DAOException e) {

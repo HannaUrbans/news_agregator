@@ -1,7 +1,7 @@
 package by.urban.web_project.listener;
+
 import by.urban.web_project.dbmanager.ConnectionPool;
 import by.urban.web_project.dbmanager.ConnectionPoolException;
-import by.urban.web_project.dbmanager.DBResourceManager;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;

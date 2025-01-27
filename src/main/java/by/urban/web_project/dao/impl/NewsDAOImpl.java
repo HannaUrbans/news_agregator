@@ -27,7 +27,7 @@ public class NewsDAOImpl implements INewsDAO {
     private static final String GET_ALL_NEWS_BY_AUTHOR_QUERY = "SELECT news_id FROM news_management.news_authors WHERE users_id = ? ORDER BY (SELECT publish_date FROM news_management.news WHERE id = news_id) DESC";
     private static final String UPDATE_NEWS_QUERY = "UPDATE news_management.news SET importance = ?, title = ?, image = ?, brief = ?, content = ?, publish_date = ?, news.update_date = ?, categories_id = (SELECT id FROM news_management.categories WHERE title = ?) WHERE id = ?";
     private static final String FIND_NEWS_BY_TYPE_QUERY = "SELECT * FROM news_management.news WHERE importance = ?";
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     /**
      * Метод для добавления новости в БД

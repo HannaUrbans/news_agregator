@@ -30,8 +30,8 @@ public class GoToChangeForm implements Command {
         checkAuthPresence(request, response, auth);
 
         System.out.println("В сети находится: " + auth.toString());
-        String formType = request.getParameter("formType");
 
+        String formType = request.getParameter("formType");
         if (formType == null) {
             request.getSession().setAttribute("authError", "Не указан тип формы");
             response.sendRedirect("Controller?command=NO_SUCH_COMMAND");
@@ -44,8 +44,6 @@ public class GoToChangeForm implements Command {
                 return;
             }
         }
-
-        String page = specifyPageAccordingToFormType(formType);
 
         //newsId передавалось в URL, его нужно передать далее в ChangeNewsArticle.java
         String newsId = request.getParameter("newsId");
@@ -62,7 +60,7 @@ public class GoToChangeForm implements Command {
             e.printStackTrace();
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher(page);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(specifyPageAccordingToFormType(formType));
         dispatcher.forward(request, response);
     }
 

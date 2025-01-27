@@ -17,16 +17,13 @@ public class LogOut implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Cookie cookie = new Cookie("rememberMe", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        response.addCookie(cookie);
+
+        deleteCookie(response);
 
         Auth auth = (Auth) request.getSession(false).getAttribute("auth");
-        System.out.println("команда логаут");
         // Проверяем, существует ли сессия
         try {
-            authorizationService = ServiceFactory.getInstance().getAuthorizationService();
+            authorizationService = serviceFactory.getAuthorizationService();
             if (auth != null) {
                 if (authorizationService.deleteToken(auth.getId())) {
                     System.out.println("Токен был успешно удален из базы данных.");
@@ -43,5 +40,12 @@ public class LogOut implements Command {
             e.printStackTrace();
         }
         response.sendRedirect("Controller?command=GO_TO_AUTHENTICATION_PAGE");
+    }
+
+    private void deleteCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("rememberMe", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
     }
 }

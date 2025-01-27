@@ -18,7 +18,7 @@ public class GoToAddNewsFormPage implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Auth auth = (Auth) request.getSession(false).getAttribute("auth");
         checkAuthPresence(request, response, auth);
-        if(!isAuthRoleValid(request, response, UserRole.AUTHOR)){
+        if (!isAuthRoleValid(request, response, UserRole.AUTHOR)) {
             return;
         }
 

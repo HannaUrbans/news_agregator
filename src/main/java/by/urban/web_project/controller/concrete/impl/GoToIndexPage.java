@@ -1,6 +1,5 @@
 package by.urban.web_project.controller.concrete.impl;
 
-import by.urban.web_project.bean.Auth;
 import by.urban.web_project.bean.News;
 import by.urban.web_project.bean.NewsImportance;
 import by.urban.web_project.controller.concrete.Command;
@@ -21,7 +20,6 @@ public class GoToIndexPage implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Auth auth = (Auth) request.getSession(false).getAttribute("auth");
 
         try {
             newsService = serviceFactory.getNewsService();
@@ -40,11 +38,6 @@ public class GoToIndexPage implements Command {
 
             request.setAttribute("regularNews", regularNewsList);
 
-            if (auth != null) {
-                System.out.println("В сети " + auth.toString());
-            } else {
-                System.out.println("В сети нет зарегистрированного пользователя");
-            }
         } catch (ServiceException e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Ошибка при получении новостей.");

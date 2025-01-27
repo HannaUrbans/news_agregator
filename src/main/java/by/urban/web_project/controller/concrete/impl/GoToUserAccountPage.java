@@ -20,7 +20,7 @@ public class GoToUserAccountPage implements Command {
         // если не в сессии
         checkAuthPresence(request, response, auth);
         // если от другой роли
-        if(!isAuthRoleValid(request, response, UserRole.USER)){
+        if (!isAuthRoleValid(request, response, UserRole.USER)) {
             return;
         }
 

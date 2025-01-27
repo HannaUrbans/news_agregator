@@ -67,8 +67,9 @@ public class ReadImagePathFromStorage implements ImagePathReadable {
     /**
      * Метод сохраняет картинку в указанную папку из параметров и возвращает имя сохраненной картинки,
      * которое трансформируется в путь к картинке путем добавления названия папки и слеша
+     *
      * @param imagesDir - папка, куда будем сохранять картинки
-     * return путь к картинке, который будет сохраняться в БД и впоследствии использоваться для получения доступа к картинке
+     *                  return путь к картинке, который будет сохраняться в БД и впоследствии использоваться для получения доступа к картинке
      */
     private String saveImage(HttpServletRequest request, File imagesDir) throws IOException, ServletException {
         String relativePath = "images";

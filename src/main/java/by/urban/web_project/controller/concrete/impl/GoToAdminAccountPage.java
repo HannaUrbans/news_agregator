@@ -21,7 +21,7 @@ public class GoToAdminAccountPage implements Command {
         // если не в сессии
         checkAuthPresence(request, response, auth);
         // если от другой роли
-        if(!isAuthRoleValid(request, response, UserRole.ADMIN)){
+        if (!isAuthRoleValid(request, response, UserRole.ADMIN)) {
             return;
         }
 

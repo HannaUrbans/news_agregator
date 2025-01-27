@@ -1,17 +1,11 @@
 package by.urban.web_project.service.impl;
 
-import by.urban.web_project.bean.Auth;
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.DAOFactory;
 import by.urban.web_project.dao.IUserDAO;
-import by.urban.web_project.bean.User;
-import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.ServiceException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

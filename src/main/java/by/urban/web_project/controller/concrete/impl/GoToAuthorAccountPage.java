@@ -21,7 +21,7 @@ public class GoToAuthorAccountPage implements Command {
         // если не в сессии
         checkAuthPresence(request, response, auth);
         // если от другой роли
-        if(!isAuthRoleValid(request, response, UserRole.AUTHOR)){
+        if (!isAuthRoleValid(request, response, UserRole.AUTHOR)) {
             return;
         }
 

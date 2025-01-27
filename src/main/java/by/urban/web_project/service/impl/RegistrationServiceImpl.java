@@ -1,9 +1,9 @@
 package by.urban.web_project.service.impl;
 
+import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.DAOFactory;
 import by.urban.web_project.dao.IUserDAO;
-import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.service.IRegistrationService;
 import by.urban.web_project.service.ServiceException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,7 +58,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
     public boolean addInitialBioToExclusiveUser(int userId) throws ServiceException {
         try {
-           //return userRegistrationLogic.addInitialBioToExclusiveUser(userId);
+            //return userRegistrationLogic.addInitialBioToExclusiveUser(userId);
             return userRegistrationLogic.addOrUpdateBio(userId, null);
         } catch (DAOException e) {
             throw new ServiceException(e);

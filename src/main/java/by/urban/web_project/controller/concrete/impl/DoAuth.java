@@ -26,7 +26,7 @@ public class DoAuth implements Command {
         String password = request.getParameter("password");
 
         if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
-            redirectInErrorCase(request, response, "Email и пароль не могут быть пустыми.");
+            setAuthErrorAndRedirect(request, response, "Email и пароль не могут быть пустыми.");
             return;
         }
 
@@ -38,13 +38,14 @@ public class DoAuth implements Command {
             //проверяем формат email + авторизован ли посетитель
             Auth auth = authorizationService.checkAuth(email, password);
             if (auth == null) {
-                redirectInErrorCase(request, response, "Неверный email или пароль.");
+                setAuthErrorAndRedirect(request, response, "Неверный email или пароль.");
                 return;
             }
 
             //передаем в атрибуты поля объекта auth
             setAttributes(request, auth);
 
+            //проверяем, был ли заполнен чекбокс "запомни меня", передаем в респонс куки в случае поставленной галочки
             try {
                 checkCookieField(request, response, auth);
             } catch (ServiceException e) {
@@ -54,11 +55,14 @@ public class DoAuth implements Command {
             response.sendRedirect("Controller?command=" + formatRedirectUrl(auth.getRole()));
 
         } catch (ServiceException e) {
-            redirectInErrorCase(request, response,"Произошла ошибка при авторизации.");
+            setAuthErrorAndRedirect(request, response, "Произошла ошибка при авторизации.");
         }
     }
 
-    private void setAttributes(HttpServletRequest request, Auth auth){
+    /**
+     * Метод для передачи в атрибуты сессии аутентифицированного пользователя
+     */
+    private void setAttributes(HttpServletRequest request, Auth auth) {
         request.getSession().setAttribute("auth", auth);
         request.getSession().setAttribute("id", auth.getId());
         request.getSession().setAttribute("role", auth.getRole().name().toLowerCase());
@@ -85,6 +89,11 @@ public class DoAuth implements Command {
         }
     }
 
+    /**
+     * Метод для проверки передавалось ли что-то в чекбоксе "запомни меня".
+     * Также добавляем в респонс куки, если в чекбоксе была поставлена галочка
+     * Куки сохраняются в браузере и будут передаваться с каждым реквестом
+     */
     private void checkCookieField(HttpServletRequest request, HttpServletResponse response, Auth auth) throws ServiceException {
         //параметр из формы на странице авторизации
         String rememberMe = request.getParameter("rememberMe");
@@ -102,7 +111,10 @@ public class DoAuth implements Command {
         }
     }
 
-    private void redirectInErrorCase(HttpServletRequest request, HttpServletResponse response, String message) throws IOException {
+    /**
+     * Метод для редиректа на страницу аутентификации в случае ошибки
+     */
+    private void setAuthErrorAndRedirect(HttpServletRequest request, HttpServletResponse response, String message) throws IOException {
         request.getSession().setAttribute("authError", message);
         response.sendRedirect("Controller?command=GO_TO_AUTHENTICATION_PAGE");
     }

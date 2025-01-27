@@ -6,7 +6,6 @@ import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.IRegistrationService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -47,7 +46,7 @@ public class DoRegistration implements Command {
                         redirectIfSuccess(request, response, name, email, password, regKey, UserRole.AUTHOR);
                         break;
                     case null, default:
-                        redirectIfError(request, response);
+                        setAttributeNameAuthErrorAndRedirect(request, response, "invalidAuthorKey", "Вы ввели неверный ключ");
                         break;
                 }
             } else {
@@ -59,15 +58,8 @@ public class DoRegistration implements Command {
                 }
             }
         } catch (ServiceException e) {
-            e.printStackTrace();
-            request.getSession().setAttribute("regError", "Произошла ошибка при регистрации. Попробуйте позже.");
-            redirectToRegistrationPage(response);
+            setAttributeNameAuthErrorAndRedirect(request, response, "regError", "Произошла ошибка при регистрации. Попробуйте позже.");
         }
-    }
-
-    private void redirectIfError(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.getSession().setAttribute("invalidAuthorKey", "Вы ввели неверный ключ");
-        redirectToRegistrationPage(response);
     }
 
     private void redirectIfSuccess(HttpServletRequest request, HttpServletResponse response, String name, String email, String password, String regKey, UserRole userRole) throws IOException, ServiceException {
@@ -80,26 +72,28 @@ public class DoRegistration implements Command {
                                                    String email, String password, String confirmPassword) throws IOException, ServiceException {
         // Проводим валидацию введённого email для передачи информации по пути из формы к БД
         if (check.checkInvalidEmail(email)) {
-            request.getSession().setAttribute("regError", "Неверный формат email");
-            redirectToRegistrationPage(response);
+            setAttributeNameAuthErrorAndRedirect(request, response, "regError", "Неверный формат email");
             return true;
         }
 
         // Проверяем, что в базе данных ещё нет пользователя с таким email
         if (logicForRegistration.checkEmailExistsInDB(request, email)) {
-            request.getSession().setAttribute("emailDuplicate", "Пользователь с таким e-mail уже существует");
-            redirectToRegistrationPage(response);
+            setAttributeNameAuthErrorAndRedirect(request, response, "emailDuplicate", "Пользователь с таким e-mail уже существует");
             return true;
         }
 
         // Проверяем, что повторно введённый пароль верный
         if (!Objects.equals(password, confirmPassword)) {
-            request.getSession().setAttribute("regError", "Пароли не совпадают");
-            redirectToRegistrationPage(response);
+            setAttributeNameAuthErrorAndRedirect(request, response, "regError", "Пароли не совпадают");
             return true;
         }
 
         return false;
+    }
+
+    private void setAttributeNameAuthErrorAndRedirect(HttpServletRequest request, HttpServletResponse response, String attributeName, String message) throws IOException {
+        request.getSession().setAttribute(attributeName, message);
+        redirectToRegistrationPage(response);
     }
 
     private void redirectToRegistrationPage(HttpServletResponse response) throws IOException {

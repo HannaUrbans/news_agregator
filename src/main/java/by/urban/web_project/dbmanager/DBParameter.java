@@ -6,7 +6,9 @@ package by.urban.web_project.dbmanager;
  * ТЕОРЕТИЧЕСКИ МОЖНО ЗАМЕНИТЬ НА ЕНАМ
  */
 public final class DBParameter {
-    private DBParameter(){}
+    private DBParameter() {
+    }
+
     public static final String DB_DRIVER = "db.driver";
     public static final String DB_URL = "db.url";
     public static final String DB_USER = "db.user";

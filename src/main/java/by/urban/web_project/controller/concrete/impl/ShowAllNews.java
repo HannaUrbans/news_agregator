@@ -17,6 +17,7 @@ import java.util.List;
 public class ShowAllNews implements Command {
     private final ServiceFactory serviceFactory = ServiceFactory.getInstance();
     private INewsService newsService;
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
