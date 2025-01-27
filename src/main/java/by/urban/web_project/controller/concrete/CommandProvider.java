@@ -15,7 +15,7 @@ public final class CommandProvider {
         // 1. Аутентификация и регистрация
         commands.put(CommandName.DO_AUTH, new DoAuth());
         commands.put(CommandName.DO_REGISTRATION, new DoRegistration());
-        commands.put(CommandName.GO_TO_AUTHENTIFICATION_PAGE, new GoToAuthentificationPage());
+        commands.put(CommandName.GO_TO_AUTHENTICATION_PAGE, new GoToAuthenticationPage());
         commands.put(CommandName.GO_TO_REGISTRATION_PAGE, new GoToRegistrationPage());
 
         // 2. Навигация по страницам

@@ -5,7 +5,6 @@ import by.urban.web_project.bean.ProfileDataField;
 import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.controller.utils.UrlFormatterUtil;
-import by.urban.web_project.service.ServiceException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -13,7 +12,6 @@ import java.io.IOException;
 
 import static by.urban.web_project.controller.utils.AuthPresenceUtil.checkAuthPresence;
 import static by.urban.web_project.controller.utils.UpdateUtil.isProfileFieldCheckedAndUpdated;
-import static by.urban.web_project.controller.utils.UpdateUtil.isProfileFieldUpdated;
 
 //отдельно, на одну форму по одной команде контроллера + эта форма доступна для всех ролей, в отличие от changeBio
 

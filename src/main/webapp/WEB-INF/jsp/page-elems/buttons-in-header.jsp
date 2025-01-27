@@ -24,7 +24,7 @@
         <c:if test="${empty sessionScope.auth}">
             <div class="enter_button">
                 <form action="Controller" method="Get">
-                    <button type="submit" name="command" value="GO_TO_AUTHENTIFICATION_PAGE">Войти</button>
+                    <button type="submit" name="command" value="GO_TO_AUTHENTICATION_PAGE">Войти</button>
 
                     <button type="submit" name="command" value="GO_TO_REGISTRATION_PAGE">Регистрация</button>
                 </form>

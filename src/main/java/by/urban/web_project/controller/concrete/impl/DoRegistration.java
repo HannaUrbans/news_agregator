@@ -53,7 +53,7 @@ public class DoRegistration implements Command {
             } else {
                 if (logicForRegistration.checkUserReg(name, email, password) != -1) {
                     request.getSession().setAttribute("regSuccess", name + ", поздравляем Вас с завершением регистрации в качестве пользователя!");
-                    response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+                    response.sendRedirect("Controller?command=GO_TO_AUTHENTICATION_PAGE");
                 } else {
                     redirectToRegistrationPage(response);
                 }
@@ -73,7 +73,7 @@ public class DoRegistration implements Command {
     private void redirectIfSuccess(HttpServletRequest request, HttpServletResponse response, String name, String email, String password, String regKey, UserRole userRole) throws IOException, ServiceException {
         logicForRegistration.addInitialBioToExclusiveUser(logicForRegistration.checkExclusiveUserReg(name, email, password, regKey, userRole));
         request.getSession().setAttribute("regSuccess", name + ", поздравляем Вас с завершением регистрации, теперь Вы " + userRole.name());
-        response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+        response.sendRedirect("Controller?command=GO_TO_AUTHENTICATION_PAGE");
     }
 
     private boolean detectErrorsInRegistrationData(HttpServletRequest request, HttpServletResponse response,

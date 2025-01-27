@@ -4,7 +4,7 @@ public enum CommandName {
     // 1. Аутентификация и регистрация
     DO_AUTH,                            // Авторизация пользователя
     DO_REGISTRATION,                    // Регистрация нового пользователя
-    GO_TO_AUTHENTIFICATION_PAGE,        // Переход на страницу авторизации
+    GO_TO_AUTHENTICATION_PAGE,        // Переход на страницу авторизации
     GO_TO_REGISTRATION_PAGE,            // Переход на страницу регистрации
 
     // 2. Навигация по страницам

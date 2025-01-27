@@ -42,6 +42,6 @@ public class LogOut implements Command {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        response.sendRedirect("Controller?command=GO_TO_AUTHENTIFICATION_PAGE");
+        response.sendRedirect("Controller?command=GO_TO_AUTHENTICATION_PAGE");
     }
 }

@@ -31,7 +31,7 @@ public class AddNews implements Command {
         // если не в сессии
         checkAuthPresence(request, response, auth);
         // если от другой роли
-        if(!isAuthRoleValid(request, response, UserRole.AUTHOR)){
+        if (!isAuthRoleValid(request, response, UserRole.AUTHOR)) {
             return;
         }
 
@@ -68,13 +68,12 @@ public class AddNews implements Command {
         }
     }
 
-    private static void errorHandling(HttpServletRequest request, News newNews, String errorClass, String errorMessage, HttpServletResponse response)  {
+    private static void errorHandling(HttpServletRequest request, News newNews, String errorClass, String errorMessage, HttpServletResponse response) {
         request.getSession().setAttribute("newNews", newNews);
         request.getSession().setAttribute(errorClass, errorMessage);
         try {
             request.getRequestDispatcher("/WEB-INF/jsp/add-news-form-page.jsp").forward(request, response);
-        }
-        catch (ServletException | IOException e) {
+        } catch (ServletException | IOException e) {
             e.printStackTrace();
         }
     }

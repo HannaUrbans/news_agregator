@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import static by.urban.web_project.controller.utils.UrlFormatterUtil.formatRedirectUrl;
 
-public class GoToAuthentificationPage implements Command {
+public class GoToAuthenticationPage implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
