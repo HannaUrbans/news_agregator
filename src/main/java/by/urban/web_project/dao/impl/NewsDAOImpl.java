@@ -1,13 +1,13 @@
 package by.urban.web_project.dao.impl;
 
-import by.urban.web_project.bean.News;
-import by.urban.web_project.bean.NewsImportance;
-import by.urban.web_project.bean.User;
-import by.urban.web_project.bean.UserRole;
+import by.urban.web_project.model.News;
+import by.urban.web_project.model.NewsImportance;
+import by.urban.web_project.model.User;
+import by.urban.web_project.model.UserRole;
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.INewsDAO;
-import by.urban.web_project.dbmanager.ConnectionPool;
-import by.urban.web_project.dbmanager.ConnectionPoolException;
+import by.urban.web_project.dao.dbmanager.ConnectionPool;
+import by.urban.web_project.dao.dbmanager.ConnectionPoolException;
 
 import java.sql.*;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package by.urban.web_project.bean;
+package by.urban.web_project.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -71,7 +71,7 @@ public class Session implements Serializable {
 
     @Override
     public String toString() {
-        return "Session{" +
+        return getClass().getSimpleName() + "{" +
                 "sessionId=" + sessionId +
                 ", email='" + email + '\'' +
                 ", dateCreated='" + dateCreated + '\'' +

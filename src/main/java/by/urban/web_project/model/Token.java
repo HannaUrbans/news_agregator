@@ -1,4 +1,4 @@
-package by.urban.web_project.bean;
+package by.urban.web_project.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -77,7 +77,7 @@ public class Token {
 
     @Override
     public String toString() {
-        return getClass().getName() + "{" +
+        return getClass().getSimpleName() + "{" +
                 "id=" + id +
                 ", tokenName='" + tokenName + '\'' +
                 ", tokenRegDate=" + tokenRegDate +

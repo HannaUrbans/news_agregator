@@ -1,24 +1,27 @@
-package by.urban.web_project.bean;
+package by.urban.web_project.model;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class User implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    private final int id;
+public class Auth {
+    private int id;
     private String name;
     private UserRole role;
 
+    public Auth() {
+    }
 
-    public User(int id, String name, UserRole userRole) {
+    public Auth(int id, String name, UserRole role) {
         this.id = id;
         this.name = name;
-        this.role = userRole;
+        this.role = role;
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -33,16 +36,16 @@ public class User implements Serializable {
         return role;
     }
 
-    public void setRole(UserRole userRole) {
-        this.role = userRole;
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id && Objects.equals(name, user.name) && role == user.role;
+        Auth auth = (Auth) o;
+        return id == auth.id && Objects.equals(name, auth.name) && role == auth.role;
     }
 
     @Override
@@ -52,7 +55,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return getClass().getName() + "{" +
+        return getClass().getSimpleName() + "{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", role=" + role +

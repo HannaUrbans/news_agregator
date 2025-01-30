@@ -1,4 +1,4 @@
-package by.urban.web_project.bean;
+package by.urban.web_project.model;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -49,7 +49,7 @@ public class Favorites implements Serializable {
 
     @Override
     public String toString() {
-        return getClass().getName() + "{" +
+        return getClass().getSimpleName() + "{" +
                 "loggedVisitorEmail=" + loggedVisitorEmail +
                 ", newsId=" + newsId +
                 '}';

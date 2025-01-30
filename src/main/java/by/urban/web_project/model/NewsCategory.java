@@ -1,4 +1,4 @@
-package by.urban.web_project.bean;
+package by.urban.web_project.model;
 
 import java.util.Objects;
 
@@ -48,7 +48,7 @@ public class NewsCategory {
 
     @Override
     public String toString() {
-        return getClass().getName() + "{" +
+        return getClass().getSimpleName() + "{" +
                 "newsCategoryId=" + newsCategoryId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

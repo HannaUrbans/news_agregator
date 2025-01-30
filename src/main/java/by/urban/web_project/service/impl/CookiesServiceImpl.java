@@ -1,7 +1,7 @@
 package by.urban.web_project.service.impl;
 
-import by.urban.web_project.bean.Auth;
-import by.urban.web_project.bean.Token;
+import by.urban.web_project.model.Auth;
+import by.urban.web_project.model.Token;
 import by.urban.web_project.service.IAuthorizationService;
 import by.urban.web_project.service.ICookiesService;
 import by.urban.web_project.service.ServiceException;

@@ -1,4 +1,4 @@
-<%@ page import="by.urban.web_project.bean.Auth" %>
+<%@ page import="by.urban.web_project.model.Auth" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ include file="page-elems/title.jsp" %>

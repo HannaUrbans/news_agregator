@@ -1,6 +1,6 @@
 package by.urban.web_project.dao;
 
-import by.urban.web_project.bean.NewsComment;
+import by.urban.web_project.model.NewsComment;
 
 //НЕ БУДЕТ РЕАЛИЗОВАН
 public interface INewsCommentDAO {

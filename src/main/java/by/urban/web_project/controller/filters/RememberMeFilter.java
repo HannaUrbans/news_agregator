@@ -1,8 +1,8 @@
 package by.urban.web_project.controller.filters;
 
-import by.urban.web_project.bean.Auth;
-import by.urban.web_project.bean.ProfileDataField;
-import by.urban.web_project.bean.User;
+import by.urban.web_project.model.Auth;
+import by.urban.web_project.model.ProfileDataField;
+import by.urban.web_project.model.User;
 import by.urban.web_project.service.IAuthorizationService;
 import by.urban.web_project.service.IChangeProfileService;
 import by.urban.web_project.service.ServiceException;
@@ -32,7 +32,7 @@ public class RememberMeFilter implements Filter {
     }
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
 
     }
 
@@ -54,9 +54,6 @@ public class RememberMeFilter implements Filter {
                                 User userFromCookies = null;
                                 try {
                                     userFromCookies = authorizationLogic.findUserByToken(token);
-//                                    if (userFromCookies != null) {
-//                                        System.out.println(userFromCookies.toString());
-//                                    }
                                 } catch (ServiceException e) {
                                     throw new RuntimeException(e);
                                 }

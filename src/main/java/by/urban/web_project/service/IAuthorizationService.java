@@ -1,8 +1,8 @@
 package by.urban.web_project.service;
 
-import by.urban.web_project.bean.Auth;
-import by.urban.web_project.bean.Token;
-import by.urban.web_project.bean.User;
+import by.urban.web_project.model.Auth;
+import by.urban.web_project.model.Token;
+import by.urban.web_project.model.User;
 
 public interface IAuthorizationService {
     Auth checkAuth(String email, String password) throws ServiceException;

@@ -1,6 +1,6 @@
 package by.urban.web_project.dao;
 
-import by.urban.web_project.bean.Favorites;
+import by.urban.web_project.model.Favorites;
 
 //НЕ БУДЕТ РЕАЛИЗОВАН
 public interface IFavoritesDAO {

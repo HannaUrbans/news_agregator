@@ -1,13 +1,13 @@
 package by.urban.web_project.dao.impl;
 
-import by.urban.web_project.bean.Auth;
-import by.urban.web_project.bean.Token;
-import by.urban.web_project.bean.User;
-import by.urban.web_project.bean.UserRole;
+import by.urban.web_project.model.Auth;
+import by.urban.web_project.model.Token;
+import by.urban.web_project.model.User;
+import by.urban.web_project.model.UserRole;
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.IUserDAO;
-import by.urban.web_project.dbmanager.ConnectionPool;
-import by.urban.web_project.dbmanager.ConnectionPoolException;
+import by.urban.web_project.dao.dbmanager.ConnectionPool;
+import by.urban.web_project.dao.dbmanager.ConnectionPoolException;
 
 import java.sql.*;
 import java.time.LocalDate;

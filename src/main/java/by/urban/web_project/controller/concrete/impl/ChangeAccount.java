@@ -1,10 +1,10 @@
 package by.urban.web_project.controller.concrete.impl;
 
-import by.urban.web_project.bean.Auth;
-import by.urban.web_project.bean.ProfileDataField;
-import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.controller.utils.UrlFormatterUtil;
+import by.urban.web_project.model.Auth;
+import by.urban.web_project.model.ProfileDataField;
+import by.urban.web_project.model.UserRole;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -25,19 +25,26 @@ public class ChangeAccount implements Command {
         //проверяем, жива ли сессия
         checkAuthPresence(request, response, auth);
 
-        boolean updatedName = isProfileFieldCheckedAndUpdated(auth, request.getParameter("newName"), auth.getName(), ProfileDataField.NAME);
-        boolean updatedEmail = isProfileFieldCheckedAndUpdated(request, auth, request.getParameter("oldEmail"), request.getParameter("newEmail"), ProfileDataField.EMAIL);
-        boolean updatedPassword = isProfileFieldCheckedAndUpdated(request, auth, request.getParameter("oldPassword"), request.getParameter("newPassword"), ProfileDataField.PASSWORD);
-
+      boolean checkUpdateResult = isUpdated(request, auth);
         // проверяем, было ли изменено хотя бы одно поле
-        if (updatedName || updatedEmail || updatedPassword) {
-            request.getSession().setAttribute("changeAccountSuccess", "Профиль успешно обновлен!");
-        } else {
-            request.getSession().setAttribute("changeAccountError", "Не было внесено ни одного изменения.");
-        }
+        request.getSession().setAttribute(
+                checkUpdateResult ?
+                        "changeAccountSuccess" : "changeAccountError",
+                checkUpdateResult ?
+                        "Профиль успешно обновлен!" : "Не было внесено ни одного изменения");
 
         // Перенаправление на страницу профиля
         UserRole role = UserRole.valueOf(((String) request.getSession().getAttribute("role")).toUpperCase());
         response.sendRedirect("Controller?command=" + UrlFormatterUtil.formatRedirectUrl(role));
     }
+
+    private boolean isUpdated(HttpServletRequest request, Auth auth) {
+
+        boolean updatedName = isProfileFieldCheckedAndUpdated(auth, request.getParameter("newName"), auth.getName(), ProfileDataField.NAME);
+        boolean updatedEmail = isProfileFieldCheckedAndUpdated(request, auth, request.getParameter("oldEmail"), request.getParameter("newEmail"), ProfileDataField.EMAIL);
+        boolean updatedPassword = isProfileFieldCheckedAndUpdated(request, auth, request.getParameter("oldPassword"), request.getParameter("newPassword"), ProfileDataField.PASSWORD);
+
+        return (updatedName || updatedEmail || updatedPassword);
+    }
 }
+

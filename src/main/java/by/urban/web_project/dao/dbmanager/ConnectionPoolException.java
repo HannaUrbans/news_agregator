@@ -1,4 +1,4 @@
-package by.urban.web_project.dbmanager;
+package by.urban.web_project.dao.dbmanager;
 
 public class ConnectionPoolException extends Exception {
     private static final long serialVersionUID = 1L;

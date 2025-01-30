@@ -1,6 +1,6 @@
 package by.urban.web_project.service.impl;
 
-import by.urban.web_project.bean.UserRole;
+import by.urban.web_project.model.UserRole;
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.DAOFactory;
 import by.urban.web_project.dao.IUserDAO;

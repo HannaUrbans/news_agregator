@@ -1,4 +1,4 @@
-package by.urban.web_project.dbmanager;
+package by.urban.web_project.dao.dbmanager;
 
 /**
  * Класс содержит константы, представляющие ключи

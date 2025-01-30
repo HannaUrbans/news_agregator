@@ -1,4 +1,4 @@
-package by.urban.web_project.bean;
+package by.urban.web_project.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -147,7 +147,7 @@ public class News implements Serializable {
 
     @Override
     public String toString() {
-        return getClass().getName() + "{" +
+        return getClass().getSimpleName() + "{" +
                "newsId=" + newsId +
                ", importance=" + importance +
                ", title='" + title + '\'' +

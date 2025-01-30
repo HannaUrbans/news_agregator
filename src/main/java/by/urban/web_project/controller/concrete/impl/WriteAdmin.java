@@ -19,12 +19,12 @@ public class WriteAdmin implements Command {
         Part inputFile = request.getPart("inputFile");
 
         try {
-            EmailSending.sendEmail(request.getServletContext(), email, message, inputFile);
+            EmailSending.sendEmail(email, message, inputFile);
             // устанавливаем оповещение об успехе
             // добавляем сессию, потому что при редиректе атрибуты запроса не сохраняются,
             // т.к. происходит новый HTTP-запрос от клиента серверу
             request.getSession().setAttribute("successMessage", "Сообщение успешно отправлено.");
-        } catch (Exception e) {
+        } catch (IOException | ServletException e) {
             // устанавливаем оповещение об ошибке
             request.getSession().setAttribute("errorMessage", "Ошибка: " + e.getMessage());
             // поля не обнуляются при ошибке -> их не нужно заново заполнять

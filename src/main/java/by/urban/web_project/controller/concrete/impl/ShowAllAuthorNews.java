@@ -1,8 +1,8 @@
 package by.urban.web_project.controller.concrete.impl;
 
-import by.urban.web_project.bean.Auth;
-import by.urban.web_project.bean.News;
-import by.urban.web_project.bean.UserRole;
+import by.urban.web_project.model.Auth;
+import by.urban.web_project.model.News;
+import by.urban.web_project.model.UserRole;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;
@@ -42,6 +42,7 @@ public class ShowAllAuthorNews implements Command {
             request.setAttribute("newsAuthorList", newsAuthorList);
         } catch (ServiceException e) {
             e.printStackTrace();
+            throw new RuntimeException("Ошибка при обработке запроса", e);
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/jsp/author-news-page.jsp");

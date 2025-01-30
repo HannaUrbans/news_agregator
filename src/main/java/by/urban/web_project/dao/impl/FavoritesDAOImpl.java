@@ -2,7 +2,7 @@ package by.urban.web_project.dao.impl;
 
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.IFavoritesDAO;
-import by.urban.web_project.bean.Favorites;
+import by.urban.web_project.model.Favorites;
 
 //НЕ БУДЕТ РЕАЛИЗОВАН
 public class FavoritesDAOImpl implements IFavoritesDAO {

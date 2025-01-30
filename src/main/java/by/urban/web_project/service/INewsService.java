@@ -1,9 +1,8 @@
 package by.urban.web_project.service;
 
-import by.urban.web_project.bean.News;
-import by.urban.web_project.bean.NewsImportance;
-import by.urban.web_project.bean.User;
-import by.urban.web_project.dao.DAOException;
+import by.urban.web_project.model.News;
+import by.urban.web_project.model.NewsImportance;
+import by.urban.web_project.model.User;
 
 import java.util.List;
 

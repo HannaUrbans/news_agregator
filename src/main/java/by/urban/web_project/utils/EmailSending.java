@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class EmailSending {
-    public static void sendEmail(ServletContext context, String userEmail, String userMessage, Part inputFile)
+    public static void sendEmail(String userEmail, String userMessage, Part inputFile)
             throws IOException, ServletException {
         // класс для работы с набором свойств, хранящихся в виде пар "ключ=значение"
         // в нашем случае вытягиваем адрес почты и пароль к почте из файла
@@ -28,7 +28,7 @@ public class EmailSending {
 
         // создание сессии для управления параметрами соединения и аутентификации при
         // отправке электронной почты
-        Session session = createEmailSession(properties, adminEmail, password);
+        Session session = createEmailSession(adminEmail, password);
 
         try {
             Message msg = createEmailMessage(session, adminEmail, userEmail, userMessage, inputFile);
@@ -36,8 +36,8 @@ public class EmailSending {
             Transport.send(msg);
             System.out.println("Сообщение успешно отправлено.");
         } catch (MessagingException e) {
-            System.err.println("Ошибка при отправке сообщения: " + e.getMessage());
             e.printStackTrace();
+            throw new RuntimeException("Ошибка при отправке сообщения", e);
         }
     }
 
@@ -56,7 +56,7 @@ public class EmailSending {
         return properties;
     }
 
-    private static Session createEmailSession(Properties properties, String adminEmail, String password) {
+    private static Session createEmailSession(String adminEmail, String password) {
         // настройка свойств почтового соединения
         // взяты из thunderbird, подключенного к яндекс почте с заданным отдельным
         // паролем для приложения

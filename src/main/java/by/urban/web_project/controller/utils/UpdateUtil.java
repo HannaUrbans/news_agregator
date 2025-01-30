@@ -1,7 +1,7 @@
 package by.urban.web_project.controller.utils;
 
-import by.urban.web_project.bean.Auth;
-import by.urban.web_project.bean.ProfileDataField;
+import by.urban.web_project.model.Auth;
+import by.urban.web_project.model.ProfileDataField;
 import by.urban.web_project.service.IChangeProfileService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
@@ -24,15 +24,19 @@ public class UpdateUtil {
      * @param profileDataField - поле профиля, которое будет обновляться
      * @return true, если поле профиля было успешно обновлено в базе данных, и false в противном случае
      */
-    public static boolean isProfileFieldUpdated(Auth auth, String inputValue, ProfileDataField profileDataField) {
+    private static boolean isProfileFieldUpdated(Auth auth, String inputValue, ProfileDataField profileDataField) {
         try {
             changeProfileService = serviceFactory.getChangeProfileService();
-            return UpdateUtil.updateProfileField(auth, inputValue, profileDataField, changeProfileService);
-        } catch (
-                ServiceException e) {
+            changeProfileService.updateProfile(auth.getId(), profileDataField, inputValue);
+
+            if (Objects.equals(profileDataField, ProfileDataField.NAME)) {
+                auth.setName(inputValue);
+            }
+            return true;
+        } catch (ServiceException e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     /**
@@ -74,7 +78,7 @@ public class UpdateUtil {
      * @return true, если поле профиля было успешно обновлено в базе данных, и false в противном случае
      */
     public static boolean isProfileFieldCheckedAndUpdated(HttpServletRequest request, Auth auth, String oldInputValue, String newInputValue, ProfileDataField profileDataField) {
-        if (!isInputNotEmpty(oldInputValue) || !isInputNotEmpty(newInputValue)) {
+        if (isInputEmpty(oldInputValue) || isInputEmpty(newInputValue)) {
             return false;
         }
 
@@ -94,7 +98,7 @@ public class UpdateUtil {
     }
 
     public static boolean isProfileFieldCheckedAndUpdated(Auth auth, String newInputValue, String valueToCompare, ProfileDataField profileDataField) {
-        if (!isInputNotEmpty(newInputValue)) {
+        if (isInputEmpty(newInputValue)) {
             return false;
         }
 
@@ -105,61 +109,27 @@ public class UpdateUtil {
         return isProfileFieldUpdated(auth, newInputValue, profileDataField);
     }
 
-
-    /**
-     * Метод, который задает новое значение определенному полю в БД через слои сервис-дао
-     *
-     * @param auth                 - зарегистрированный пользователь, который будет искаться в БД по id
-     * @param inputValue           - новое значение поля, которое вводится в форме
-     * @param field                - енам с видами полей
-     * @param changeProfileService - метод слоя сервис, который служит прокладкой между контроллером и БД
-     * @return true, в случае успешного обновления поля
-     */
-    private static boolean updateProfileField(Auth auth, String inputValue, ProfileDataField field, IChangeProfileService changeProfileService) {
-        try {
-            switch (field) {
-                case NAME:
-                    changeProfileService.updateName(auth.getId(), inputValue);
-                    auth.setName(inputValue);
-                    break;
-                case EMAIL:
-                    changeProfileService.updateEmail(auth.getId(), inputValue);
-                    break;
-                case PASSWORD:
-                    changeProfileService.updatePassword(auth.getId(), inputValue);
-                    break;
-                case BIO:
-                    changeProfileService.updateBio(auth.getId(), inputValue);
-                    break;
-                default:
-                    return false;
-            }
-            return true;
-        } catch (ServiceException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     /**
      * Метод для проверки валидности введённых данных в поле
      *
      * @param inputValue - строковое значение, которое пользователь ввёл в форме
      * @return true, если в поле присутствуют данные
      */
-    private static boolean isInputNotEmpty(String inputValue) {
-        return inputValue != null && !inputValue.trim().isEmpty();
+    private static boolean isInputEmpty(String inputValue) {
+        return inputValue == null || inputValue.trim().isEmpty();
     }
 
     private static void addChangeSuccessMessage(HttpServletRequest request, ProfileDataField profileDataField) {
         request.getSession().setAttribute("change" + engFieldName(profileDataField) + "Success", "Поле " + rusFieldName(profileDataField) + " успешно обновлено!");
     }
 
-    private static void addChangeErrorMessage(HttpServletRequest request, ProfileDataField profileDataField, String message) {
+    private static void addChangeErrorMessage(HttpServletRequest request, ProfileDataField profileDataField, String
+            message) {
         request.getSession().setAttribute("change" + engFieldName(profileDataField) + "Error", message + rusFieldName(profileDataField));
     }
 
-    private static void updateNotificationMessage(HttpServletRequest request, ProfileDataField profileDataField, String value) {
+    private static void updateNotificationMessage(HttpServletRequest request, ProfileDataField
+            profileDataField, String value) {
         request.getSession().setAttribute("updated" + engFieldName(profileDataField), value);
     }
 

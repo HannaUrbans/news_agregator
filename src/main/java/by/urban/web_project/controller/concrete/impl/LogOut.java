@@ -1,6 +1,6 @@
 package by.urban.web_project.controller.concrete.impl;
 
-import by.urban.web_project.bean.Auth;
+import by.urban.web_project.model.Auth;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.service.IAuthorizationService;
 import by.urban.web_project.service.ServiceException;
@@ -38,6 +38,7 @@ public class LogOut implements Command {
             }
         } catch (ServiceException e) {
             e.printStackTrace();
+            throw new RuntimeException("Ошибка при обработке запроса", e);
         }
         response.sendRedirect("Controller?command=GO_TO_AUTHENTICATION_PAGE");
     }

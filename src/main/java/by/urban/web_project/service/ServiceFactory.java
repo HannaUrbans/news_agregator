@@ -1,5 +1,6 @@
 package by.urban.web_project.service;
 
+import by.urban.web_project.dao.DAOFactory;
 import by.urban.web_project.service.impl.*;
 
 public final class ServiceFactory {
@@ -16,17 +17,23 @@ public final class ServiceFactory {
 
 
     // Статический блок для инициализации фабрики
-    static {
-            instance = new ServiceFactory();
-    }
-
-    // Метод для получения экземпляра фабрики
+//    static {
+//            instance = new ServiceFactory();
+//    }
     public static ServiceFactory getInstance() {
         if (instance == null) {
-            throw new IllegalStateException("ServiceFactory не был инициализирован.");
+            instance = new ServiceFactory();
         }
         return instance;
     }
+
+    // Метод для получения экземпляра фабрики
+//    public static ServiceFactory getInstance() {
+//        if (instance == null) {
+//            throw new IllegalStateException("ServiceFactory не был инициализирован.");
+//        }
+//        return instance;
+//    }
 
     // Ленивая инициализация сервисов
     public ICheckService getCheckService() throws ServiceException {

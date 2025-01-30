@@ -1,8 +1,5 @@
 package by.urban.web_project.service.impl;
 
-import by.urban.web_project.dao.DAOException;
-import by.urban.web_project.dao.DAOFactory;
-import by.urban.web_project.dao.IUserDAO;
 import by.urban.web_project.service.ICheckService;
 import by.urban.web_project.service.ServiceException;
 
@@ -10,18 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CheckServiceImpl implements ICheckService {
-
-    private final IUserDAO checkKeyTool;
-
-    //ранняя инициализация в конструкторе
-    public CheckServiceImpl() throws ServiceException {
-        try {
-            DAOFactory daoFactory = DAOFactory.getInstance();
-            this.checkKeyTool = daoFactory.getUserDAO();
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
-    }
 
     /**
      * Валидация email на бэке

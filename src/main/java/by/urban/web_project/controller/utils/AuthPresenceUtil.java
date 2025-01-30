@@ -1,6 +1,6 @@
 package by.urban.web_project.controller.utils;
 
-import by.urban.web_project.bean.Auth;
+import by.urban.web_project.model.Auth;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

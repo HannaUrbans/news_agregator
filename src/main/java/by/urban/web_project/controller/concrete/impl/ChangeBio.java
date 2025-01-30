@@ -1,8 +1,8 @@
 package by.urban.web_project.controller.concrete.impl;
 
-import by.urban.web_project.bean.Auth;
-import by.urban.web_project.bean.ProfileDataField;
-import by.urban.web_project.bean.UserRole;
+import by.urban.web_project.model.Auth;
+import by.urban.web_project.model.ProfileDataField;
+import by.urban.web_project.model.UserRole;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.controller.utils.UrlFormatterUtil;
 import by.urban.web_project.service.IChangeProfileService;
@@ -36,6 +36,7 @@ public class ChangeBio implements Command {
             updateSessionAndDisplayMessage(request, isProfileUpdated, auth, ProfileDataField.BIO);
         } catch (ServiceException e) {
             e.printStackTrace();
+            throw new RuntimeException("Ошибка при обработке запроса", e);
         }
         // Перенаправление на страницу профиля
         response.sendRedirect("Controller?command=" + UrlFormatterUtil.formatRedirectUrl(UserRole.valueOf(((String) request.getSession().getAttribute("role")).toUpperCase())));

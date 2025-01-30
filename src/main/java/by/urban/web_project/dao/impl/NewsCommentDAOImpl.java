@@ -2,7 +2,7 @@ package by.urban.web_project.dao.impl;
 
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.INewsCommentDAO;
-import by.urban.web_project.bean.NewsComment;
+import by.urban.web_project.model.NewsComment;
 
 //НЕ БУДЕТ РЕАЛИЗОВАН
 public class NewsCommentDAOImpl implements INewsCommentDAO {

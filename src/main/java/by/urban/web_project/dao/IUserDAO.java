@@ -1,9 +1,9 @@
 package by.urban.web_project.dao;
 
-import by.urban.web_project.bean.Auth;
-import by.urban.web_project.bean.Token;
-import by.urban.web_project.bean.User;
-import by.urban.web_project.bean.UserRole;
+import by.urban.web_project.model.Auth;
+import by.urban.web_project.model.Token;
+import by.urban.web_project.model.User;
+import by.urban.web_project.model.UserRole;
 
 import java.util.Map;
 
@@ -33,21 +33,28 @@ public interface IUserDAO {
 
     Map<String, String> getUserProfileById(int id) throws DAOException;
 
-    Token saveTokenInDb (int userId, String token) throws DAOException;
+    Token saveTokenInDb(int userId, String token) throws DAOException;
 
-    boolean deleteTokenFromDb(int userId)  throws DAOException;
+    boolean deleteTokenFromDb(int userId) throws DAOException;
 
     User findUserByTokenInDb(String token) throws DAOException;
 
     boolean checkTokenPresence(int userId) throws DAOException;
 
     Token getFullTokenByUsersId(int userId) throws DAOException;
+
     //void logOut(String loggedVisitorEmail) throws DAOException;
+
     //void addProfilePic(String loggedVisitorEmail, String profilePicUrl) throws DAOException;
+
     //void changeName(String loggedVisitorEmail, String name) throws DAOException;
+
     //void changeProfilePic(String loggedVisitorEmail, String profilePicUrl) throws DAOException;
+
     //boolean deleteProfilePic(String loggedVisitorEmail, String profilePicUrl) throws DAOException;
+
     //boolean deleteProfile(String loggedVisitorEmail) throws DAOException;
+
     //void resetPassword(String loggedVisitorEmail) throws DAOException;
 
 }

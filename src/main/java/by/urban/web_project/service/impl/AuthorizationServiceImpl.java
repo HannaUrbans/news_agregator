@@ -1,8 +1,8 @@
 package by.urban.web_project.service.impl;
 
-import by.urban.web_project.bean.Auth;
-import by.urban.web_project.bean.Token;
-import by.urban.web_project.bean.User;
+import by.urban.web_project.model.Auth;
+import by.urban.web_project.model.Token;
+import by.urban.web_project.model.User;
 import by.urban.web_project.dao.DAOException;
 import by.urban.web_project.dao.DAOFactory;
 import by.urban.web_project.dao.IUserDAO;
@@ -82,7 +82,6 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
             throw new ServiceException(e);
         }
     }
-
 
     public boolean deleteToken(int id) throws ServiceException {
         try {

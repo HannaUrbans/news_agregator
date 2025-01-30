@@ -1,6 +1,6 @@
 package by.urban.web_project.dao;
 
-import by.urban.web_project.bean.NewsCategory;
+import by.urban.web_project.model.NewsCategory;
 
 //НЕ БУДЕТ РЕАЛИЗОВАН
 public interface INewsCategoryDAO {

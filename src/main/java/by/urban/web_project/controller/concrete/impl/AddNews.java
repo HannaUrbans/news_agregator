@@ -1,10 +1,10 @@
 package by.urban.web_project.controller.concrete.impl;
 
-import by.urban.web_project.bean.Auth;
-import by.urban.web_project.bean.News;
-import by.urban.web_project.bean.UserRole;
 import by.urban.web_project.controller.concrete.Command;
 import by.urban.web_project.controller.utils.NewsUtil;
+import by.urban.web_project.model.Auth;
+import by.urban.web_project.model.News;
+import by.urban.web_project.model.UserRole;
 import by.urban.web_project.service.INewsService;
 import by.urban.web_project.service.ServiceException;
 import by.urban.web_project.service.ServiceFactory;
@@ -59,11 +59,9 @@ public class AddNews implements Command {
             response.sendRedirect("Controller?command=SHOW_ALL_AUTHOR_NEWS");
 
         } catch (IllegalArgumentException | IOException e) {
-            e.printStackTrace();
             errorHandling(request, newNews, "addNewsError", "Неверный формат данных", response);
 
         } catch (ServiceException e) {
-            e.printStackTrace();
             errorHandling(request, newNews, "errorMessage", "Ошибка при добавлении новости", response);
         }
     }
@@ -75,6 +73,7 @@ public class AddNews implements Command {
             request.getRequestDispatcher("/WEB-INF/jsp/add-news-form-page.jsp").forward(request, response);
         } catch (ServletException | IOException e) {
             e.printStackTrace();
+            throw new RuntimeException("Ошибка при обработке запроса", e);
         }
     }
 }
