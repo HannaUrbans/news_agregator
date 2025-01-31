@@ -25,7 +25,7 @@ public class ChangeAccount implements Command {
         //проверяем, жива ли сессия
         checkAuthPresence(request, response, auth);
 
-      boolean checkUpdateResult = isUpdated(request, auth);
+        boolean checkUpdateResult = isUpdated(request, auth);
         // проверяем, было ли изменено хотя бы одно поле
         request.getSession().setAttribute(
                 checkUpdateResult ?
@@ -47,4 +47,3 @@ public class ChangeAccount implements Command {
         return (updatedName || updatedEmail || updatedPassword);
     }
 }
-

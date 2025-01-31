@@ -7,9 +7,8 @@ import by.urban.web_project.model.ProfileDataField;
 import by.urban.web_project.service.IChangeProfileService;
 import by.urban.web_project.service.ServiceException;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
+
 
 public class ChangeProfileServiceImpl implements IChangeProfileService {
 
@@ -42,86 +41,28 @@ public class ChangeProfileServiceImpl implements IChangeProfileService {
         }
     }
 
-    //здесь был свич
     @Override
     public void updateProfile(int id, ProfileDataField fieldToUpdate, String newValue) throws ServiceException {
-        Map<String, BiConsumer<Integer, String>> updateMethods = new HashMap<>();
-        updateMethods.put(ProfileDataField.BIO.name().toLowerCase(), (authId, newBio) -> {
-
-            try {
-                userDAO.addOrUpdateBio(authId, newBio);
-            } catch (DAOException e) {
-                throw new RuntimeException("Ошибка при обновлении био" + e);
+        try {
+            switch (fieldToUpdate) {
+                case BIO:
+                    userDAO.addOrUpdateBio(id, newValue);
+                    break;
+                case NAME:
+                    userDAO.updateName(id, newValue);
+                    break;
+                case EMAIL:
+                    userDAO.updateEmail(id, newValue);
+                    break;
+                case PASSWORD:
+                    userDAO.updatePassword(id, newValue);
+                    break;
+                default:
+                    throw new ServiceException("Неизвестное поле профиля: " + fieldToUpdate);
             }
-        });
-        updateMethods.put(ProfileDataField.NAME.name().toLowerCase(), (authId, newName) -> {
-            try {
-                userDAO.updateName(authId, newName);
-            } catch (DAOException e) {
-                throw new RuntimeException("Ошибка при обновлении имени" + e);
-            }
-        });
-        updateMethods.put(ProfileDataField.EMAIL.name().toLowerCase(), (authId, newEmail) -> {
-            try {
-                userDAO.updateEmail(authId, newEmail);
-            } catch (DAOException e) {
-                throw new RuntimeException("Ошибка при обновлении email" + e);
-            }
-        });
-        updateMethods.put(ProfileDataField.PASSWORD.name().toLowerCase(), (authId, newPassword) -> {
-            try {
-                userDAO.updatePassword(authId, newPassword);
-            } catch (DAOException e) {
-                throw new RuntimeException("Ошибка при обновлении пароля" + e);
-            }
-        });
-
-        BiConsumer<Integer, String> updateMethod = updateMethods.get(fieldToUpdate.name().toLowerCase());
-        if (updateMethod != null) {
-            updateMethod.accept(id, newValue);
-        } else {
-            System.out.println("fieldToUpdate "+ fieldToUpdate);
-            System.out.println("updateMethod " + updateMethod);
-            throw new ServiceException("Неизвестный тип обновления");
+        } catch (DAOException e) {
+            throw new ServiceException("Ошибка при обновлении поля " + fieldToUpdate, e);
         }
 
     }
-
-//    //переделац
-//    @Override
-//    public boolean updateBio(int id, String newBio) throws ServiceException {
-//        try {
-//            return userDAO.addOrUpdateBio(id, newBio);
-//        } catch (DAOException e) {
-//            throw new ServiceException("Ошибка при обновлении био автора", e);
-//        }
-//    }
-
-//    @Override
-//    public void updateName(int id, String newName) throws ServiceException {
-//        try {
-//            userDAO.updateName(id, newName);
-//        } catch (DAOException e) {
-//            throw new ServiceException("Ошибка при обновлении имени пользователя", e);
-//        }
-//    }
-//
-//    @Override
-//    public void updateEmail(int id, String newEmail) throws ServiceException {
-//        try {
-//            userDAO.updateEmail(id, newEmail);
-//        } catch (DAOException e) {
-//            throw new ServiceException("Ошибка при обновлении почты пользователя", e);
-//        }
-//    }
-//
-//    @Override
-//    public void updatePassword(int id, String newPassword) throws ServiceException {
-//        try {
-//            userDAO.updatePassword(id, newPassword);
-//        } catch (DAOException e) {
-//            throw new ServiceException("Ошибка при обновлении пароля пользователя", e);
-//        }
-//    }
-
 }

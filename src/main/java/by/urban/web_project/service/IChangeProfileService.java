@@ -4,7 +4,7 @@ import by.urban.web_project.model.ProfileDataField;
 
 public interface IChangeProfileService {
 
-   String getFieldData (int id, ProfileDataField profileDataField) throws ServiceException;
+    String getFieldData (int id, ProfileDataField profileDataField) throws ServiceException;
 
 //    boolean updateBio(int id, String newBio) throws ServiceException;
 //

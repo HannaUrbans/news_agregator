@@ -12,6 +12,11 @@ import java.util.Objects;
 
 public class UpdateUtil {
 
+    private UpdateUtil() {
+        // Приватный конструктор, чтобы никто не мог создать объект этого класса
+        // Т.о. мы делаем утилитарный класс
+    }
+
     private static final ServiceFactory serviceFactory = ServiceFactory.getInstance();
     private static IChangeProfileService changeProfileService;
 
